@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,35 @@
   to {
     transform: rotate(360deg);
   }
+} */
+body {
+  padding-top: 60px; /* Adjust the height of the navigation bar */
+  background-color: hsl(0, 0%, 96%);
+}
+
+
+/* Set the left and right sections to the same height */
+.side-section {
+  height: 100%;
+}
+.truncated-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines to show before truncation */
+  -webkit-box-orient: vertical;
+}
+.view-more-content {
+  display: none;
+}
+
+.view-more-btn {
+  cursor: pointer;
+  color: #007bff;
+}
+.small-avatar {
+  width: 35px; /* Adjust the width as needed */
+  height: 35px; /* Adjust the height as needed */
+  border-radius: 50%; /* Make it a circle */
+  margin-right: 5px; /* Add some space to the right of the avatar */
 }

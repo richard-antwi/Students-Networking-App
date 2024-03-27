@@ -1,5 +1,5 @@
 import avatar from '../Images/avatar.webp';
-{/* <img src={logo} className="App-logo" alt="logo" /> */}
+
 function NavBar() {
   return (
     <>
@@ -40,7 +40,7 @@ function NavBar() {
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-message" style={{color: 'white'}} />
-              <a className="nav-link" href="messages.html">Messages</a>
+              <a className="nav-link" href="Messages.js">Messages</a>
             </div>
           </li>
           <li className="nav-item">

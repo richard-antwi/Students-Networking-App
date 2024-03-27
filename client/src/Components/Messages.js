@@ -1,6 +1,9 @@
 
 import avatar from '../Images/avatar.webp'
-
+import coverPhoto from '../Images/coverPhoto.jpg'
+// import React, { useState, useEffect } from 'react';
+// import $ from 'jquery';
+import 'bootstrap'; 
 
 
 function Messages() {
@@ -134,7 +137,7 @@ function Messages() {
                             <p className="text-muted" id="messageTime">Sat, Aug 24, 1:10pm</p>
                           </div>
                           {/* Right Avatar */}
-                          <img src="img/cover-Photo.jpg" alt="Another User Avatar" className="avatar-img ml-2" />
+                          <img src={coverPhoto} alt="Another User Avatar" className="avatar-img ml-2" />
                         </div>
                       </div>
                     </div>
@@ -190,7 +193,8 @@ function Messages() {
               </div>
             </div>
           </div>
-          <script>
+          </div>
+          {/* <script>
             function toggleText() {'{'}
             $('#longText').toggleClass('truncated-text');
             $('#readMoreLink').text(function(i, text){'{'}
@@ -257,8 +261,8 @@ function Messages() {
             button: false
             {'}'});
             {'}'});
-          </script>
-          </div>
+          </script> */}
+        
           </>
           );
 }

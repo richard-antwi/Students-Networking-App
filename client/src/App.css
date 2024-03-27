@@ -67,3 +67,67 @@ body {
   border-radius: 50%; /* Make it a circle */
   margin-right: 5px; /* Add some space to the right of the avatar */
 }
+
+
+.small-avatar {
+    width: 35px; /* Adjust the width as needed */
+    height: 35px; /* Adjust the height as needed */
+    border-radius: 50%; /* Make it a circle */
+    margin-right: 5px; /* Add some space to the right of the avatar */
+}
+/* Common styles for all messages */
+.message {
+padding: 10px;
+border-radius: 10px;
+max-width: 80%; /* Adjust as needed */
+margin-bottom: 10px;
+width: 100%;
+}
+
+.avatar-img {
+width: 30px;
+height: 30px;
+border-radius: 50%; /* Make avatars circular */
+}
+
+/* Styles for sender's (your) messages */
+.my-message {
+background-color: #007BFF;
+color: #fff;
+align-self: flex-end;
+max-width: 300px; /* Set your maximum width as needed */
+width: 100%; /* Take full width initially */
+}
+.my-message p :focus {
+width: auto; /* Allow width to expand based on content length */
+}
+/* Styles for receiver's messages */
+.other-message {
+background-color: #E9ECEF;
+color: #000;
+align-self: flex-start;
+max-width: 300px; /* Set your maximum width as needed */
+width: 100%; /* Take full width initially */
+}
+.other-message p :focus {
+width: auto; /* Allow width to expand based on content length */
+}
+
+
+/* Additional styling for flex container of messages */
+.message-container {
+display: flex;
+flex-direction: column; /* Messages are stacked vertically */
+}
+
+/* Avatar style */
+.avatar {
+margin-right: 10px; /* Adjust as needed */
+}
+
+/* Timestamp style */
+.timestamp {
+font-size: 0.8em;
+margin-top: 5px;
+color: #888;
+}

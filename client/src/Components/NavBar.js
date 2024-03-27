@@ -34,7 +34,7 @@ function NavBar() {
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-users" style={{color: 'white'}} />
-              <a className="nav-link" href="profiles.html">Profiles</a>
+              <a className="nav-link" href="Profiles.html">Profiles</a>
             </div>
           </li>
           <li className="nav-item">

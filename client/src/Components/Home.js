@@ -1,5 +1,6 @@
 // import './App.css';
 // import NavBar from './Components/NavBar';
+import avatar from '../Images/avatar.webp';
 
 function Home() {
   return (
@@ -14,7 +15,7 @@ function Home() {
               <div className="card">
                 {/* Top part of the card with different color */}
                 <div className="card-header text-center " style={{padding: '15px', margin: 0, background: 'linear-gradient(to bottom, #007bff 50%, #ffffff 50%)', color: '#fff'}}>
-                  <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}} />
+                  <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}} />
                 </div>
                 <div className="card-body text-center">
                   {/* User Details */}
@@ -45,7 +46,7 @@ function Home() {
                   {/* Avatar, Name, and Interest */}
                   <div className="d-flex justify-content-between align-items-center">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -58,7 +59,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -71,7 +72,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -84,7 +85,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -97,7 +98,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -110,7 +111,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -137,7 +138,7 @@ function Home() {
                   <div className="row">
                     {/* Avatar on the left */}
                     <div className="col-md-3">
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '60px', height: '60px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '60px', height: '60px'}} />
                     </div>
                     {/* Buttons on the right */}
                     <div className="col-md-9 text-right mt-3">
@@ -151,7 +152,7 @@ function Home() {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
                     {/* User details */}
                     <div className="flex-grow-1 d-flex flex-column">
                       {/* Name */}
@@ -277,7 +278,7 @@ function Home() {
                           {/* New Card Content */}
                           <div className="card-body text-center">
                             {/* Avatar at the top center */}
-                            <img src="img/avatar.webp" className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
+                            <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
                             {/* Centered Name */}
                             <h5 className="card-title mb-2">John Doe</h5>
                             {/* Developer Text */}
@@ -300,7 +301,7 @@ function Home() {
                           {/* New Card Content */}
                           <div className="card-body text-center">
                             {/* Avatar at the top center */}
-                            <img src="img/avatar.webp" className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
+                            <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
                             {/* Centered Name */}
                             <h5 className="card-title mb-2">John Doe</h5>
                             {/* Developer Text */}
@@ -323,7 +324,7 @@ function Home() {
                           {/* New Card Content */}
                           <div className="card-body text-center">
                             {/* Avatar at the top center */}
-                            <img src="img/avatar.webp" className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
+                            <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
                             {/* Centered Name */}
                             <h5 className="card-title mb-2">John Doe</h5>
                             {/* Developer Text */}
@@ -352,7 +353,7 @@ function Home() {
                           {/* New Card Content */}
                           <div className="card-body text-center">
                             {/* Avatar at the top center */}
-                            <img src="img/avatar.webp" className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
+                            <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
                             {/* Centered Name */}
                             <h5 className="card-title mb-2">John Doe</h5>
                             {/* Developer Text */}
@@ -375,7 +376,7 @@ function Home() {
                           {/* New Card Content */}
                           <div className="card-body text-center">
                             {/* Avatar at the top center */}
-                            <img src="img/avatar.webp" className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
+                            <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
                             {/* Centered Name */}
                             <h5 className="card-title mb-2">John Doe</h5>
                             {/* Developer Text */}
@@ -398,7 +399,7 @@ function Home() {
                           {/* New Card Content */}
                           <div className="card-body text-center">
                             {/* Avatar at the top center */}
-                            <img src="img/avatar.webp" className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
+                            <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{width: '80px', height: '80px'}} />
                             {/* Centered Name */}
                             <h5 className="card-title mb-2">John Doe</h5>
                             {/* Developer Text */}
@@ -436,7 +437,7 @@ function Home() {
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-between">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
                     {/* User details */}
                     <div className="flex-grow-1 d-flex flex-column">
                       {/* Name */}
@@ -644,7 +645,7 @@ function Home() {
                   {/* Avatar, Name, and Interest */}
                   <div className="d-flex justify-content-between align-items-center">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -657,7 +658,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -670,7 +671,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -683,7 +684,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -696,7 +697,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>
@@ -709,7 +710,7 @@ function Home() {
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
                     {/* Avatar on the left */}
-                    <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                     {/* Name and Interest */}
                     <div className="text-left">
                       <h6 className="mb-1">John Doe</h6>

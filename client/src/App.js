@@ -3,9 +3,8 @@ import './App.css';
 import NavBar from './Components/NavBar';
 import Home from './Components/Home';
 import Messages from './Components/Messages';
-// import { Router } from 'express';
-// import React, { useRef } from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 
 function App() {
   return (
@@ -17,7 +16,7 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route path="/messages">
+          <Route path="/Mssages">
             <Messages />
           </Route>
         </Switch>

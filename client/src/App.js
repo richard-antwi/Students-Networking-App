@@ -15,12 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<NavBar />} />
           <Route index element={<Home />} />
-          <Route exact path="/" element={<NavBar />} />
-            <Home />
-         
-          <Route path="/Mssages">
-            <Messages />
-          </Route>
+          <Route path="messages" element={<Messages />} />
         </Routes>
       </div>
     </div>

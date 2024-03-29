@@ -2,7 +2,9 @@
 // import NavBar from './Components/NavBar';
 import avatar from '../Images/avatar.webp';
 import {Link} from 'react-router-dom';
-
+import {  faBookmark, faClock, faEnvelope, faGraduationCap, faMapMarkerAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 function Home() {
   return (
     <>
@@ -55,7 +57,8 @@ function Home() {
                     </div>
                     {/* Icon at the extreme right */}
                     <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      <i className="fas fa-plus" />
+                      {/* <i className="fas fa-plus" /> */}
+                      <FontAwesomeIcon icon={faPlus} />
                     </div>
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
@@ -68,7 +71,9 @@ function Home() {
                     </div>
                     {/* Icon at the extreme right */}
                     <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      <i className="fas fa-plus" />
+                      {/* <i className="fas fa-plus" /> */}
+                      <FontAwesomeIcon icon={faPlus} />
+                      
                     </div>
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
@@ -81,7 +86,8 @@ function Home() {
                     </div>
                     {/* Icon at the extreme right */}
                     <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      <i className="fas fa-plus" />
+                      {/* <i className="fas fa-plus" /> */}
+                      <FontAwesomeIcon icon={faPlus} />
                     </div>
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
@@ -94,7 +100,8 @@ function Home() {
                     </div>
                     {/* Icon at the extreme right */}
                     <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      <i className="fas fa-plus" />
+                      {/* <i className="fas fa-plus" /> */}
+                      <FontAwesomeIcon icon={faPlus} />
                     </div>
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
@@ -107,7 +114,8 @@ function Home() {
                     </div>
                     {/* Icon at the extreme right */}
                     <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      <i className="fas fa-plus" />
+                      {/* <i className="fas fa-plus" /> */}
+                      <FontAwesomeIcon icon={faPlus} />
                     </div>
                   </div>
                   <div className="d-flex justify-content-between align-items-center my-3">
@@ -120,12 +128,13 @@ function Home() {
                     </div>
                     {/* Icon at the extreme right */}
                     <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      <i className="fas fa-plus" />
+                      {/* <i className="fas fa-plus" /> */}
+                      <FontAwesomeIcon icon={faPlus} />
                     </div>
                   </div>
                   {/* View More button */}
                   <div className="text-center mt-3">
-                    <span className="view-more-btn" onclick="toggleViewMore()">View More</span>
+                    <span className="view-more-btn" onClick="toggleViewMore()">View More</span>
                   </div>
                 </div>
               </div>
@@ -162,7 +171,9 @@ function Home() {
                       </div>
                       {/* Timer icon below the name */}
                       <div className="text-muted">
-                        <i className="fa-solid fa-clock" /> 3 min ago
+                      <FontAwesomeIcon icon={faClock} />
+                        {/* <i className="fa-solid fa-clock" />  */}
+                        3 min ago
                       </div>
                     </div>
                     {/* Vertical three dots on the right */}
@@ -174,14 +185,16 @@ function Home() {
                   <div className="d-flex align-items-center mb-2">
                     {/* User interest icon and text */}
                     <div className="mr-2">
-                      <i className="fas fa-graduation-cap text-danger" />
+                    <FontAwesomeIcon icon={faGraduationCap} className="text-danger"/>
+                      {/* <i className="fas fa-graduation-cap text-danger" /> */}
                     </div>
                     <div>
                       <p className="mb-0">Epic Developer</p>
                     </div>
                     {/* Location icon and text */}
                     <div className="ml-4 mr-2">
-                      <i className="fas fa-map-marker-alt text-success" />
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-success"/>
+                      {/* <i className="fas fa-map-marker-alt text-success" /> */}
                     </div>
                     <div>
                       <p className="mb-0">Ghana</p>
@@ -189,8 +202,11 @@ function Home() {
                     {/* Favourite and message icons on the right */}
                     <div className="ml-auto">
                       <div className="mr-3">
-                        <i className="far fa-bookmark text-white" style={{border: '#13a550 solid 10px', background: '#13a550', borderRadius: '3px'}} />
-                        <i className="far fa-envelope text-white" style={{border: '#3e7df3 solid 10px', background: '#3e7df3', borderRadius: '3px'}} />
+                      <FontAwesomeIcon icon={faBookmark} className="text-white" style={{border: '#13a550 solid 10px', background: '#13a550', borderRadius: '3px'}}/>
+                      <FontAwesomeIcon icon={faEnvelope} className="text-white" style={{border: '#3e7df3 solid 10px', background: '#3e7df3', borderRadius: '3px'}}/>
+
+                        {/* <i className="far fa-bookmark text-white" style={{border: '#13a550 solid 10px', background: '#13a550', borderRadius: '3px'}} /> */}
+                        {/* <i className="far fa-envelope text-white" style={{border: '#3e7df3 solid 10px', background: '#3e7df3', borderRadius: '3px'}} /> */}
                       </div>
                     </div>
                   </div>
@@ -215,7 +231,7 @@ function Home() {
                       consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                     </p>
                     {/* "Read More" link */}
-                    <a href="read.html" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                    <a href="read.html" className="text-primary" id="readMoreLink" role="button" onClick="toggleText()">
                       Read More
                     </a>
                   </div>
@@ -500,9 +516,9 @@ function Home() {
                       consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                     </p>
                     {/* "Read More" link */}
-                    <a href="read-more.html" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                    <Link to="/" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
                       Read More
-                    </a>
+                    </Link>
                   </div>
                   <div className="mb-3" style={{marginTop: '8px'}}>
                     <span className="badge badge-secondary rounded-pill p-2" style={{borderRadius: '12px'}}>HTML</span>
@@ -724,7 +740,7 @@ function Home() {
                   </div>
                   {/* View More button */}
                   <div className="text-center mt-3">
-                    <span className="view-more-btn" onclick="toggleViewMore()">View More</span>
+                    <span className="view-more-btn" onClick="toggleViewMore()">View More</span>
                   </div>
                 </div>
               </div>

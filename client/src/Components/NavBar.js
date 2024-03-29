@@ -1,6 +1,6 @@
 import avatar from '../Images/avatar.webp';
 import {Outlet, Link} from 'react-router-dom';
-import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faHome, faMessage, faPuzzlePiece, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -25,39 +25,43 @@ function NavBar() {
         <ul className="navbar-nav ml-auto">
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
-              <i className="fas fa-home" style={{color: 'white'}} />
-              <FontAwesomeIcon icon={faBolt} style={{ color: 'white' }} />
+              {/* <i className="fas fa-home" style={{color: 'white'}} /> */}
+              <FontAwesomeIcon icon={faHome} style={{ color: 'white' }} />
               <Link to="/" className="nav-link" >Home</Link>
             </div>
           </li>
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
-              <i className="fas fa-puzzle-piece" style={{color: 'white'}} />
+              {/* <i className="fas fa-puzzle-piece" style={{color: 'white'}} /> */}
+              <FontAwesomeIcon icon={faPuzzlePiece} style={{ color: 'white' }} />
               <Link to="/projects" className="nav-link" >Projects</Link>
             </div>
           </li>
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
-              <i className="fas fa-users" style={{color: 'white'}} />
+              {/* <i className="fas fa-users" style={{color: 'white'}} /> */}
+              <FontAwesomeIcon icon={faUser} style={{ color: 'white' }} />
               <Link to="profiles" className="nav-link" >Profiles</Link>
             </div>
           </li>
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
-              <i className="fas fa-message" style={{color: 'white'}} />
+              {/* <i className="fas fa-message" style={{color: 'white'}} /> */}
+              <FontAwesomeIcon icon={faMessage} style={{ color: 'white' }} />
               <Link to="messages" className="nav-link" >Messages</Link>
             </div>
           </li>
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
-              <i className="fas fa-bolt" style={{color: 'white'}} />
+              {/* <i className="fas fa-bolt" style={{color: 'white'}} /> */}
+              <FontAwesomeIcon icon={faBolt} style={{ color: 'white' }} />
               <Link to="notification" className="nav-link" >
                 Notification</Link>
             </div>
           </li>
           <li>
             <div className="dropdown mr-5">
-              <Link to="avatar" className="nav-link dropdown-toggle" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <Link to="/" className="nav-link dropdown-toggle" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src={avatar} alt="Avatar" className="avatar-img small-avatar" />
                 John Doe
               </Link>

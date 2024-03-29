@@ -22,25 +22,25 @@ function NavBar() {
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-home" style={{color: 'white'}} />
-              <Link to="/" className="nav-link" href="Home.html">Home</Link>
+              <Link to="/" className="nav-link" >Home</Link>
             </div>
           </li>
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-puzzle-piece" style={{color: 'white'}} />
-              <Link to="/" className="nav-link" href="projects.html">Projects</Link>
+              <Link to="/projects" className="nav-link" >Projects</Link>
             </div>
           </li>
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-users" style={{color: 'white'}} />
-              <a className="nav-link" href="Profiles.html">Profiles</a>
+              <Link to="profiles" className="nav-link" >Profiles</Link>
             </div>
           </li>
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-message" style={{color: 'white'}} />
-              <a className="nav-link" href="Messages.js">Messages</a>
+              <Link to="messages" className="nav-link" >Messages</Link>
             </div>
           </li>
           <li className="nav-item">

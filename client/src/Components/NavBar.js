@@ -1,5 +1,5 @@
 import avatar from '../Images/avatar.webp';
-
+import {Outlet, Link} from 'react-router-dom';
 function NavBar() {
   return (
     <>
@@ -22,13 +22,13 @@ function NavBar() {
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-home" style={{color: 'white'}} />
-              <a className="nav-link" href="Home.html">Home</a>
+              <Link to="/" className="nav-link" href="Home.html">Home</Link>
             </div>
           </li>
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-puzzle-piece" style={{color: 'white'}} />
-              <a className="nav-link" href="projects.html">Projects</a>
+              <Link to="/" className="nav-link" href="projects.html">Projects</Link>
             </div>
           </li>
           <li className="nav-item">

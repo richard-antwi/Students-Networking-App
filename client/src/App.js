@@ -3,26 +3,28 @@ import './App.css';
 import NavBar from './Components/NavBar';
 import Home from './Components/Home';
 import Messages from './Components/Messages';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
-import { Switch } from 'react-router-dom';
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
+// import { Switch } from 'react-router-dom';
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <div className="App">
         <NavBar />
       <div className="Content">
-        <Switch>
-          <Route exact path="/">
+        <Routes>
+          <Route path="/" element={<NavBar />} />
+          <Route index element={<Home />} />
+          <Route exact path="/" element={<NavBar />} />
             <Home />
-          </Route>
+         
           <Route path="/Mssages">
             <Messages />
           </Route>
-        </Switch>
+        </Routes>
       </div>
     </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 

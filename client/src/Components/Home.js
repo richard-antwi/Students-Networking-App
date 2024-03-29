@@ -1,6 +1,7 @@
 // import './App.css';
 // import NavBar from './Components/NavBar';
 import avatar from '../Images/avatar.webp';
+import {Link} from 'react-router-dom';
 
 function Home() {
   return (
@@ -32,7 +33,7 @@ function Home() {
                   </div>
                   <hr />
                   {/* View Profile Button */}
-                  <a href="view_profile.html" className="primary  mt-3">View Profile</a>
+                  <Link to="user-profile" className="primary  mt-3">View Profile</Link>
                 </div>
               </div>
               <div className="card mt-5">

@@ -4,6 +4,7 @@ import NavBar from './Components/NavBar';
 import Home from './Components/Home';
 import Messages from './Components/Messages';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 // import { Switch } from 'react-router-dom';
 
 function App() {

@@ -1,5 +1,9 @@
 import avatar from '../Images/avatar.webp';
 import {Outlet, Link} from 'react-router-dom';
+import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 function NavBar() {
   return (
     <>
@@ -22,6 +26,7 @@ function NavBar() {
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-home" style={{color: 'white'}} />
+              <FontAwesomeIcon icon={faBolt} style={{ color: 'white' }} />
               <Link to="/" className="nav-link" >Home</Link>
             </div>
           </li>
@@ -46,16 +51,17 @@ function NavBar() {
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               <i className="fas fa-bolt" style={{color: 'white'}} />
-              <a className="nav-link" href="notification.html">Notification</a>
+              <Link to="notification" className="nav-link" >
+                Notification</Link>
             </div>
           </li>
           <li>
-            <div className="dropdown mr-3">
-              <a className="nav-link dropdown-toggle" href="avatar.html" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div className="dropdown mr-5">
+              <Link to="avatar" className="nav-link dropdown-toggle" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src={avatar} alt="Avatar" className="avatar-img small-avatar" />
                 John Doe
-              </a>
-              <div className="dropdown-menu mr-5" aria-labelledby="profileDropdown">
+              </Link>
+              <div className="dropdown-menu mr-7" aria-labelledby="profileDropdown">
                 {/* Dropdown items go here */}
                 <div className="dropdown-item">
                   <p>Online Status</p>
@@ -92,13 +98,14 @@ function NavBar() {
                   <h6>Settings</h6>
                 </div>
                 <div className="dropdown-divider" />
-                <a className="dropdown-item" href="profile_account_settings.html">Acount Settings</a>
-                <a className="dropdown-item" href="policy_privacy.html">Privacy</a>
-                <a className="dropdown-item" href="frequently_asked_questions.html">FAQs</a>
-                <a className="dropdown-item" href="terms_and_conditions.html">Terms &amp; Conditions</a>
+                <Link to="/" className="dropdown-item" href="profile_account_settings.html">Acount Settings</Link>
+                <Link to="/" className="dropdown-item" href="policy_privacy.html">Privacy</Link>
+                <Link to="/" className="dropdown-item" href="policy_privacy.html">Privacy</Link>
+                <Link to="/" className="dropdown-item" href="frequently_asked_questions.html">FAQs</Link>
+                <Link to="/" className="dropdown-item" href="terms_and_conditions.html">Terms &amp; Conditions</Link>
                 <div className="dropdown-divider" />
                 <div className>
-                  <a className="dropdown-item" href="logout.html">Logout</a>
+                  <Link to="/" className="dropdown-item" href="logout.html">Logout</Link>
                 </div>
               </div>
             </div>
@@ -106,6 +113,7 @@ function NavBar() {
         </ul>
       </div>
     </nav>
+    <Outlet />
     </>
   );
 }

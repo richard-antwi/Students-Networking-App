@@ -1,4 +1,13 @@
-return (
+import avatar from '../Images/avatar.webp'
+import coverPhoto from '../Images/coverPhoto.jpg'
+// import React, { useState, useEffect } from 'react';
+// import $ from 'jquery';
+import 'bootstrap'; 
+
+
+function About() {
+    return (
+        <>
     <div>
       <nav className="navbar navbar-expand-md navbar-dark bg-secondary mt-3">
         <div className="container d-flex justify-content-center">
@@ -80,6 +89,8 @@ return (
         </div>
       </div>
     </div>
-  );
+    </>
+          );
 }
-});
+
+export default About;

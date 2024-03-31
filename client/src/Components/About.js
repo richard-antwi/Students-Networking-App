@@ -1,5 +1,10 @@
-import avatar from '../Images/avatar.webp'
-import coverPhoto from '../Images/coverPhoto.jpg'
+import person1 from '../Images/person1.jpg';
+import person2 from '../Images/person2.jpg';
+import person3 from '../Images/person3.jpg';
+import person4 from '../Images/person4.jpg';
+import person5 from '../Images/person5.jpg';
+// import avatar from '../Images/avatar.webp';
+import connectPhoto from '../Images/connectPhoto.png';
 // import React, { useState, useEffect } from 'react';
 // import $ from 'jquery';
 import 'bootstrap'; 
@@ -34,7 +39,7 @@ function About() {
           </div>
           <div className="col-md-6 d-flex justify-content-end">
             {/* Right side content with image */}
-            <img src="img/connect-photo.png" className="img-fluid" alt="Image" style={{marginRight: '20px'}} />
+            <img src={connectPhoto} className="img-fluid" alt="" style={{marginRight: '20px'}} />
           </div>
         </div>
       </div>
@@ -43,7 +48,7 @@ function About() {
         <div className="row ml-3">
           <div className="col-md-2 mr-3">
             <div className="card">
-              <img src="img/person1.jpg" className="card-img-top" alt="Picture 1" />
+              <img src={person1}  alt="" className="card-img-top" />
               <div className="card-body">
                 <h5 className="card-title">Theophilus</h5>
                 <p className="card-text">Back-End Dev</p>
@@ -52,7 +57,7 @@ function About() {
           </div>
           <div className="col-md-2 mr-3 ml-3">
             <div className="card">
-              <img src="img/person2.jpg" className="card-img-top" alt="Picture 2" />
+              <img src={person2} className="card-img-top" alt="" />
               <div className="card-body">
                 <h5 className="card-title">Patrick</h5>
                 <p className="card-text">Lead Documentarian</p>
@@ -61,7 +66,7 @@ function About() {
           </div>
           <div className="col-md-2  mr-3 ml-3">
             <div className="card">
-              <img src="img/person3.jpg" className="card-img-top" alt="Picture 3" />
+              <img src={person3.jpg} className="card-img-top" alt="" />
               <div className="card-body">
                 <h5 className="card-title">Thadus</h5>
                 <p className="card-text">Documentarian</p>
@@ -70,7 +75,7 @@ function About() {
           </div>
           <div className="col-md-2 mr-3 ml-3">
             <div className="card">
-              <img src="img/person4.jpg" className="card-img-top" alt="Picture 4" />
+              <img src={person4} className="card-img-top" alt="" />
               <div className="card-body">
                 <h5 className="card-title">Nicholas</h5>
                 <p className="card-text">Designer</p>
@@ -79,7 +84,7 @@ function About() {
           </div>
           <div className="col-md-2 ml-3">
             <div className="card">
-              <img src="img/person5.jpg" className="card-img-top" alt="Picture 5" />
+              <img src={person5} className="card-img-top" alt="" />
               <div className="card-body">
                 <h5 className="card-title">Richard</h5>
                 <p className="card-text">Front-End Dev.</p>

@@ -1,7 +1,5 @@
-import avatar from '../Images/avatar.webp';
-import {Outlet, Link} from 'react-router-dom';
-import { faBolt, faHome, faMessage, faPuzzlePiece, faUser } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import {Link} from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 function Footer() {
     return (
@@ -11,7 +9,6 @@ function Footer() {
         <div className="row">
           <div className="col-md-10 mx-0">
             <ul className="list-inline">
-            <Link to="/projects" className="nav-link" >Projects</Link>
               <li className="list-inline-item"><Link to="help_center" className="text-muted">Help Center |</Link></li>
               <li className="list-inline-item"><Link to="about" className="text-muted">About |</Link></li>
               <li className="list-inline-item"><Link to="privacy_policy" className="text-muted">Privacy Policy |</Link></li>

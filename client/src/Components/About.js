@@ -5,6 +5,7 @@ import person4 from '../Images/person4.jpg';
 import person5 from '../Images/person5.jpg';
 // import avatar from '../Images/avatar.webp';
 import connectPhoto from '../Images/connectPhoto.png';
+import coverPhoto2 from '../Images/coverPhoto2.avif';
 // import React, { useState, useEffect } from 'react';
 // import $ from 'jquery';
 import 'bootstrap'; 
@@ -21,7 +22,7 @@ function About() {
           </span>
         </div>
       </nav>
-      <nav className="navbar navbar-expand-md navbar-dark bg-secondary" style={{backgroundImage: 'url("img/cover-Photo2.avif")', backgroundSize: 'cover', height: '250px'}}>
+      <nav className="navbar navbar-expand-md navbar-dark bg-secondary" style={{backgroundImage: `url(${coverPhoto2})`, backgroundSize: 'cover', height: '250px'}}>
         <div className="container position-relative d-flex justify-content-center">
           <span className="navbar-text text-white position-absolute top-50 start-50 translate-middle" style={{backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '20px'}}>
             <h2> Student social networking Platform.</h2>
@@ -47,8 +48,8 @@ function About() {
         <h2 className="text-center mb-4">About Us</h2>
         <div className="row ml-3">
           <div className="col-md-2 mr-3">
-            <div className="card">
-              <img src={person1}  alt="" className="card-img-top" />
+            <div className="card about-card" id="about-card">
+              <img src={person1}  alt="" className="card-img-top" id="card-img" />
               <div className="card-body">
                 <h5 className="card-title">Theophilus</h5>
                 <p className="card-text">Back-End Dev</p>
@@ -56,8 +57,8 @@ function About() {
             </div>
           </div>
           <div className="col-md-2 mr-3 ml-3">
-            <div className="card">
-              <img src={person2} className="card-img-top" alt="" />
+            <div className="card about-card" id="about-card">
+              <img src={person2} className="card-img-top" id="card-img" alt="" />
               <div className="card-body">
                 <h5 className="card-title">Patrick</h5>
                 <p className="card-text">Lead Documentarian</p>
@@ -65,8 +66,8 @@ function About() {
             </div>
           </div>
           <div className="col-md-2  mr-3 ml-3">
-            <div className="card">
-              <img src={person3.jpg} className="card-img-top" alt="" />
+            <div className="card about-card" id="about-card">
+              <img src={person3} className="card-img-top" id="card-img" alt="" />
               <div className="card-body">
                 <h5 className="card-title">Thadus</h5>
                 <p className="card-text">Documentarian</p>
@@ -74,8 +75,8 @@ function About() {
             </div>
           </div>
           <div className="col-md-2 mr-3 ml-3">
-            <div className="card">
-              <img src={person4} className="card-img-top" alt="" />
+            <div className="card" id="about-card">
+              <img src={person4} className="card-img-top" id="card-img" alt="" />
               <div className="card-body">
                 <h5 className="card-title">Nicholas</h5>
                 <p className="card-text">Designer</p>
@@ -83,8 +84,8 @@ function About() {
             </div>
           </div>
           <div className="col-md-2 ml-3">
-            <div className="card">
-              <img src={person5} className="card-img-top" alt="" />
+            <div className="card about-card" id="about-card">
+              <img src={person5} className="card-img-top" id="card-img" alt="" />
               <div className="card-body">
                 <h5 className="card-title">Richard</h5>
                 <p className="card-text">Front-End Dev.</p>

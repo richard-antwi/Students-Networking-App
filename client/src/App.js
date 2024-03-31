@@ -4,6 +4,8 @@ import NavBar from './Components/NavBar';
 import Home from './Components/Home';
 import About from './Components/About';
 import Messages from './Components/Messages';
+import Layout from './Components/Layout';
+import Footer from './Components/Footer';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 // import { Switch } from 'react-router-dom';
@@ -18,7 +20,8 @@ function App() {
           <Route path="/" element={<NavBar />} />
           <Route index element={<Home />} />
           <Route path="messages" element={<Messages />} />
-          <Route path="about" element={<About />} />
+          <Route path="about" element={<Layout><About /></Layout>} />
+          <Route path="footer" element={<Footer />} />
         </Routes>
       </div>
     </div>

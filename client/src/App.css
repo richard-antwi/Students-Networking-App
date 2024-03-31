@@ -75,6 +75,9 @@ body {
     border-radius: 50%; /* Make it a circle */
     margin-right: 5px; /* Add some space to the right of the avatar */
 }
+
+
+            /* ----------------Messages------ */
 /* Common styles for all messages */
 .message {
 padding: 10px;
@@ -131,3 +134,16 @@ font-size: 0.8em;
 margin-top: 5px;
 color: #888;
 }
+
+
+
+     /* -------------About--------- */
+
+  #about-card{
+    width: 200px; /* Fixed width for the card */
+    margin-right: 10px; /* Add some spacing between cards */
+  }
+  #card-img{
+    height: 150px; /* Fixed height for the images */
+    object-fit: cover; /* Ensure the image covers the entire card */
+  }

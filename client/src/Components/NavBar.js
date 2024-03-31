@@ -1,6 +1,7 @@
+import '../App.css';
 import avatar from '../Images/avatar.webp';
 import {Outlet, Link} from 'react-router-dom';
-import { faBolt, faHome, faMessage, faPuzzlePiece, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faHome, faMessage, faPuzzlePiece, faUser, faComments } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -49,6 +50,13 @@ function NavBar() {
               {/* <i className="fas fa-message" style={{color: 'white'}} /> */}
               <FontAwesomeIcon icon={faMessage} style={{ color: 'white' }} />
               <Link to="messages" className="nav-link" >Messages</Link>
+            </div>
+          </li>
+          <li className="nav-item">
+            <div className="d-flex flex-column align-items-center">
+              {/* <i className="fas fa-message" style={{color: 'white'}} /> */}
+              <FontAwesomeIcon icon={faComments} style={{ color: 'white' }} />
+              <Link to="forum" className="nav-link" >Forum</Link>
             </div>
           </li>
           <li className="nav-item">
@@ -103,7 +111,7 @@ function NavBar() {
                 </div>
                 <div className="dropdown-divider" />
                 <Link to="/" className="dropdown-item" href="profile_account_settings.html">Acount Settings</Link>
-                <Link to="/" className="dropdown-item" href="policy_privacy.html">Privacy</Link>
+                <Link to="about" className="dropdown-item" >About</Link>
                 <Link to="/" className="dropdown-item" href="policy_privacy.html">Privacy</Link>
                 <Link to="/" className="dropdown-item" href="frequently_asked_questions.html">FAQs</Link>
                 <Link to="/" className="dropdown-item" href="terms_and_conditions.html">Terms &amp; Conditions</Link>

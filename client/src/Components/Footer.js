@@ -12,12 +12,12 @@ function Footer() {
           <div className="col-md-10 mx-0">
             <ul className="list-inline">
             <Link to="/projects" className="nav-link" >Projects</Link>
-              <li className="list-inline-item"><a href="help_center.html" className="text-muted">Help Center |</a></li>
-              <li className="list-inline-item"><a href="about.html" className="text-muted">About |</a></li>
-              <li className="list-inline-item"><a href="privacy_policy.html" className="text-muted">Privacy Policy |</a></li>
-              <li className="list-inline-item"><a href="cookies_policy.html" className="text-muted">Cookies Policy |</a></li>
-              <li className="list-inline-item"><a href="forum.html" className="text-muted">Forum |</a></li>
-              <li className="list-inline-item"><a href="copyright_policy.html" className="text-muted">Copyright Policy</a></li>
+              <li className="list-inline-item"><Link to="help_center" className="text-muted">Help Center |</Link></li>
+              <li className="list-inline-item"><Link to="about" className="text-muted">About |</Link></li>
+              <li className="list-inline-item"><Link to="privacy_policy" className="text-muted">Privacy Policy |</Link></li>
+              <li className="list-inline-item"><Link to="cookies_policy" className="text-muted">Cookies Policy |</Link></li>
+              <li className="list-inline-item"><Link to="forum" className="text-muted">Forum |</Link></li>
+              <li className="list-inline-item"><Link to="copyright_policy" className="text-muted">Copyright Policy</Link></li>
             </ul>
           </div>
           <div className="col-md-2">

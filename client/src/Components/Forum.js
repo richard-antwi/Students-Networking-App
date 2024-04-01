@@ -3,7 +3,7 @@ import person2 from '../Images/person2.jpg';
 import person3 from '../Images/person3.jpg';
 import person4 from '../Images/person4.jpg';
 import person5 from '../Images/person5.jpg';
-// import avatar from '../Images/avatar.webp';
+import avatar from '../Images/avatar.webp';
 import connectPhoto from '../Images/connectPhoto.png';
 import coverPhoto2 from '../Images/coverPhoto2.avif';
 // import React, { useState, useEffect } from 'react';
@@ -24,7 +24,7 @@ function Forum() {
                     <div className="row">
                       {/* Left Section (Avatar) */}
                       <div className="col-md-2">
-                        <img src="img/avatar.webp" className="img-fluid rounded-circle" alt="Avatar" />
+                        <img src={avatar} className="img-fluid rounded-circle" alt="Avatar" />
                       </div>
                       {/* Center Section (Text) */}
                       <div className="col-md-7">
@@ -69,7 +69,7 @@ function Forum() {
                     <div className="row">
                       {/* Left Section (Avatar) */}
                       <div className="col-md-2">
-                        <img src="img/avatar.webp" className="img-fluid rounded-circle" alt="Avatar" />
+                        <img src={avatar} className="img-fluid rounded-circle" alt="" />
                       </div>
                       <div className="col-md-7">
                         <p>Your text goes here. Lorem ipsum dolor sit amet.</p>
@@ -120,7 +120,7 @@ function Forum() {
                       {/* Avatar, Name, and Interest */}
                       <div className="d-flex justify-content-between align-items-center mb-4">
                         {/* Avatar on the left */}
-                        <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                        <img src={avatar} alt="" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                         {/* Name and Interest */}
                         <div className="text-left">
                           <h6 className="mb-1">John Doe</h6>
@@ -136,7 +136,7 @@ function Forum() {
                       </div>
                       <div className="d-flex justify-content-between align-items-center my-3 mb-4">
                         {/* Avatar on the left */}
-                        <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                        <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                         {/* Name and Interest */}
                         <div className="text-left">
                           <h6 className="mb-1">John Doe</h6>

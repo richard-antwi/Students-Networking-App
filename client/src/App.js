@@ -7,6 +7,7 @@ import Messages from './Components/Messages';
 import Layout from './Components/Layout';
 import Footer from './Components/Footer';
 import Forum from './Components/Forum';
+import ForumNav from './Components/ForumNav';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 // import { Switch } from 'react-router-dom';
@@ -24,6 +25,7 @@ function App() {
           <Route path="about" element={<Layout><About /></Layout>} />
           <Route path="footer" element={<Footer />} />
           <Route path="forum" element={<Forum />} />
+          <Route path="forumnav" element={<ForumNav />} />
         </Routes>
       </div>
     </div>

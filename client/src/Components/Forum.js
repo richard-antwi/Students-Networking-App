@@ -4,18 +4,59 @@
 // import person4 from '../Images/person4.jpg';
 // import person5 from '../Images/person5.jpg';
 import avatar from '../Images/avatar.webp';
+import {Outlet, Link} from 'react-router-dom';
 // import connectPhoto from '../Images/connectPhoto.png';
 // import coverPhoto2 from '../Images/coverPhoto2.avif';
 // import React, { useState, useEffect } from 'react';
 // import $ from 'jquery';
 import 'bootstrap'; 
-import ForumNav from '../Components/ForumNav';
+// import ForumNav from '../Components/ForumNav';
 
 
 function Forum() {
     return (
         <>
-        <ForumNav/>
+         <nav className="navbar navbar-expand-md navbar-dark bg-white mt-12">
+            <div className="collapse navbar-collapse " id="navbarNav">
+              <ul className="navbar-nav mr-auto ml-5">
+                <li className="nav-item">
+                  <div className="d-flex flex-column align-items-center">
+                    <Link to="/" className="nav-link" id="color" >Latest</Link>
+                  </div>
+                </li>
+                <li className="nav-item">
+                  <div className="d-flex flex-column align-items-center">
+                    <Link to="/" className="nav-link " id="color" >Unanswered</Link>
+                  </div>  
+                </li>
+                <li className="nav-item">
+                  <div className="d-flex flex-column align-items-center">
+                    <Link className="nav-link" id="color" >Trending</Link>
+                  </div>
+                </li>
+                <li className="nav-item">
+                  <div className="d-flex flex-column align-items-center">
+                    <Link to="/" className="nav-link" id="color" >Popular This Week</Link>
+                  </div>
+                </li>
+                <li className="nav-item">
+                  <div className="d-flex flex-column align-items-center">
+                    <Link to="/" className="nav-link" id="color" >Popular of Month</Link>
+                  </div>
+                </li>
+                <li className="nav-item">
+                  <div className="d-flex flex-column align-items-center">
+                    <i className="fas fa-message" style={{color: 'white'}} />
+                    <a className="nav-link" href="messages.html">Messages</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon" />
+            </button>
+          </nav>
+        
         <div>
           <div className="container mt-5">
             <div className="row">
@@ -217,6 +258,7 @@ function Forum() {
             </div>
           </div>
         </div>
+        <Outlet />
         </>
           );
 }

@@ -1,21 +1,12 @@
-// import person1 from '../Images/person1.jpg';
-// import person2 from '../Images/person2.jpg';
-// import person3 from '../Images/person3.jpg';
-// import person4 from '../Images/person4.jpg';
-// import person5 from '../Images/person5.jpg';
 import avatar from '../Images/avatar.webp';
 import {Outlet, Link} from 'react-router-dom';
-// import connectPhoto from '../Images/connectPhoto.png';
-// import coverPhoto2 from '../Images/coverPhoto2.avif';
-// import React, { useState, useEffect } from 'react';
-// import $ from 'jquery';
 import 'bootstrap'; 
-// import ForumNav from '../Components/ForumNav';
-
+import NavBar from './Components/NavBar';
 
 function Forum() {
     return (
         <>
+        <NavBar /> 
          <nav className="navbar navbar-expand-md navbar-dark bg-white mt-12">
             <div className="collapse navbar-collapse " id="navbarNav">
               <ul className="navbar-nav mr-auto ml-5">

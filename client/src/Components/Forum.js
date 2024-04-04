@@ -46,6 +46,8 @@ function Forum() {
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon" />
             </button>
+
+            <button class="btn btn-primary text-white" type="submit">Ask a Question</button>
           </nav>
         
         <div>

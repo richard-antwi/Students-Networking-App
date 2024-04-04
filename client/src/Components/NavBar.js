@@ -1,7 +1,7 @@
 import '../App.css';
 import avatar from '../Images/avatar.webp';
 import {Outlet, Link} from 'react-router-dom';
-import { faBolt, faHome, faMessage, faPuzzlePiece, faUser, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faHome, faMessage, faPuzzlePiece, faUser, faComments,faCity } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -55,7 +55,7 @@ function NavBar() {
           <li className="nav-item">
             <div className="d-flex flex-column align-items-center">
               {/* <i className="fas fa-message" style={{color: 'white'}} /> */}
-              <FontAwesomeIcon icon={faComments} style={{ color: 'white' }} />
+              <FontAwesomeIcon icon={faCity} style={{ color: 'white' }} />
               <Link to="forum" className="nav-link" >Forum</Link>
             </div>
           </li>

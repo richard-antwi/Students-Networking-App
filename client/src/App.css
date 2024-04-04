@@ -147,3 +147,12 @@ color: #888;
     height: 150px; /* Fixed height for the images */
     object-fit: cover; /* Ensure the image covers the entire card */
   }
+
+#color{
+  color:grey;
+}
+#color :hover{
+  cursor: pointer;
+    color: #007bff;
+}
+  

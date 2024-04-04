@@ -1,13 +1,13 @@
 import avatar from '../Images/avatar.webp';
 import {Outlet, Link} from 'react-router-dom';
 import 'bootstrap'; 
-import NavBar from './Components/NavBar';
+import NavBar from '../Components/NavBar';
 
 function Forum() {
     return (
         <>
-        <NavBar /> 
-         <nav className="navbar navbar-expand-md navbar-dark bg-white mt-12">
+        {/* <NavBar />  */}
+         <nav className="navbar navbar-expand-md navbar-dark bg-white mt-4">
             <div className="collapse navbar-collapse " id="navbarNav">
               <ul className="navbar-nav mr-auto ml-5">
                 <li className="nav-item">

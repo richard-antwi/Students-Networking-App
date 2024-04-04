@@ -8,10 +8,7 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/StudentSocialMedia', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect('mongodb://localhost/StudentSocialMedia')
   .then(() => {
     console.log('Connected to the database');
   })

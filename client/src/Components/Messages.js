@@ -1,21 +1,48 @@
-
-import avatar from '../Images/avatar.webp'
-import coverPhoto from '../Images/coverPhoto.jpg'
 import React, { useState, useEffect } from 'react';
-// import $ from 'jquery';
-import 'bootstrap'; 
-
+import 'bootstrap';
+import avatar from '../Images/avatar.webp';
+import coverPhoto from '../Images/coverPhoto.jpg';
 
 function Messages() {
   const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+
+  // Define currentUser statically for demonstration purposes
+  const currentUser = { name: "John Doe" };
 
   useEffect(() => {
-    // Fetch the messages from the server
     fetch('/api/messages')
       .then(response => response.json())
       .then(data => setMessages(data))
       .catch(error => console.error('Error fetching messages:', error));
   }, []);
+
+  const handleMessageSend = () => {
+    if (newMessage.trim() === '') {
+      return;
+    }
+  
+    const messageToSend = {
+      content: newMessage.trim(),
+      sender: currentUser.name,
+      timestamp: new Date().toISOString(),
+    };
+  
+    fetch('/api/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(messageToSend),
+    })
+    .then(response => response.json())
+    .then(data => {
+      setMessages(messages => [...messages, data]);
+      setNewMessage('');
+    })
+    .catch(error => console.error("Sending message failed", error));
+  };
+  
     return (
         <>
         <div>
@@ -119,42 +146,52 @@ function Messages() {
                   {/* Chat Body */}
                   <div className="card-body">
                     {/* Chat Window */}
-                    <div className="row" style={{maxHeight: '85vh'}}>
-                      <div className="col-md-8">
-                        <div className="d-flex align-items-center" style={{minHeight: '52vh'}}>
-                          {/* Avatar on the left side */}
-                          <img src={avatar} alt="User Avatar" className="avatar-img mr-2" />
-                          {/* Chat messages container */}
-                          <div className="chat-messages">
-                            {/* User's messages */}
-                            <div className="message my-message">
-                              <p>How are you doing?</p>
-                            </div>
-                            <p className="text-muted" id="messageTime">20 minutes ago</p>
-                          </div>
-                        </div>
+                    <div className="card-body">
+            {/* Chat Window */}
+            <div className="row" style={{ maxHeight: '85vh' }}>
+              {/* Left Column */}
+              <div className="col-md-8">
+                <div className="d-flex align-items-center" style={{ minHeight: '52vh' }}>
+                  {/* Avatar on the left side */}
+                  <img src={avatar} alt="User Avatar" className="avatar-img mr-2" />
+                  {/* Chat messages container */}
+                  <div className="chat-messages">
+                    {/* User's messages */}
+                    {messages.map((message, index) => (
+                      <div className="message my-message" key={index}>
+                        <p>{message.content}</p>
                       </div>
+                    ))}
+                    <p className="text-muted" id="messageTime">20 minutes ago</p>
+                  </div>
+                </div>
+              </div>
                       {/* Right Column */}
                       <div className="col-md-4">
-                        <div className="d-flex align-items-center justify-content-end" style={{minHeight: '45vh'}}>
-                          {/* Another Chat messages container */}
-                          <div className="chat-messages">
-                            {/* Another user's messages */}
-                            <div className="message other-message">
-                              <p>Not much, just working on some stuff.</p>
-                            </div>
-                            <p className="text-muted" id="messageTime">Sat, Aug 24, 1:10pm</p>
-                          </div>
-                          {/* Right Avatar */}
-                          <img src={coverPhoto} alt="Another User Avatar" className="avatar-img ml-2" />
-                        </div>
+                <div className="d-flex align-items-center justify-content-end" style={{ minHeight: '45vh' }}>
+                  {/* Another Chat messages container */}
+                  <div className="chat-messages">
+                    {/* Another user's messages */}
+                    {messages.map((message, index) => (
+                      <div className="message other-message" key={index}>
+                        <p>{message.content}</p>
                       </div>
-                    </div>
+                    ))}
+                    <p className="text-muted" id="messageTime">Sat, Aug 24, 1:10pm</p>
+                  </div>
+                  {/* Right Avatar */}
+                  <img src={coverPhoto} alt="Another User Avatar" className="avatar-img ml-2" />
+                </div>
+              </div>
+            </div>
                     {/* Input Field and Send Button */}
                     <div className="input-group mt-3">
-                      <input type="text" className="form-control" placeholder="Type your message..." />
+                      <input type="text" className="form-control"
+                       placeholder="Type your message..."
+                       value={newMessage}
+                       onChange={(e) => setNewMessage(e.target.value)} />
                       <div className="input-group-append">
-                        <button className="btn btn-primary" type="button">Send</button>
+                        <button className="btn btn-primary" type="button" onClick={handleMessageSend}>Send</button>
                       </div>
                       {/* Emoji Icon with Emoji Picker */}
                       <div className="input-group-append">
@@ -203,9 +240,10 @@ function Messages() {
             </div>
           </div>
           </div>
+          </div>
 
             </>
           );
-}
+          }
 
 export default Messages;

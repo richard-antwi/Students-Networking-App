@@ -9,7 +9,7 @@ import avatar from '../Images/avatar.webp';
 // import React, { useState, useEffect } from 'react';
 // import $ from 'jquery';
 import 'bootstrap'; 
-import ForumNav from '../Components/ForumNav';
+// import ForumNav from '../Components/ForumNav';
 
 
 function ForumPostView() {

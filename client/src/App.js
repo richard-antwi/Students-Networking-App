@@ -25,7 +25,7 @@ function App() {
           <Route path="messages" element={<Messages />} />
           <Route path="about" element={<Layout><About /></Layout>} />
           <Route path="footer" element={<Footer />} />
-          <Route path="forum" element={<Forum />} />
+          <Route path="forum" element={<Layout><Forum /></Layout>} />
           <Route path="forumnav" element={<ForumNav />} />
           <Route path="forumpostview" element={<ForumPostView />} />
         </Routes>

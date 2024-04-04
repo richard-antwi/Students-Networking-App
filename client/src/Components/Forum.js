@@ -240,7 +240,7 @@ function Forum() {
               </div>
             </div>
           </div>
-          <div className="container mt-5">
+          <div className="container mt-5 mb-5">
             <div className="row">
               <div className="col-md-12">
                 <div className="bg-white text-left p-2 font-weight-bold">

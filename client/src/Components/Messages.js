@@ -1,12 +1,21 @@
 
 import avatar from '../Images/avatar.webp'
 import coverPhoto from '../Images/coverPhoto.jpg'
-// import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 // import $ from 'jquery';
 import 'bootstrap'; 
 
 
 function Messages() {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    // Fetch the messages from the server
+    fetch('/api/messages')
+      .then(response => response.json())
+      .then(data => setMessages(data))
+      .catch(error => console.error('Error fetching messages:', error));
+  }, []);
     return (
         <>
         <div>
@@ -194,76 +203,8 @@ function Messages() {
             </div>
           </div>
           </div>
-          {/* <script>
-            function toggleText() {'{'}
-            $('#longText').toggleClass('truncated-text');
-            $('#readMoreLink').text(function(i, text){'{'}
-            return text === "Read More" ? "Read Less" : "Read More";
-            {'}'});
-            {'}'}
-            setInterval(function() {'{'}
-            $('#cardSlider').carousel('next');
-            {'}'}, 5000);
-            function toggleViewMore() {'{'}
-            const viewMoreContainer = document.getElementById('viewMoreContainer');
-            viewMoreContainer.classList.toggle('view-more-content-expanded');
-            {'}'}
-            document.getElementById('commentForm').addEventListener('submit', function (event) {'{'}
-            event.preventDefault();
-            // Get the comment input value
-            var comment = document.getElementById('commentInput').value;
-            // Add the new comment to the comments list
-            var commentItem = document.createElement('div');
-            commentItem.className = 'mb-2';
-            commentItem.textContent = 'User: ' + comment;
-            document.getElementById('existingComments').appendChild(commentItem);
-            // Clear the comment input
-            document.getElementById('commentInput').value = '';
-            {'}'});
-            // Function to toggle comment dropdown
-            function toggleCommentDropdown() {'{'}
-            $('#commentDropdown').dropdown('toggle');
-            {'}'}
-            // Function to handle comment form submission
-            document.getElementById('commentForm').addEventListener('submit', function (event) {'{'}
-            event.preventDefault();
-            // Get the comment input value
-            var comment = document.getElementById('commentInput').value;
-            // Add the new comment to the comments list
-            var commentItem = document.createElement('div');
-            commentItem.className = 'mb-2';
-            commentItem.textContent = 'User: ' + comment;
-            document.getElementById('existingComments').appendChild(commentItem);
-            // Clear the comment input
-            document.getElementById('commentInput').value = '';
-            // Close the comment dropdown
-            toggleCommentDropdown();
-            {'}'});
-            document.getElementById('cameraBtn').addEventListener('click', function () {'{'}
-            // Your logic to handle the camera icon click (e.g., open a modal for photo selection)
-            console.log('Camera button clicked');
-            // You can add additional logic here to perform specific actions when the camera button is clicked
-            {'}'});
-            // Handle File Clipper Button Click
-            document.getElementById('fileClipperBtn').addEventListener('click', function () {'{'}
-            // Your logic to handle the file clipper icon click (e.g., open a file selection dialog)
-            console.log('File clipper button clicked');
-            {'}'});
-            // Enable Popover for Emoji Icon
-            $(function () {'{'}
-            $('[data-toggle="popover"]').popover()
-            {'}'});
-            // Initialize Emoji Picker
-            $(document).ready(function () {'{'}
-            $('.emoji-picker-btn').emojiPicker({'{'}
-            width: '300px',
-            height: '200px',
-            button: false
-            {'}'});
-            {'}'});
-          </script> */}
-        
-          </>
+
+            </>
           );
 }
 

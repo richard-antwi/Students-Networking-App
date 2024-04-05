@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
 import 'bootstrap';
-import avatar from '../Images/avatar.webp';
-import coverPhoto from '../Images/coverPhoto.jpg';
+// import avatar from '../Images/avatar.webp';
+// import coverPhoto from '../Images/coverPhoto.jpg';
 
 function Register() {
     return (

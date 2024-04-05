@@ -1,11 +1,12 @@
 import '../App.css';
+import React from 'react';
 import avatar from '../Images/avatar.webp';
 import {Outlet, Link} from 'react-router-dom';
-import { faBolt, faHome, faMessage, faPuzzlePiece, faUser, faComments,faCity } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faHome, faMessage, faPuzzlePiece, faUser,faCity } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-function NavBar() {
+function NavBar({ isLoggedIn }) {
   return (
     <>
       {/* Navigation Bar */}

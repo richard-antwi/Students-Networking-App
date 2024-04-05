@@ -4,6 +4,8 @@ import avatar from '../Images/avatar.webp';
 import coverPhoto from '../Images/coverPhoto.jpg';
 
 function Register() {
+    return (
+        <>
         <div>
           {/* Tabs navigation */}
           <ul className="nav nav-tabs" id="myTabs">
@@ -157,6 +159,9 @@ function Register() {
             </div>
           </div>
         </div>
+      
+      </>
       );
-    }
-  });
+      }
+
+export default Register;

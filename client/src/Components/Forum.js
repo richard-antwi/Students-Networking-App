@@ -1,7 +1,7 @@
 import avatar from '../Images/avatar.webp';
 import {Outlet, Link} from 'react-router-dom';
 import 'bootstrap'; 
-import NavBar from '../Components/NavBar';
+// import NavBar from '../Components/NavBar';
 
 function Forum() {
     return (

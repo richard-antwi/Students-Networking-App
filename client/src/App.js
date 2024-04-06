@@ -14,18 +14,19 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = () => {
+  // const handleLogin = () => {
     // Perform login logic here
     // Set isLoggedIn to true upon successful login
-    setIsLoggedIn(true);
-  };
+  //   setIsLoggedIn(true);
+  // };
 
   return (
     <BrowserRouter>
       <div className="App">
-        <NavBar isLoggedIn={isLoggedIn} />
+        {/* <NavBar isLoggedIn={isLoggedIn} /> */}
+        <NavBar />
         <div className="Content">
           <Routes>
             <Route

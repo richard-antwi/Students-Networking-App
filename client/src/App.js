@@ -29,12 +29,12 @@ function App() {
         <NavBar />
         <div className="Content">
           <Routes>
-            <Route
+            {/* <Route
               path="/"
               element={
                 isLoggedIn ? <Navigate to="/home" /> : <Register onLogin={handleLogin} />
               }
-            />
+            /> */}
             <Route path="/home" element={<Home />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/about" element={<Layout><About /></Layout>} />

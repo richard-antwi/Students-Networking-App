@@ -1,9 +1,27 @@
-// import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
+import axios from 'axios';
 import 'bootstrap';
-// import avatar from '../Images/avatar.webp';
-// import coverPhoto from '../Images/coverPhoto.jpg';
+import "../App.css";
+
 
 function Register() {
+  const [firstName, setfirstName]= useState();
+  const [lastName, setlastName]= useState();
+  const [userName, setuserName]= useState();
+  const [email, setemail]= useState();
+  const [dateOfBirth, setdateOfBirth]= useState();
+  const [password, setpassword]= useState();
+  
+  const handleSubmit= (e)=>{
+    e.preventDefault();
+    axios.post('', firstName, lastName, userName, email, dateOfBirth, password)
+    .then(result =>console.log(result))
+    .catch(err => console.log(err) )
+
+  }
+
+
+ 
     return (
         <>
          <link
@@ -85,18 +103,22 @@ function Register() {
                       <div className="col-lg-6 mb-5 mb-lg-0">
                         <div className="card">
                           <div className="card-body py-5 px-md-5">
-                            <form>
+                            <form onSubmit={handleSubmit}>
                               {/* 2 column grid layout with text inputs for the first and last names */}
                               <div className="row">
                                 <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="text" id="form3Example1" className="form-control" />
+                                    <input type="text" id="form3Example1" name="firstName" 
+                                    className="form-control"
+                                    onChange={(e) => setfirstName(e.target.value)} />
                                     <label className="form-label" htmlFor="form3Example1">First name</label>
                                   </div>
                                 </div>
                                 <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="text" id="form3Example2" className="form-control" />
+                                    <input type="text" id="form3Example2" name="lastName" 
+                                    className="form-control" 
+                                    onChange={(e) => setlastName(e.target.value)}/>
                                     <label className="form-label" htmlFor="form3Example2">Last name</label>
                                   </div>
                                 </div>
@@ -105,22 +127,43 @@ function Register() {
                                 {/* Email input */}
                                 <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="email" id="form3Example3" className="form-control" />
-                                    <label className="form-label" htmlFor="form3Example3">Email address</label>
+                                    <input type="email" id="form3Example3" name="email" 
+                                    className="form-control" 
+                                    onChange={(e) => setemail(e.target.value)}/>
+                                    <label className="form-label" name="email" htmlFor="form3Example3">Email address</label>
                                   </div>
                                 </div>
-                                {/* Date of Birth input */}
-                                <div className="col-md-6 mb-4">
+
+                                 {/* UserName input */}
+                              <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="text" id="form3Example5" className="form-control" />
-                                    <label className="form-label" htmlFor="form3Example5">Date of Birth</label>
+                                    <input type="text" id="form3Example2" name="userName"
+                                     className="form-control"
+                                     onChange={(e) => setuserName(e.target.value)} />
+                                    <label className="form-label" htmlFor="form3Example2">User name</label>
                                   </div>
                                 </div>
                               </div>
+                              <div className="row">
                               {/* Password input */}
+                              <div className="col-md-6 mb-4">
                               <div className="form-outline mb-4">
-                                <input type="password" id="form3Example4" className="form-control" />
+                                <input type="password" id="form3Example4" name="password"
+                                 className="form-control"
+                                 onChange={(e) => setpassword(e.target.value)} />
                                 <label className="form-label" htmlFor="form3Example4">Password</label>
+                              </div>
+                              </div>
+                              {/* Date of Birth input */}
+                              <div className="col-md-6 mb-4">
+                                  <div className="form-outline">
+                                    <input type="text" id="form3Example5" name="dateOfBirth" 
+                                    className="form-control" 
+                                    onChange={(e) => setdateOfBirth(e.target.value)}/>
+                                    <label className="form-label" htmlFor="form3Example5">Date of Birth</label>
+                                  </div>
+                                </div>
+                               
                               </div>
                               {/*program select input*/}
                               <div className="form-outline mb-4">

@@ -156,3 +156,8 @@ color: #888;
     color: #007bff;
 }
   
+
+/* For register*/
+.custom-tab .nav-link {
+  padding: 2px 2px; /* Decrease the top and bottom padding */
+}

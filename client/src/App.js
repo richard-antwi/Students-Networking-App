@@ -5,7 +5,7 @@ import Home from './Components/Home';
 import About from './Components/About';
 import Messages from './Components/Messages';
 import Layout from './Components/Layout';
-import Footer from './Components/Footer';
+// import Footer from './Components/Footer';
 import Forum from './Components/Forum';
 import ForumNav from './Components/ForumNav';
 import ForumPostView from './Components/ForumPostView';

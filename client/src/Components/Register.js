@@ -125,9 +125,9 @@ function Register() {
                               {/*program select input*/}
                               <div className="form-outline mb-4">
                                 <select id="genderSelect" className="form-control">
-                                  {/* <option value="male">BSC. Information Technology</option>
+                                  <option value="male">BSC. Information Technology</option>
                           <option value="female">Bed. Information Technolgy</option>
-                          <option value="other">BA. Communication Studies</option> */}
+                          <option value="other">BA. Communication Studies</option>
                                 </select>
                                 <label className="form-label" htmlFor="genderSelect">Program of Study</label>
                               </div>

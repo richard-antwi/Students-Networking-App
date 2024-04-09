@@ -11,10 +11,11 @@ function Register() {
   const [email, setemail]= useState();
   const [dateOfBirth, setdateOfBirth]= useState();
   const [password, setpassword]= useState();
+  const [selectProgram, setselectProgram]= useState();
   
   const handleSubmit= (e)=>{
     e.preventDefault();
-    axios.post('', firstName, lastName, userName, email, dateOfBirth, password)
+    axios.post('https://localhost:3001/register', firstName, lastName, userName, email, dateOfBirth, password, selectProgram)
     .then(result =>console.log(result))
     .catch(err => console.log(err) )
 
@@ -167,7 +168,7 @@ function Register() {
                               </div>
                               {/*program select input*/}
                               <div className="form-outline mb-4">
-                                <select id="genderSelect" className="form-control">
+                                <select id="genderSelect" className="form-control" onChange={(e) => setselectProgram(e.target.value)}>
                                   <option value="male">BSC. Information Technology</option>
                           <option value="female">Bed. Information Technolgy</option>
                           <option value="other">BA. Communication Studies</option>

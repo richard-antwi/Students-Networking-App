@@ -11,15 +11,22 @@ function Register() {
   const [email, setemail]= useState();
   const [dateOfBirth, setdateOfBirth]= useState();
   const [password, setpassword]= useState();
-  const [selectProgram, setselectProgram]= useState();
+  // const [selectProgram, setselectProgram]= useState();
   
-  const handleSubmit= (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('https://localhost:3001/register', firstName, lastName, userName, email, dateOfBirth, password, selectProgram)
-    .then(result =>console.log(result))
-    .catch(err => console.log(err) )
-
-  }
+    const userData = {
+      firstName: firstName,
+      lastName: lastName,
+      userName: userName,
+      email: email,
+      dateOfBirth: dateOfBirth,
+      password: password,
+    };
+    axios.post('http://localhost:3001/register', userData)
+    .then(result => console.log(result))
+    .catch(err => console.log(err));
+};
 
 
  
@@ -58,6 +65,7 @@ function Register() {
                       <div className="card shadow-2-strong" style={{borderRadius: '1rem'}}>
                         <div className="card-body p-5 text-center">
                           <h3 className="mb-5">Sign in</h3>
+                          <form>
                           <div className="form-outline mb-4">
                             <input type="email" id="typeEmailX-2" className="form-control form-control-lg" />
                             <label className="form-label" htmlFor="typeEmailX-2">Email</label>
@@ -72,6 +80,7 @@ function Register() {
                             <label className="form-check-label" htmlFor="form1Example3"> Remember password </label>
                           </div>
                           <button className="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                          </form>
                           <hr className="my-4" />
                           <button className="btn btn-lg btn-block btn-primary" style={{backgroundColor: '#dd4b39'}} type="submit"><i className="fab fa-google me-2" /> Sign in with google</button>
                           <button className="btn btn-lg btn-block btn-primary mb-2" style={{backgroundColor: '#3b5998'}} type="submit"><i className="fab fa-facebook-f me-2" />Sign in with facebook</button>
@@ -109,7 +118,7 @@ function Register() {
                               <div className="row">
                                 <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="text" id="form3Example1" name="firstName" 
+                                    <input type="text" id="form3Example1" value={firstName} 
                                     className="form-control"
                                     onChange={(e) => setfirstName(e.target.value)} />
                                     <label className="form-label" htmlFor="form3Example1">First name</label>
@@ -117,7 +126,7 @@ function Register() {
                                 </div>
                                 <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="text" id="form3Example2" name="lastName" 
+                                    <input type="text" id="form3Example2" value={lastName}
                                     className="form-control" 
                                     onChange={(e) => setlastName(e.target.value)}/>
                                     <label className="form-label" htmlFor="form3Example2">Last name</label>
@@ -128,20 +137,20 @@ function Register() {
                                 {/* Email input */}
                                 <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="email" id="form3Example3" name="email" 
+                                    <input type="email" id="form3Example3" value={email}
                                     className="form-control" 
                                     onChange={(e) => setemail(e.target.value)}/>
-                                    <label className="form-label" name="email" htmlFor="form3Example3">Email address</label>
+                                    <label className="form-label" value={email} htmlFor="form3Example3">Email address</label>
                                   </div>
                                 </div>
 
                                  {/* UserName input */}
                               <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="text" id="form3Example2" name="userName"
+                                    <input type="text" id="form3Example4" value={userName}
                                      className="form-control"
                                      onChange={(e) => setuserName(e.target.value)} />
-                                    <label className="form-label" htmlFor="form3Example2">User name</label>
+                                    <label className="form-label" htmlFor="form3Example4">User name</label>
                                   </div>
                                 </div>
                               </div>
@@ -149,32 +158,32 @@ function Register() {
                               {/* Password input */}
                               <div className="col-md-6 mb-4">
                               <div className="form-outline mb-4">
-                                <input type="password" id="form3Example4" name="password"
+                                <input type="password" id="form3Example5" value={password}
                                  className="form-control"
                                  onChange={(e) => setpassword(e.target.value)} />
-                                <label className="form-label" htmlFor="form3Example4">Password</label>
+                                <label className="form-label" htmlFor="form3Example5">Password</label>
                               </div>
                               </div>
                               {/* Date of Birth input */}
                               <div className="col-md-6 mb-4">
                                   <div className="form-outline">
-                                    <input type="text" id="form3Example5" name="dateOfBirth" 
+                                    <input type="date" id="form3Example6" value={dateOfBirth} 
                                     className="form-control" 
                                     onChange={(e) => setdateOfBirth(e.target.value)}/>
-                                    <label className="form-label" htmlFor="form3Example5">Date of Birth</label>
+                                    <label className="form-label" htmlFor="form3Example6">Date of Birth</label>
                                   </div>
                                 </div>
                                
                               </div>
                               {/*program select input*/}
-                              <div className="form-outline mb-4">
+                              {/* <div className="form-outline mb-4">
                                 <select id="genderSelect" className="form-control" onChange={(e) => setselectProgram(e.target.value)}>
                                   <option value="male">BSC. Information Technology</option>
                           <option value="female">Bed. Information Technolgy</option>
                           <option value="other">BA. Communication Studies</option>
                                 </select>
                                 <label className="form-label" htmlFor="genderSelect">Program of Study</label>
-                              </div>
+                              </div> */}
                               {/* Checkbox */}
                               <div className="form-check d-flex justify-content-center mb-4">
                                 <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Example33" defaultChecked />

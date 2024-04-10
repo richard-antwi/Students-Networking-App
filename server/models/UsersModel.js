@@ -14,29 +14,30 @@ const UserSchema = new mongoose.Schema({
             "type": "string",
             "required": true
         },
-          "userName": {
+        "userName": {
             "type": "string",
             "required": true
         },
         "email": {
           "type": "string",
-          "required": true
+          "required": true,
+          unique: true 
         },
         "password": {
           "type": "string",
           "required": true
         },
         "dateOfBirth": {
-            "type": "string",
+            "type": "date",
             "required": true
           },
-          "selectProgram": {
+        "selectProgram": {
             "type": "string",
-            "required": true
+            "required": false
           },
         "university": {
           "type": "string",
-          "required": true
+          "required": false
         },
         "profilePicture": {
           "type": "string",
@@ -52,3 +53,6 @@ const UserSchema = new mongoose.Schema({
         }
       
 })
+
+const UsersModel = mongoose.model('user', UserSchema);
+module.exports = UsersModel;

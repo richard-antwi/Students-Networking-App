@@ -27,6 +27,29 @@ function Register() {
     .then(result => console.log(result))
     .catch(err => console.log(err));
 };
+// Add these state hooks at the beginning of your component function
+const [loginEmail, setLoginEmail] = useState('');
+const [loginPassword, setLoginPassword] = useState('');
+
+// Add this login form submit handler
+const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    const loginData = {
+        email: loginEmail,
+        password: loginPassword,
+    };
+    axios.post('http://localhost:3001/login', loginData)
+    .then(response => {
+        console.log(response.data);
+        localStorage.setItem('token', response.data.token);
+        // Handle successful login here (e.g., redirect to dashboard or store auth token)
+    })
+    .catch(err => {
+        console.log(err);
+        console.error("Login failed:", err.response.data.error);
+        // Handle login failure here (e.g., display error message)
+    });
+};
 
 
  
@@ -65,13 +88,26 @@ function Register() {
                       <div className="card shadow-2-strong" style={{borderRadius: '1rem'}}>
                         <div className="card-body p-5 text-center">
                           <h3 className="mb-5">Sign in</h3>
-                          <form>
+                          <form onSubmit={handleLoginSubmit}>
                           <div className="form-outline mb-4">
-                            <input type="email" id="typeEmailX-2" className="form-control form-control-lg" />
+                            <input type="email" 
+                            id="typeEmailX-2" 
+                            className="form-control form-control-lg"
+                            value={loginEmail}
+                            onChange={(e) => setLoginEmail(e.target.value)}
+                          
+                            required
+                                         />
                             <label className="form-label" htmlFor="typeEmailX-2">Email</label>
                           </div>
                           <div className="form-outline mb-4">
-                            <input type="password" id="typePasswordX-2" className="form-control form-control-lg" />
+                            <input type="password" 
+                            id="typePasswordX-2" 
+                            className="form-control form-control-lg"
+                            value={loginPassword}
+                            onChange={(e) => setLoginPassword(e.target.value)}
+                                        
+                                        required />
                             <label className="form-label" htmlFor="typePasswordX-2">Password</label>
                           </div>
                           {/* Checkbox */}

@@ -27,6 +27,19 @@ app.post('/register', async (req, res) => {
     }
 });
 
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    // Assuming you have a user model and a method to check password validity
+    const user = await UsersModel.findOne({ email });
+    if (user && await user.checkPassword(password)) {
+        // Generate token (or handle login success)
+        res.json({ message: "Login successful", token: "YourTokenHere" });
+    } else {
+        res.status(401).json({ error: "Invalid credentials" });
+    }
+});
+
+
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
 });

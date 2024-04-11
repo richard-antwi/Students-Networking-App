@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap';
+import {Outlet} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
 import coverPhoto from '../Images/coverPhoto.jpg';
 
@@ -241,6 +242,7 @@ function Messages() {
           </div>
           </div>
           </div>
+          <Outlet />
 
             </>
           );

@@ -1,6 +1,12 @@
-var NewComponent = React.createClass({
-    render: function() {
+import React, { useState, useEffect } from 'react';
+import 'bootstrap';
+import {Outlet} from 'react-router-dom';
+import avatar from '../Images/avatar.webp';
+import coverPhoto from '../Images/coverPhoto.jpg';
+
+function MyProfile() {
       return (
+        <>
         <div>
           {/* Profile Section with Cover Image */}
           <div className="cover-image" id="dynamicCoverImage">
@@ -92,7 +98,7 @@ var NewComponent = React.createClass({
                     {/* Avatar, Name, and Interest */}
                     <div className="d-flex justify-content-between align-items-center">
                       {/* Avatar on the left */}
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                       {/* Name and Interest */}
                       <div className="text-left">
                         <h6 className="mb-1">John Doe</h6>
@@ -555,6 +561,10 @@ var NewComponent = React.createClass({
             </div>
           </div>
         </div>
-      );
+      <Outlet />
+
+      </>
+    );
     }
-  });
+
+export default MyProfile;

@@ -9,6 +9,7 @@ import Layout from './Components/Layout';
 import Forum from './Components/Forum';
 import ForumNav from './Components/ForumNav';
 import Profiles from './Components/Profiles';
+import MyProfile from './Components/MyProfile';
 import ForumPostView from './Components/ForumPostView';
 import Register from './Components/Register';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -26,6 +27,7 @@ function App() {
           <Route path="forum" element={<LayoutWithNav><Layout><Forum /></Layout></LayoutWithNav>} />
           <Route path="forumnav" element={<LayoutWithNav><ForumNav /></LayoutWithNav>} />
           <Route path="profiles" element={<LayoutWithNav><Profiles /></LayoutWithNav>} />
+          <Route path="myprofile" element={<LayoutWithNav><MyProfile /></LayoutWithNav>} />
           <Route path="forumpostview" element={<LayoutWithNav><ForumPostView /></LayoutWithNav>} />
 
           {/* For routes without NavBar */}

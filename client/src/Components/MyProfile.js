@@ -111,7 +111,7 @@ function MyProfile() {
                     </div>
                     <div className="d-flex justify-content-between align-items-center my-3">
                       {/* Avatar on the left */}
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                       {/* Name and Interest */}
                       <div className="text-left">
                         <h6 className="mb-1">John Doe</h6>
@@ -124,7 +124,7 @@ function MyProfile() {
                     </div>
                     <div className="d-flex justify-content-between align-items-center my-3">
                       {/* Avatar on the left */}
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                       {/* Name and Interest */}
                       <div className="text-left">
                         <h6 className="mb-1">John Doe</h6>
@@ -137,7 +137,7 @@ function MyProfile() {
                     </div>
                     <div className="d-flex justify-content-between align-items-center my-3">
                       {/* Avatar on the left */}
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                       {/* Name and Interest */}
                       <div className="text-left">
                         <h6 className="mb-1">John Doe</h6>
@@ -150,7 +150,7 @@ function MyProfile() {
                     </div>
                     <div className="d-flex justify-content-between align-items-center my-3">
                       {/* Avatar on the left */}
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                       {/* Name and Interest */}
                       <div className="text-left">
                         <h6 className="mb-1">John Doe</h6>
@@ -163,7 +163,7 @@ function MyProfile() {
                     </div>
                     <div className="d-flex justify-content-between align-items-center my-3">
                       {/* Avatar on the left */}
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                       {/* Name and Interest */}
                       <div className="text-left">
                         <h6 className="mb-1">John Doe</h6>
@@ -236,7 +236,7 @@ function MyProfile() {
                   <div className="card-body">
                     <div className="d-flex align-items-center justify-content-between">
                       {/* Avatar on the left */}
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
                       {/* User details */}
                       <div className="flex-grow-1 d-flex flex-column">
                         {/* Name */}
@@ -357,7 +357,7 @@ function MyProfile() {
                   <div className="card-body">
                     <div className="d-flex align-items-center justify-content-between">
                       {/* Avatar on the left */}
-                      <img src="img/avatar.webp" alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
                       {/* User details */}
                       <div className="flex-grow-1 d-flex flex-column">
                         {/* Name */}
@@ -496,63 +496,63 @@ function MyProfile() {
                     <div className="row">
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
                       </div>
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-3">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
                       </div>
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
                       </div>
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
                       </div>
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-2">
-                        <img src="img/img11.png" className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
                       </div>   
                     </div>
                   </div>

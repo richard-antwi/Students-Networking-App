@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
 import 'bootstrap';
-import {Outlet} from 'react-router-dom';
+import {Outlet, Link} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
-import coverPhoto from '../Images/coverPhoto.jpg';
+import img11 from '../Images/img11.png';
+// import coverPhoto from '../Images/coverPhoto.jpg';
 
 function MyProfile() {
       return (
@@ -23,7 +24,7 @@ function MyProfile() {
                 <div className="card avatar-card">
                   <div className="image-container position-relative">
                     <i className="fas fa-camera position-absolute top-50 start-50 translate-middle" style={{border: '1px solid rgb(245, 78, 78)', padding: '6px', borderRadius: '50%', backgroundColor: 'rgb(245, 78, 78)', color: 'white'}} />
-                    <img src="img/avatar.webp" alt="Avatar" className="card-img-top avatar-img" />
+                    <img src={avatar} alt="Avatar" className="card-img-top avatar-img" />
                   </div>
                   <div className="card-body">
                     <div className="d-flex justify-content-between mb-3">
@@ -197,7 +198,7 @@ function MyProfile() {
                   </div>
                   {/* Link Status */}
                   <p className="link-status d-inline ml-2">
-                    <a href="#">Status</a>
+                    <Link to="/">Status</Link>
                   </p>
                 </div>
                 {/* Icons and Text */}
@@ -298,9 +299,9 @@ function MyProfile() {
                         consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                       </p>
                       {/* "Read More" link */}
-                      <a href="#" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                      <Link href="#" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
                         Read More
-                      </a>
+                      </Link>
                     </div>
                     <div className="mb-3" style={{marginTop: '8px'}}>
                       <span className="badge badge-secondary rounded-pill p-2" style={{borderRadius: '12px'}}>HTML</span>
@@ -419,9 +420,9 @@ function MyProfile() {
                         consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                       </p>
                       {/* "Read More" link */}
-                      <a href="#" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                      <Link to="/" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
                         Read More
-                      </a>
+                      </Link>
                     </div>
                     <div className="mb-3" style={{marginTop: '8px'}}>
                       <span className="badge badge-secondary rounded-pill p-2" style={{borderRadius: '12px'}}>HTML</span>
@@ -496,63 +497,64 @@ function MyProfile() {
                     <div className="row">
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image3" />
                       </div>
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-3">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image3" />
                       </div>
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image3" />
                       </div>
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image2" />
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image3" />
                       </div>
                       {/* Image 1 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 1" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image1" />
                       </div>
                       {/* Image 2 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 2" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image2" />
+                        
                       </div>
                       {/* Image 3 */}
                       <div className="col-md-4 mb-2">
-                        <img src={img11} className="img-fluid custom-image" alt="Image 3" />
+                        <img src={img11} className="img-fluid custom-image" alt="Image3" />
                       </div>   
                     </div>
                   </div>

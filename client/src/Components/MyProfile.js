@@ -4,6 +4,9 @@ import {Outlet, Link} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
 import img11 from '../Images/img11.png';
 // import coverPhoto from '../Images/coverPhoto.jpg';
+import { faBolt, faHome, faMessage, faPuzzlePiece, faUser,faCity } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function MyProfile() {
       return (
@@ -23,7 +26,7 @@ function MyProfile() {
               <div className="col-md-3 bg-light ">
                 <div className="card avatar-card">
                   <div className="image-container position-relative">
-                    <i className="fas fa-camera position-absolute top-50 start-50 translate-middle" style={{border: '1px solid rgb(245, 78, 78)', padding: '6px', borderRadius: '50%', backgroundColor: 'rgb(245, 78, 78)', color: 'white'}} />
+                    <FontAwesomeIcon icon={faCamera} className="position-absolute top-50 start-50 translate-middle" style={{border: '1px solid rgb(245, 78, 78)', padding: '6px', borderRadius: '50%', backgroundColor: 'rgb(245, 78, 78)', color: 'white'}} />
                     <img src={avatar} alt="Avatar" className="card-img-top avatar-img" />
                   </div>
                   <div className="card-body">

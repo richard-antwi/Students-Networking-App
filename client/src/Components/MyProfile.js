@@ -7,13 +7,35 @@ import img11 from '../Images/img11.png';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import React, { useState, useEffect } from 'react';
 
 function MyProfile() {
+  const [coverImagePath, setCoverImagePath] = useState('image/coverPhoto.jpg');
+  const [readMore, setReadMore] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState('');
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // Implement carousel functionality here or use a library like 'react-slick'
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const toggleReadMore = () => {
+    setReadMore(!readMore);
+  };
+
+  const handleCommentSubmit = (event) => {
+    event.preventDefault();
+    setComments([...comments, commentInput]);
+    setCommentInput('');  // Clear input after submission
+  };
       return (
         <>
         <div>
           {/* Profile Section with Cover Image */}
-          <div className="cover-image" id="dynamicCoverImage">
+          <div style={{ backgroundImage: `url(${coverImagePath})` }} id="dynamicCoverImage">
             {/* "Change Cover Picture" button */}
             <div className="change-cover-btn mt-5">
               <i className="fas fa-camera" /> Change Cover Picture

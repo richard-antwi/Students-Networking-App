@@ -4,7 +4,7 @@ import {Outlet, Link} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
 import img11 from '../Images/img11.png';
 // import coverPhoto from '../Images/coverPhoto.jpg';
-import { faBolt, faHome, faMessage, faPuzzlePiece, faUser,faCity } from '@fortawesome/free-solid-svg-icons';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 

@@ -35,7 +35,7 @@ function Home() {
                   </div>
                   <hr />
                   {/* View Profile Button */}
-                  <Link to="user-profile" className="primary  mt-3">View Profile</Link>
+                  <Link to="myprofile" className="primary  mt-3">View Profile</Link>
                 </div>
               </div>
               <div className="card mt-5">

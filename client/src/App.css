@@ -161,3 +161,93 @@ color: #888;
 .custom-tab .nav-link {
   padding: 2px 2px; /* Decrease the top and bottom padding */
 }
+
+
+/* myProfile */
+
+
+/* Style for the cover image */
+.cover-image {
+  position: relative;
+  height: calc(60vh - 60px); /* 100% of the viewport height minus the height of the navigation bar */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 3; /* Set z-index for the cover image */
+}
+
+/* Style for the "Change Cover Picture" button */
+.change-cover-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1; /* Set z-index above cover image */
+}
+
+.avatar-card {
+  position: relative;
+  text-align: center;
+}
+
+.image-icon {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: rgba(255, 255, 255, 0.8);
+border-radius: 50%;
+padding: 5px;
+cursor: pointer;
+z-index: 1; /* Ensure the icon is on top of the image */
+}
+
+
+.avatar-img {
+width: 100px;
+height: 100px;
+object-fit: cover;
+border-radius: 50%;
+margin: 0 auto;
+overflow: hidden;
+z-index: 0; /* Ensure the image is below the icon */
+}
+.view-more-content {
+display: none;
+}
+
+.view-more-btn {
+cursor: pointer;
+color: #007bff;
+}
+
+
+
+/* Style for the card body */
+.avatar-card .card-body {
+  position: relative;
+  z-index: 2; /* Set z-index between cover image and avatar image */
+} 
+.img-fluid {
+  border-radius: 3px; /* Adjust the radius as needed */
+}
+#icon-color{
+color: rgb(204, 200, 224);
+}
+#icon-color-info{
+color: rgb(241, 93, 74);
+}
+
+.custom-image {
+width: 100%; /* Adjust the width as needed */
+height: 100%; /* Maintain aspect ratio */
+}
+.small-avatar {
+width: 35px; /* Adjust the width as needed */
+height: 35px; /* Adjust the height as needed */
+border-radius: 50%; /* Make it a circle */
+margin-right: 5px; /* Add some space to the right of the avatar */
+}

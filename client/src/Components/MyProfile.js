@@ -3,44 +3,44 @@ import 'bootstrap';
 import {Outlet, Link} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
 import img11 from '../Images/img11.png';
+import coverPhoto from '../Images/coverPhoto.jpg';
+
 // import coverPhoto from '../Images/coverPhoto.jpg';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function MyProfile() {
-  const [coverImagePath, setCoverImagePath] = useState('image/coverPhoto.jpg');
-  const [readMore, setReadMore] = useState(false);
-  const [comments, setComments] = useState([]);
-  const [commentInput, setCommentInput] = useState('');
+  const [coverImagePath, setCoverImagePath] = useState(coverPhoto);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // Implement carousel functionality here or use a library like 'react-slick'
-    }, 5000);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const toggleReadMore = () => {
-    setReadMore(!readMore);
+  const handleImageChange = (event) => {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      const newImagePath = URL.createObjectURL(file);
+      setCoverImagePath(newImagePath);
+    }
   };
 
-  const handleCommentSubmit = (event) => {
-    event.preventDefault();
-    setComments([...comments, commentInput]);
-    setCommentInput('');  // Clear input after submission
-  };
+  
       return (
         <>
-        <div>
+        <div className="mt-5">
           {/* Profile Section with Cover Image */}
-          <div style={{ backgroundImage: `url(${coverImagePath})` }} id="dynamicCoverImage">
-            {/* "Change Cover Picture" button */}
-            <div className="change-cover-btn mt-5">
-              <i className="fas fa-camera" /> Change Cover Picture
-            </div>
+          <div style={{
+            backgroundImage: `url(${coverImagePath})`,
+            height: '300px',
+            width: '100%',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover'
+        }} id="dynamicCoverImage">
+          <input type="file" onChange={handleImageChange} />
+          <div className="change-cover-btn mt-5">
+            <i className="fas fa-camera" /> Change Cover Picture
           </div>
+        </div>
+
           {/* Content below the cover image */}
           <div className="container-fluid">
             <div className="row">

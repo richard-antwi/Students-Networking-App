@@ -188,10 +188,7 @@ color: #888;
   z-index: 1; /* Set z-index above cover image */
 }
 
-.avatar-card {
-  position: relative;
-  text-align: center;
-}
+
 
 .image-icon {
 position: absolute;
@@ -206,15 +203,7 @@ z-index: 1; /* Ensure the icon is on top of the image */
 }
 
 
-.avatar-img {
-width: 100px;
-height: 100px;
-object-fit: cover;
-border-radius: 50%;
-margin: 0 auto;
-overflow: hidden;
-z-index: 0; /* Ensure the image is below the icon */
-}
+
 .view-more-content {
 display: none;
 }
@@ -226,11 +215,7 @@ color: #007bff;
 
 
 
-/* Style for the card body */
-.avatar-card .card-body {
-  position: relative;
-  z-index: 2; /* Set z-index between cover image and avatar image */
-} 
+
 .img-fluid {
   border-radius: 3px; /* Adjust the radius as needed */
 }
@@ -241,13 +226,4 @@ color: rgb(204, 200, 224);
 color: rgb(241, 93, 74);
 }
 
-.custom-image {
-width: 100%; /* Adjust the width as needed */
-height: 100%; /* Maintain aspect ratio */
-}
-.small-avatar {
-width: 35px; /* Adjust the width as needed */
-height: 35px; /* Adjust the height as needed */
-border-radius: 50%; /* Make it a circle */
-margin-right: 5px; /* Add some space to the right of the avatar */
-}
+

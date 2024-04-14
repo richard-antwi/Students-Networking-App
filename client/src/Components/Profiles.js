@@ -1,7 +1,4 @@
-// import axios from 'axios';
 import 'bootstrap';
-// import {Outlet} from 'react-router-dom';
-// import React, { useState } from 'react';
 import "../App.css";
 import avatar from '../Images/avatar.webp';
 
@@ -109,7 +106,6 @@ function Profiles() {
             </div>
           </div>
         </div>
-       
        </>
        );
        }

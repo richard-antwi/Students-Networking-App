@@ -1,6 +1,6 @@
 import axios from 'axios';
 import 'bootstrap';
-import {Outlet} from 'react-router-dom';
+// import {Outlet} from 'react-router-dom';
 import React, { useState } from 'react';
 import "../App.css";
 
@@ -261,7 +261,7 @@ const handleLoginSubmit = (e) => {
             </div>
           </div>
         </div>
-        <Outlet />
+       
       </>
       );
       }

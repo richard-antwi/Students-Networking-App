@@ -1,5 +1,4 @@
 // import './App.css';
-// import NavBar from './Components/NavBar';
 import avatar from '../Images/avatar.webp';
 import {Link} from 'react-router-dom';
 import {  faBookmark, faClock, faEnvelope, faGraduationCap, faMapMarkerAlt, faPlus } from '@fortawesome/free-solid-svg-icons';

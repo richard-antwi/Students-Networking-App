@@ -1,13 +1,9 @@
-// import React, { useState, useEffect } from 'react';
-
 import '../App.css';
 import 'bootstrap';
 import {Link} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
 import img11 from '../Images/img11.png';
 import coverPhoto from '../Images/coverPhoto.jpg';
-
-// import coverPhoto from '../Images/coverPhoto.jpg';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -29,7 +25,7 @@ function MyProfile() {
         <>
         <div className="mt-3">
           {/* Profile Section with Cover Image */}
-          <div style={{ backgroundImage: `url(${coverImagePath})` }} className="cover-image">
+          <div style={{ backgroundImage: `url(${coverImagePath})` }} className="cover-image" id ="handleImagesChange">
           {/* <input type="file" onChange={handleImageChange} /> */}
           <div className="change-cover-btn mt-5">
             <i className="fas fa-camera" /> Change Cover Picture
@@ -583,8 +579,6 @@ function MyProfile() {
             </div>
           </div>
         </div>
-      
-
       </>
     );
     }

@@ -1,4 +1,6 @@
 // import React, { useState, useEffect } from 'react';
+
+import '../App.css';
 import 'bootstrap';
 import {Outlet, Link} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
@@ -27,20 +29,13 @@ function MyProfile() {
         <>
         <div className="mt-5">
           {/* Profile Section with Cover Image */}
-          <div style={{
-            backgroundImage: `url(${coverImagePath})`,
-            height: '300px',
-            width: '100%',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover'
-        }} id="dynamicCoverImage">
+          <div style={{ backgroundImage: `url(${coverImagePath})` }} className="cover-image">
           <input type="file" onChange={handleImageChange} />
           <div className="change-cover-btn mt-5">
             <i className="fas fa-camera" /> Change Cover Picture
           </div>
         </div>
-
+        
           {/* Content below the cover image */}
           <div className="container-fluid">
             <div className="row">

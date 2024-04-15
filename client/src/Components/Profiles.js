@@ -21,7 +21,7 @@ function Profiles() {
             <div className="row">
               <div className="col-md-3">
                 <div className="card">
-                  <img src="img/avatar.webp" className="card-img-top mx-auto d-block avatar-img mt-5" alt="Avatar" />
+                  <img src={avatar} className="card-img-top mx-auto d-block avatar-img mt-5" alt="Avatar" />
                   <div className="card-body">
                     <p className="card-text text-center font-weight-bold">John Doe</p>
                     {/* Job Title */}

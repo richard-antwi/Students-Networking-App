@@ -9,6 +9,7 @@ import Layout from './Components/Layout';
 import Forum from './Components/Forum';
 import ForumNav from './Components/ForumNav';
 import Profiles from './Components/Profiles';
+import Projects from './Components/Projects';
 import MyProfile from './Components/MyProfile';
 import ForumPostView from './Components/ForumPostView';
 import Register from './Components/Register';
@@ -25,6 +26,7 @@ function App() {
           <Route path="messages" element={<LayoutWithNav><Messages /></LayoutWithNav>} />
           <Route path="about" element={<LayoutWithNav><About /></LayoutWithNav>} />
           <Route path="forum" element={<LayoutWithNav><Layout><Forum /></Layout></LayoutWithNav>} />
+          <Route path="projects" element={<LayoutWithNav><Layout><Projects /></Layout></LayoutWithNav>} />
           <Route path="forumnav" element={<LayoutWithNav><ForumNav /></LayoutWithNav>} />
           <Route path="profiles" element={<LayoutWithNav><Profiles /></LayoutWithNav>} />
           <Route path="myprofile" element={<LayoutWithNav><MyProfile /></LayoutWithNav>} />

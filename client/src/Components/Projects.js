@@ -1,6 +1,7 @@
 import 'bootstrap';
 import "../App.css";
 import avatar from '../Images/avatar.webp';
+import {Link} from 'react-router-dom';
 
 function Projects() {
       return (
@@ -195,9 +196,9 @@ function Projects() {
                         consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                       </p>
                       {/* "Read More" link */}
-                      <a href="#" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                      <Link href="#" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
                         Read More
-                      </a>
+                      </Link>
                     </div>
                     <div className="mb-3" style={{marginTop: '8px'}}>
                       <span className="badge badge-secondary rounded-pill p-2" style={{borderRadius: '12px'}}>HTML</span>

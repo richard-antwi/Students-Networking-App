@@ -5,6 +5,8 @@ import {Outlet, Link} from 'react-router-dom';
 import { faBolt, faHome, faMessage, faPuzzlePiece, faUser,faCity } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+// import '@fortawesome/fontawesome-free/css/all.min.css';
+// import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function NavBar({ isLoggedIn }) {
   return (

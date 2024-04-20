@@ -5,7 +5,7 @@ import Home from './Components/Home';
 import About from './Components/About';
 import Messages from './Components/Messages';
 import Layout from './Components/Layout';
-// import Footer from './Components/Footer';
+import ProfileAccountSettings from './Components/AccountSettings';
 import Forum from './Components/Forum';
 import ForumNav from './Components/ForumNav';
 import Profiles from './Components/Profiles';
@@ -31,7 +31,8 @@ function App() {
           <Route path="profiles" element={<LayoutWithNav><Profiles /></LayoutWithNav>} />
           <Route path="myprofile" element={<LayoutWithNav><MyProfile /></LayoutWithNav>} />
           <Route path="forumpostview" element={<LayoutWithNav><ForumPostView /></LayoutWithNav>} />
-
+          <Route path="accountsettings" element={<LayoutWithNav><AccountSettings /></LayoutWithNav>} />
+          
           {/* For routes without NavBar */}
           <Route path="register" element={<Register />} />
         </Routes>

@@ -1,17 +1,17 @@
-import person1 from '../Images/person1.jpg';
-import person2 from '../Images/person2.jpg';
-import person3 from '../Images/person3.jpg';
-import person4 from '../Images/person4.jpg';
-import person5 from '../Images/person5.jpg';
+// import person1 from '../Images/person1.jpg';
+// import person2 from '../Images/person2.jpg';
+// import person3 from '../Images/person3.jpg';
+// import person4 from '../Images/person4.jpg';
+// import person5 from '../Images/person5.jpg';
 // import avatar from '../Images/avatar.webp';
-import connectPhoto from '../Images/connectPhoto.png';
-import coverPhoto2 from '../Images/coverPhoto2.avif';
+// import connectPhoto from '../Images/connectPhoto.png';
+// import coverPhoto2 from '../Images/coverPhoto2.avif';
 // import React, { useState, useEffect } from 'react';
 // import $ from 'jquery';
 import 'bootstrap'; 
 
 
-function About() {
+function AccountSettings() {
     return (
         <>
   
@@ -115,4 +115,4 @@ function About() {
           );
 }
 
-export default p;
+export default AccountSettings;

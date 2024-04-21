@@ -15,7 +15,7 @@ import Register from './Components/Register';
 import Layout from './Components/Layout'; // Make sure to import the Layout component
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-// import PolicyPrivacy from './Components/PolicyPrivacy';
+import HelpCenter from './Components/HelpCenter';
 
 function App() {
   return (
@@ -35,7 +35,8 @@ function App() {
             <Route path="forumpostview" element={<ForumPostView />} />
             <Route path="accountsettings" element={<AccountSettings />} />
             <Route path="frequentlyaskedquestions" element={<FrequentlyAskedQuestions />} />
-            <Route path="PolicyPrivacy" element={<PolicyPrivacy />} />
+            <Route path="policyprivacy" element={<PolicyPrivacy />} />
+            <Route path="helpcenter" element={<HelpCenter />} />
           </Route>
 
           {/* Route without NavBar */}

@@ -1,13 +1,6 @@
 import '../App.css';
 import 'bootstrap';
-import {Link} from 'react-router-dom';
-import avatar from '../Images/avatar.webp';
-import img11 from '../Images/img11.png';
-import coverPhoto from '../Images/coverPhoto.jpg';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import React, { useState } from 'react';
+
 
 function FrequentlyAskedQuestions() {
     

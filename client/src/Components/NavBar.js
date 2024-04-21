@@ -116,7 +116,7 @@ function NavBar({ isLoggedIn }) {
                 <Link to="accountsettings" className="dropdown-item" >Acount Settings</Link>
                 <Link to="about" className="dropdown-item" >About</Link>
                 <Link to="/" className="dropdown-item" href="policy_privacy.html">Privacy</Link>
-                <Link to="/" className="dropdown-item" href="frequently_asked_questions.html">FAQs</Link>
+                <Link to="frequentlyaskedquestions" className="dropdown-item" >FAQs</Link>
                 <Link to="/" className="dropdown-item" href="terms_and_conditions.html">Terms &amp; Conditions</Link>
                 <div className="dropdown-divider" />
                 <div className>

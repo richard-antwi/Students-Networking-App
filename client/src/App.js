@@ -3,6 +3,7 @@ import Home from './Components/Home';
 import About from './Components/About';
 import Messages from './Components/Messages';
 import AccountSettings from './Components/AccountSettings';
+import FrequentlyAskedQuestions from './Components/FrequentlyAskedQuestions';
 import Forum from './Components/Forum';
 import ForumNav from './Components/ForumNav';
 import Profiles from './Components/Profiles';
@@ -31,6 +32,7 @@ function App() {
             <Route path="myprofile" element={<MyProfile />} />
             <Route path="forumpostview" element={<ForumPostView />} />
             <Route path="accountsettings" element={<AccountSettings />} />
+            <Route path="frequentlyaskedquestions" element={<FrequentlyAskedQuestions />} />
           </Route>
 
           {/* Route without NavBar */}

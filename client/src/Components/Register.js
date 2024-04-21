@@ -119,8 +119,8 @@ const handleLoginSubmit = (e) => {
                           <button className="btn btn-primary btn-lg btn-block" type="submit">Login</button>
                           </form>
                           <hr className="my-4" />
-                          <button className="btn btn-lg btn-block btn-primary" style={{backgroundColor: '#dd4b39'}} type="submit"><i className="fab fa-google me-2" /> Sign in with google</button>
-                          <button className="btn btn-lg btn-block btn-primary mb-2" style={{backgroundColor: '#3b5998'}} type="submit"><i className="fab fa-facebook-f me-2" />Sign in with facebook</button>
+                          {/* <button className="btn btn-lg btn-block btn-primary" style={{backgroundColor: '#dd4b39'}} type="submit"><i className="fab fa-google me-2" /> Sign in with google</button> */}
+                          {/* <button className="btn btn-lg btn-block btn-primary mb-2" style={{backgroundColor: '#3b5998'}} type="submit"><i className="fab fa-facebook-f me-2" />Sign in with facebook</button> */}
                           <a href="reset.html">Forgot password?</a>
                         </div>
                       </div>
@@ -213,20 +213,21 @@ const handleLoginSubmit = (e) => {
                                
                               </div>
                               {/*program select input*/}
-                              {/* <div className="form-outline mb-4">
-                                <select id="genderSelect" className="form-control" onChange={(e) => setselectProgram(e.target.value)}>
+                              <div className="form-outline mb-4">
+                                <select id="genderSelect" className="form-control">
                                   <option value="male">BSC. Information Technology</option>
                           <option value="female">Bed. Information Technolgy</option>
                           <option value="other">BA. Communication Studies</option>
                                 </select>
                                 <label className="form-label" htmlFor="genderSelect">Program of Study</label>
-                              </div> */}
+                              </div>
                               {/* Checkbox */}
                               <div className="form-check d-flex justify-content-center mb-4">
-                                <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Example33" defaultChecked />
+                                
                                 <label className="form-check-label" htmlFor="form2Example33">
                                   Subscribe to our newsletter
-                                </label>
+                                </label><br/>
+                                <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Example33" defaultChecked />
                               </div>
                               {/* Submit button */}
                               <button type="submit" className="btn btn-primary btn-block mb-4">

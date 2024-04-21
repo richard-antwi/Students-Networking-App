@@ -10,15 +10,9 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import React, { useState } from 'react';
 
 function MyProfile() {
-  const [coverImagePath, setCoverImagePath] = useState(coverPhoto);
+  const [coverImagePath] = useState(coverPhoto);
 
-  const handleImageChange = (event) => {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const newImagePath = URL.createObjectURL(file);
-      setCoverImagePath(newImagePath);
-    }
-  };
+  
 
   
       return (

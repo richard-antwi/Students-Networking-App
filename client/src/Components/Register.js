@@ -1,6 +1,5 @@
 import axios from 'axios';
 import 'bootstrap';
-// import {Outlet} from 'react-router-dom';
 import React, { useState } from 'react';
 import "../App.css";
 
@@ -59,18 +58,6 @@ const handleLoginSubmit = (e) => {
  
     return (
         <>
-         <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        rel="stylesheet"
-      />
-      <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css"
-        rel="stylesheet"
-      />
         <div>
           {/* Tabs navigation */}
           <ul className="nav nav-tabs" id="myTabs">
@@ -98,6 +85,7 @@ const handleLoginSubmit = (e) => {
                             id="typeEmailX-2" 
                             className="form-control form-control-lg"
                             value={loginEmail}
+                            autoComplete="email"
                             onChange={(e) => setLoginEmail(e.target.value)}
                           
                             required
@@ -110,6 +98,7 @@ const handleLoginSubmit = (e) => {
                             className="form-control form-control-lg"
                             value={loginPassword}
                             onChange={(e) => setLoginPassword(e.target.value)}
+                            autoComplete="current-password"
                                         
                                         required />
                             <label className="form-label" htmlFor="typePasswordX-2">Password</label>
@@ -138,9 +127,9 @@ const handleLoginSubmit = (e) => {
             </div>
             <div className="tab-pane fade" id="register">
               {/* Register form content */}
-              {/* <p>Register form content goes here.</p> */}
+    
               {/* Section: Design Block */}
-              <section className>
+              <section className="register-form-section">
                 {/* Jumbotron */}
                 <div className="px-4 py-5 px-md-5 text-center text-lg-start" style={{backgroundColor: 'hsl(0, 0%, 96%)'}}>
                   <div className="container">
@@ -165,14 +154,16 @@ const handleLoginSubmit = (e) => {
                                     <input type="text" id="form3Example1" value={firstName} 
                                     className="form-control"
                                     onChange={(e) => setfirstName(e.target.value)} />
-                                    <label className="form-label" htmlFor="form3Example1">First name</label>
+                                    <label className="form-label" htmlFor="form3Example1"
+                                    autoComplete="firstname">First name</label>
                                   </div>
                                 </div>
                                 <div className="col-md-6 mb-4">
                                   <div className="form-outline">
                                     <input type="text" id="form3Example2" value={lastName}
                                     className="form-control" 
-                                    onChange={(e) => setlastName(e.target.value)}/>
+                                    onChange={(e) => setlastName(e.target.value)}
+                                    autoComplete="lastname"/>
                                     <label className="form-label" htmlFor="form3Example2">Last name</label>
                                   </div>
                                 </div>
@@ -183,7 +174,8 @@ const handleLoginSubmit = (e) => {
                                   <div className="form-outline">
                                     <input type="email" id="form3Example3" value={email}
                                     className="form-control" 
-                                    onChange={(e) => setemail(e.target.value)}/>
+                                    onChange={(e) => setemail(e.target.value)}
+                                    autoComplete="email"/>
                                     <label className="form-label" value={email} htmlFor="form3Example3">Email address</label>
                                   </div>
                                 </div>
@@ -193,7 +185,9 @@ const handleLoginSubmit = (e) => {
                                   <div className="form-outline">
                                     <input type="text" id="form3Example4" value={userName}
                                      className="form-control"
-                                     onChange={(e) => setuserName(e.target.value)} />
+                                     onChange={(e) => setuserName(e.target.value)}
+                                     autoComplete="username"
+                                      />
                                     <label className="form-label" htmlFor="form3Example4">User name</label>
                                   </div>
                                 </div>
@@ -204,7 +198,8 @@ const handleLoginSubmit = (e) => {
                               <div className="form-outline mb-4">
                                 <input type="password" id="form3Example5" value={password}
                                  className="form-control"
-                                 onChange={(e) => setpassword(e.target.value)} />
+                                 onChange={(e) => setpassword(e.target.value)}
+                                 autoComplete="current-password" />
                                 <label className="form-label" htmlFor="form3Example5">Password</label>
                               </div>
                               </div>
@@ -276,3 +271,17 @@ const handleLoginSubmit = (e) => {
       }
 
 export default Register;
+
+
+  /* <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        rel="stylesheet"
+      />
+      <link
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        rel="stylesheet"
+      />
+      <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css"
+        rel="stylesheet"
+      /> */

@@ -6,13 +6,15 @@ import "../App.css";
 
 
 function Register() {
-  const [firstName, setfirstName]= useState();
-  const [lastName, setlastName]= useState();
-  const [userName, setuserName]= useState();
-  const [email, setemail]= useState();
-  const [dateOfBirth, setdateOfBirth]= useState();
-  const [password, setpassword]= useState();
-  // const [selectProgram, setselectProgram]= useState();
+  const [firstName, setfirstName]= useState('');
+  const [lastName, setlastName]= useState('');
+  const [userName, setuserName]= useState('');
+  const [email, setemail]= useState('');
+  const [dateOfBirth, setdateOfBirth]= useState('');
+  const [password, setpassword]= useState('');
+  const [program, setProgram] = useState('');
+  const [newsletter, setNewsletter] = useState(true);
+
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,6 +33,7 @@ function Register() {
 // Add these state hooks at the beginning of your component function
 const [loginEmail, setLoginEmail] = useState('');
 const [loginPassword, setLoginPassword] = useState('');
+const [rememberPassword, setRememberPassword] = useState(false);
 
 // Add this login form submit handler
 const handleLoginSubmit = (e) => {
@@ -113,8 +116,12 @@ const handleLoginSubmit = (e) => {
                           </div>
                           {/* Checkbox */}
                           <div className="form-check d-flex justify-content-start mb-4">
-                            <input className="form-check-input" type="checkbox" defaultValue id="form1Example3" />
-                            <label className="form-check-label" htmlFor="form1Example3"> Remember password </label>
+                          <input className="form-check-input" type="checkbox" 
+                            checked={rememberPassword} 
+                              onChange={(e) => setRememberPassword(e.target.checked)} 
+                              id="form1Example3" 
+                              />
+                              <label className="form-check-label" htmlFor="form1Example3"> Remember password </label>
                           </div>
                           <button className="btn btn-primary btn-lg btn-block" type="submit">Login</button>
                           </form>
@@ -214,7 +221,7 @@ const handleLoginSubmit = (e) => {
                               </div>
                               {/*program select input*/}
                               <div className="form-outline mb-4">
-                                <select id="genderSelect" className="form-control">
+                                <select id="program" value={program} onChange={(e) => setProgram(e.target.value)} className="form-control">
                                   <option value="male">BSC. Information Technology</option>
                           <option value="female">Bed. Information Technolgy</option>
                           <option value="other">BA. Communication Studies</option>
@@ -227,7 +234,8 @@ const handleLoginSubmit = (e) => {
                                 <label className="form-check-label" htmlFor="form2Example33">
                                   Subscribe to our newsletter
                                 </label><br/>
-                                <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Example33" defaultChecked />
+                                <input className="form-check-input me-2" type="checkbox" checked={newsletter} onChange={(e) => setNewsletter(e.target.checked)} id="form2Example33" />
+                                {/* <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Example33" defaultChecked /> */}
                               </div>
                               {/* Submit button */}
                               <button type="submit" className="btn btn-primary btn-block mb-4">

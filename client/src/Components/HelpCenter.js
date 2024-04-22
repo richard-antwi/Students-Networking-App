@@ -163,7 +163,7 @@ function HelpCenter() {
                       <h5>Visit Our Help Forum</h5>
                       <p>View, ask, or answer questions about using LinkedIn. Our moderators and community can help!</p>
                     </div>
-                    <button to="forum" className="btn btn-primary">Visit Forum</button>
+                    <Link to="/forum" className="btn btn-primary">Visit Forum</Link>
                   </div>
                 </div>
                 <h6 className="mt-4">Popular Action</h6>

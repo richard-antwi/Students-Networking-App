@@ -116,6 +116,7 @@ function NavBar() {
                 <Link to="about" className="dropdown-item" >About</Link>
                 <Link to="policyprivacy" className="dropdown-item">Privacy</Link>
                 <Link to="frequentlyaskedquestions" className="dropdown-item" >FAQs</Link>
+                <Link to="helpcenter" className="dropdown-item" >Help Center</Link>
                 <Link to="/" className="dropdown-item" href="terms_and_conditions.html">Terms &amp; Conditions</Link>
                 <div className="dropdown-divider" />
                 <div className>

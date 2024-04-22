@@ -48,7 +48,23 @@ function HelpCenter() {
                     <div className="row">
                       <div className="col">
                         <div className="dropdown">
-                          <h6 className="dropdown-toggle text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Getting Started</h6>
+                        <button className="dropdown-toggle text-primary"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          style={{
+                            background: 'none',
+                            color: 'inherit',
+                            border: 'none',
+                            padding: '0',
+                            font: 'inherit',
+                            cursor: 'pointer',
+                            outline: 'inherit'
+                          }}
+                        >
+                          Getting Started
+                        </button>
+                          {/* <h6 className="dropdown-toggle text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Getting Started</h6> */}
                           <div className="dropdown-menu">
                             <Link to="/" className="dropdown-item" href="#">Managing Your Feed</Link>
                             <Link to="/" className="dropdown-item" href="#">Post a Job</Link>
@@ -61,7 +77,25 @@ function HelpCenter() {
                     <div className="row">
                       <div className="col">
                         <div className="dropdown">
-                          <h6 className="dropdown-toggle text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage your Account</h6>
+                        <button className="dropdown-toggle text-primary"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          style={{
+                            background: 'none',
+                            color: 'inherit',
+                            border: 'none',
+                            padding: '0',
+                            font: 'inherit',
+                            cursor: 'pointer',
+                            outline: 'inherit'
+                          }}
+                        >
+                           Manage your Account
+                        </button>
+                      
+                        
+
                           <div className="dropdown-menu">
                             <Link to="/" className="dropdown-item" href="#">Account Account</Link>
                             <Link to="accountsettings" className="dropdown-item" >Account Setting</Link>
@@ -75,7 +109,23 @@ function HelpCenter() {
                     <div className="row">
                       <div className="col">
                         <div className="dropdown">
-                          <h6 className="dropdown-toggle text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Build Your Profile</h6>
+                        <button className="dropdown-toggle text-primary"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          style={{
+                            background: 'none',
+                            color: 'inherit',
+                            border: 'none',
+                            padding: '0',
+                            font: 'inherit',
+                            cursor: 'pointer',
+                            outline: 'inherit'
+                          }}
+                        >
+                          Build Your Profile
+                        </button>
+                          {/* <h6 className="dropdown-toggle text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Build Your Profile</h6> */}
                           <div className="dropdown-menu">
                             <Link to="/" className="dropdown-item" >Build User Profile</Link>
                             <Link to="/" className="dropdown-item" >Build Company Profile</Link>
@@ -113,7 +163,7 @@ function HelpCenter() {
                       <h5>Visit Our Help Forum</h5>
                       <p>View, ask, or answer questions about using LinkedIn. Our moderators and community can help!</p>
                     </div>
-                    <button className="btn btn-primary">Visit Forum</button>
+                    <button to="forum" className="btn btn-primary">Visit Forum</button>
                   </div>
                 </div>
                 <h6 className="mt-4">Popular Action</h6>

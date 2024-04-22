@@ -1,5 +1,9 @@
 import '../App.css';
 import 'bootstrap';
+import React from 'react';
+import {Link} from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 
 function HelpCenter() {
@@ -46,9 +50,9 @@ function HelpCenter() {
                         <div className="dropdown">
                           <h6 className="dropdown-toggle text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Getting Started</h6>
                           <div className="dropdown-menu">
-                            <a className="dropdown-item" href="#">Managing Your Feed</a>
-                            <a className="dropdown-item" href="#">Post a Job</a>
-                            <a className="dropdown-item" href="#">Post a Project</a>
+                            <Link to="/" className="dropdown-item" href="#">Managing Your Feed</Link>
+                            <Link to="/" className="dropdown-item" href="#">Post a Job</Link>
+                            <Link to="/" className="dropdown-item" href="#">Post a Project</Link>
                           </div>
                         </div>
                       </div>
@@ -59,10 +63,10 @@ function HelpCenter() {
                         <div className="dropdown">
                           <h6 className="dropdown-toggle text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage your Account</h6>
                           <div className="dropdown-menu">
-                            <a className="dropdown-item" href="#">Account Account</a>
-                            <a className="dropdown-item" href="#">Account Setting</a>
-                            <a className="dropdown-item" href="#">Privacy</a>
-                            <a className="dropdown-item" href="#">Notification</a>
+                            <Link to="/" className="dropdown-item" href="#">Account Account</Link>
+                            <Link to="accountsettings" className="dropdown-item" >Account Setting</Link>
+                            <Link to="policyprivacy" className="dropdown-item">Privacy</Link>
+                            <Link to="/" className="dropdown-item" >Notification</Link>
                           </div>
                         </div>
                       </div>
@@ -73,8 +77,8 @@ function HelpCenter() {
                         <div className="dropdown">
                           <h6 className="dropdown-toggle text-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Build Your Profile</h6>
                           <div className="dropdown-menu">
-                            <a className="dropdown-item" href="#">Build User Profile</a>
-                            <a className="dropdown-item" href="#">Build Company Profile</a>
+                            <Link to="/" className="dropdown-item" >Build User Profile</Link>
+                            <Link to="/" className="dropdown-item" >Build Company Profile</Link>
                           </div>
                         </div>
                       </div>
@@ -82,19 +86,19 @@ function HelpCenter() {
                     <hr className="my-1" />
                     <div className="row">
                       <div className="col">
-                        <h6><a href="#">Work With Client</a></h6>
+                        <h6><Link to="/" >Work With Client</Link></h6>
                       </div>
                     </div>
                     <hr className="my-1" />
                     <div className="row">
                       <div className="col">
-                        <h6><a href="#">Discovering People</a></h6>
+                        <h6><Link to="/" >Discovering People</Link></h6>
                       </div>
                     </div>
                     <hr className="my-1" />
                     <div className="row">
                       <div className="col">
-                        <h6> <a href="#">Reset Account</a></h6>
+                        <h6> <Link to="/" >Reset Account</Link></h6>
                       </div>
                     </div>
                     <hr className="my-1" />
@@ -117,21 +121,21 @@ function HelpCenter() {
                 <div className="row">
                   <div className="col-md-6">
                     <ul className="list-unstyled">
-                      <li><a href="#">Change or Add Email Address</a></li>
-                      <li><a href="#">Reset your password</a></li>
+                      <li><Link to="/" >Change or Add Email Address</Link></li>
+                      <li><Link to="/">Reset your password</Link></li>
                     </ul>
                   </div>
                   <div className="col-md-6">
                     <ul className="list-unstyled">
-                      <li><a href="#">Build your Profile</a></li>
-                      <li><a href="#">Close your account</a></li>
+                      <li><Link to="/">Build your Profile</Link></li>
+                      <li><Link to="/">Close your account</Link></li>
                     </ul>
                   </div>
                 </div>
                 <h6 className="mt-4">Suggested for you</h6>
                 <hr />
                 <ul className="list-unstyled">
-                  <li><a href="#">Frequently Asked Questions (FAQs)</a></li>
+                  <li><Link to="frequentlyaskedquestions">Frequently Asked Questions (FAQs)</Link></li>
                 </ul>
               </div>
             </div>

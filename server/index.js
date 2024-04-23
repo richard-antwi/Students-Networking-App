@@ -1,11 +1,11 @@
 require('dotenv').config();
- express = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
+
 
 const UserModel = require('./models/UserModel'); // Adjusted for a likely correct path
 
@@ -58,13 +58,17 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
-    if (user && await user.checkPassword(password)) {
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ message: "Login successful", token });
-    } else {
-        res.status(401).json({ error: "Invalid credentials" });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
-});
+    if (await user.checkPassword(password)) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      return res.json({ message: "Login successful", token });
+    } else {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+  });
+  
 
 // Error handling middleware
 app.use((err, req, res, next) => {

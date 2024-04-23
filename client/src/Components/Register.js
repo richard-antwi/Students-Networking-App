@@ -67,9 +67,10 @@ function Register() {
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
   const [password, setPassword] = useState('');
-  const [program, setProgram] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+ 
+  
   const [newsletter, setNewsletter] = useState(true);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -84,8 +85,9 @@ function Register() {
       lastName,
       userName,
       email,
-      dateOfBirth,
       password,
+      dateOfBirth,
+     
     };
     axios.post('http://localhost:3001/register', userData)
       .then(result => console.log(result))
@@ -98,6 +100,9 @@ function Register() {
       email: loginEmail,
       password: loginPassword,
     };
+
+    
+    console.log(loginData);
     axios.post('http://localhost:3001/login', loginData)
       .then(response => {
           console.log(response.data);
@@ -111,7 +116,7 @@ function Register() {
             setLoginError(err.response.data.error);
         } else {
             // Provide a generic error message if the expected data isn't present
-            setLoginError("An unexpected error occurred. Please try again.");
+            setLoginError("An unexpected error occurred. Please try again." + err.message);
         }
     });
     
@@ -280,15 +285,7 @@ function Register() {
                                 </div>
                                
                               </div>
-                              {/*program select input*/}
-                              <div className="form-outline mb-4">
-                                <select id="program" value={program} onChange={(e) => setProgram(e.target.value)} className="form-control">
-                                  <option value="male">BSC. Information Technology</option>
-                          <option value="female">Bed. Information Technolgy</option>
-                          <option value="other">BA. Communication Studies</option>
-                                </select>
-                                <label className="form-label" htmlFor="genderSelect">Program of Study</label>
-                              </div>
+                              
                               {/* Checkbox */}
                               <div className="form-check d-flex justify-content-center mb-4">
                                 

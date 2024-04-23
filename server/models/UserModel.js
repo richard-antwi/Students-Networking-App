@@ -4,18 +4,18 @@ const validator = require('validator');
 
 const UserSchema = new mongoose.Schema(
   {
-    firstName: { 
-      type: String, 
+    firstName: {
+      type: String,
       required: true
     },
-    lastName: { 
-      type: String, 
-      required: true 
+    lastName: {
+      type: String,
+      required: true
     },
-    userName: { 
-      type: String, 
-      required: true, 
-      unique: true 
+    userName: {
+      type: String,
+      required: true,
+      unique: true
     },
     email: {
       type: String,
@@ -24,24 +24,15 @@ const UserSchema = new mongoose.Schema(
       lowercase: true,
       validate: [validator.isEmail, 'Please provide a valid email']
     },
-    password: { 
-      type: String, 
-      required: true 
+    password: {
+      type: String,
+      required: true
     },
-    dateOfBirth: { 
-      type: Date, 
-      required: true 
-    },
-    selectProgram: { 
-      type: String
-    },
-    university: { 
-      type: String
-    },
-    profilePicture: { 
-      type: String
-    },
-  }, 
+    dateOfBirth: {
+      type: Date,
+      required: true
+    }
+  },
   { timestamps: true }
 );
 
@@ -54,8 +45,8 @@ UserSchema.pre('save', async function(next) {
 });
 
 // Method to compare candidate password with user's password
-UserSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+UserSchema.methods.checkPassword = function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
 const User = mongoose.model('User', UserSchema);

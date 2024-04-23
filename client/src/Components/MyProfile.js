@@ -4,15 +4,20 @@ import {Link} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
 import img11 from '../Images/img11.png';
 import coverPhoto from '../Images/coverPhoto.jpg';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faCamera } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function MyProfile() {
   const [coverImagePath] = useState(coverPhoto);
 
-  
+  const navigate = useNavigate();
+
+  const goToSettings = () => {
+    navigate('/accountsettings'); // This should be the path to your Settings component in your router setup.
+  };
 
   
       return (
@@ -32,10 +37,27 @@ function MyProfile() {
               {/* Left Section */}
               <div className="col-md-3 bg-light mt-5 ">
                 <div className="card avatar-card">
-                  <div className="image-container position-relative">
-                    <FontAwesomeIcon icon={faCamera} className="position-absolute top-50 start-50 translate-middle" style={{border: '1px solid rgb(245, 78, 78)', padding: '6px', borderRadius: '50%', backgroundColor: 'rgb(245, 78, 78)', color: 'white'}} />
-                    <img src={avatar} alt="Avatar" className="card-img-top avatar-img" />
-                  </div>
+                <div className="image-container position-relative">
+                  <i className="fas fa-camera position-absolute top-50 start-50 translate-middle" 
+                      style={{
+                          border: '1px solid rgb(245, 78, 78)', 
+                          padding: '6px', 
+                          borderRadius: '50%', 
+                          backgroundColor: 'rgb(245, 78, 78)', 
+                          color: 'white'
+                      }}>
+                    </i>
+                  <img src={avatar} alt="Avatar" className="card-img-top avatar-img" 
+                      style={{width: '100px',
+                        height: '100px',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                        margin: '0 auto',
+                        overflow: 'hidden',
+                        zIndex: '0' }}/>
+  
+                </div>
+
                   <div className="card-body">
                     <div className="d-flex justify-content-between mb-3">
                       <div>
@@ -488,7 +510,7 @@ function MyProfile() {
               {/* Right Section */}
               <div className="col-md-3 ">
                 <div className="text-right mt-5">
-                  <button type="button" className="btn btn-primary">
+                  <button type="button" className="btn btn-primary" onClick={goToSettings}>
                     <i className="fas fa-cog" /> Settings
                   </button>
                 </div>

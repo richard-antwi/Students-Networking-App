@@ -1,58 +1,123 @@
+// import axios from 'axios';
+// import 'bootstrap';
+// import React, { useState } from 'react';
+// import { useHistory } from 'react-router-dom';
+// import "../App.css";
+
+
+// function Register() {
+//   const [firstName, setfirstName]= useState('');
+//   const [lastName, setlastName]= useState('');
+//   const [userName, setuserName]= useState('');
+//   const [email, setemail]= useState('');
+//   const [dateOfBirth, setdateOfBirth]= useState('');
+//   const [password, setpassword]= useState('');
+//   const [program, setProgram] = useState('');
+//   const [newsletter, setNewsletter] = useState(true);
+
+  
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     const userData = {
+//       firstName: firstName,
+//       lastName: lastName,
+//       userName: userName,
+//       email: email,
+//       dateOfBirth: dateOfBirth,
+//       password: password,
+//     };
+//     axios.post('http://localhost:3001/register', userData)
+//     .then(result => console.log(result))
+//     .catch(err => console.log(err));
+// };
+// // Add these state hooks at the beginning of your component function
+// const [loginEmail, setLoginEmail] = useState('');
+// const [loginPassword, setLoginPassword] = useState('');
+// const [rememberPassword, setRememberPassword] = useState(false);
+
+// // Add this login form submit handler
+// const handleLoginSubmit = (e) => {
+//   e.preventDefault();
+//   const history = useHistory();
+//   const loginData = {
+//       email: loginEmail,
+//       password: loginPassword,
+//   };
+//   axios.post('http://localhost:3001/login', loginData)
+//   .then(response => {
+//       console.log(response.data);
+//       localStorage.setItem('token', response.data.token);
+//       history.push('/dashboard'); // Redirect to the dashboard
+//   })
+//   .catch(err => {
+//       console.log(err);
+//       // Display an error message directly on the form
+//       setLoginError(err.response.data.error);
+//   });
+// };
+
 import axios from 'axios';
 import 'bootstrap';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "../App.css";
 
-
 function Register() {
-  const [firstName, setfirstName]= useState('');
-  const [lastName, setlastName]= useState('');
-  const [userName, setuserName]= useState('');
-  const [email, setemail]= useState('');
-  const [dateOfBirth, setdateOfBirth]= useState('');
-  const [password, setpassword]= useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [password, setPassword] = useState('');
   const [program, setProgram] = useState('');
   const [newsletter, setNewsletter] = useState(true);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [rememberPassword, setRememberPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');  // Defining setLoginError
+  const navigate = useNavigate();  // Moved to the top level
 
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     const userData = {
-      firstName: firstName,
-      lastName: lastName,
-      userName: userName,
-      email: email,
-      dateOfBirth: dateOfBirth,
-      password: password,
+      firstName,
+      lastName,
+      userName,
+      email,
+      dateOfBirth,
+      password,
     };
     axios.post('http://localhost:3001/register', userData)
-    .then(result => console.log(result))
-    .catch(err => console.log(err));
-};
-// Add these state hooks at the beginning of your component function
-const [loginEmail, setLoginEmail] = useState('');
-const [loginPassword, setLoginPassword] = useState('');
-const [rememberPassword, setRememberPassword] = useState(false);
+      .then(result => console.log(result))
+      .catch(err => console.log(err));
+  };
 
-// Add this login form submit handler
-const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = (e) => {
     e.preventDefault();
     const loginData = {
-        email: loginEmail,
-        password: loginPassword,
+      email: loginEmail,
+      password: loginPassword,
     };
     axios.post('http://localhost:3001/login', loginData)
-    .then(response => {
-        console.log(response.data);
-        localStorage.setItem('token', response.data.token);
-        // Handle successful login here (e.g., redirect to dashboard or store auth token)
-    })
-    .catch(err => {
+      .then(response => {
+          console.log(response.data);
+          localStorage.setItem('token', response.data.token);
+          navigate('/home'); // Uses history defined at the component level
+      })
+      .catch(err => {
         console.log(err);
-        console.error("Login failed:", err.response.data.error);
-        // Handle login failure here (e.g., display error message)
+        // Check if the error response and data are defined
+        if (err.response && err.response.data) {
+            setLoginError(err.response.data.error);
+        } else {
+            // Provide a generic error message if the expected data isn't present
+            setLoginError("An unexpected error occurred. Please try again.");
+        }
     });
-};
+    
+  };
+
+
 
 
  
@@ -79,6 +144,7 @@ const handleLoginSubmit = (e) => {
                       <div className="card shadow-2-strong" style={{borderRadius: '1rem'}}>
                         <div className="card-body p-5 text-center">
                           <h3 className="mb-5">Sign in</h3>
+                          {loginError && <div className="alert alert-danger" role="alert">{loginError}</div>}
                           <form onSubmit={handleLoginSubmit}>
                           <div className="form-outline mb-4">
                             <input type="email" 
@@ -153,7 +219,7 @@ const handleLoginSubmit = (e) => {
                                   <div className="form-outline">
                                     <input type="text" id="form3Example1" value={firstName} 
                                     className="form-control"
-                                    onChange={(e) => setfirstName(e.target.value)} />
+                                    onChange={(e) => setFirstName(e.target.value)} />
                                     <label className="form-label" htmlFor="form3Example1"
                                     autoComplete="firstname">First name</label>
                                   </div>
@@ -162,7 +228,7 @@ const handleLoginSubmit = (e) => {
                                   <div className="form-outline">
                                     <input type="text" id="form3Example2" value={lastName}
                                     className="form-control" 
-                                    onChange={(e) => setlastName(e.target.value)}
+                                    onChange={(e) => setLastName(e.target.value)}
                                     autoComplete="lastname"/>
                                     <label className="form-label" htmlFor="form3Example2">Last name</label>
                                   </div>
@@ -174,7 +240,7 @@ const handleLoginSubmit = (e) => {
                                   <div className="form-outline">
                                     <input type="email" id="form3Example3" value={email}
                                     className="form-control" 
-                                    onChange={(e) => setemail(e.target.value)}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     autoComplete="email"/>
                                     <label className="form-label" value={email} htmlFor="form3Example3">Email address</label>
                                   </div>
@@ -185,7 +251,7 @@ const handleLoginSubmit = (e) => {
                                   <div className="form-outline">
                                     <input type="text" id="form3Example4" value={userName}
                                      className="form-control"
-                                     onChange={(e) => setuserName(e.target.value)}
+                                     onChange={(e) => setUserName(e.target.value)}
                                      autoComplete="username"
                                       />
                                     <label className="form-label" htmlFor="form3Example4">User name</label>
@@ -198,7 +264,7 @@ const handleLoginSubmit = (e) => {
                               <div className="form-outline mb-4">
                                 <input type="password" id="form3Example5" value={password}
                                  className="form-control"
-                                 onChange={(e) => setpassword(e.target.value)}
+                                 onChange={(e) => setPassword(e.target.value)}
                                  autoComplete="current-password" />
                                 <label className="form-label" htmlFor="form3Example5">Password</label>
                               </div>
@@ -208,7 +274,7 @@ const handleLoginSubmit = (e) => {
                                   <div className="form-outline">
                                     <input type="date" id="form3Example6" value={dateOfBirth} 
                                     className="form-control" 
-                                    onChange={(e) => setdateOfBirth(e.target.value)}/>
+                                    onChange={(e) => setDateOfBirth(e.target.value)}/>
                                     <label className="form-label" htmlFor="form3Example6">Date of Birth</label>
                                   </div>
                                 </div>

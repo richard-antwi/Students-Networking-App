@@ -30,7 +30,7 @@ function MyProfile() {
           <div className="container-fluid">
             <div className="row">
               {/* Left Section */}
-              <div className="col-md-3 bg-light ">
+              <div className="col-md-3 bg-light mt-5 ">
                 <div className="card avatar-card">
                   <div className="image-container position-relative">
                     <FontAwesomeIcon icon={faCamera} className="position-absolute top-50 start-50 translate-middle" style={{border: '1px solid rgb(245, 78, 78)', padding: '6px', borderRadius: '50%', backgroundColor: 'rgb(245, 78, 78)', color: 'white'}} />
@@ -571,6 +571,53 @@ function MyProfile() {
                 </div>
               </div>
             </div>
+
+             {/* Bootstrap Modal */}
+        <div className="modal" tabIndex={-1} role="dialog" id="editIntroModal">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Edit intro</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <form>
+                  <div className="form-group">
+                    <label htmlFor="firstName">First name*</label>
+                    <input type="text" className="form-control" id="firstName" placeholder="Richard" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="lastName">Last name*</label>
+                    <input type="text" className="form-control" id="lastName" placeholder="Antwi" required />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="additionalName">Additional name</label>
+                    <input type="text" className="form-control" id="additionalName" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="namePronunciation">Name pronunciation</label>
+                    <input type="text" className="form-control" id="namePronunciation" placeholder="This can only be added using our mobile app" disabled />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="headline">Headline*</label>
+                    <input type="text" className="form-control" id="headline" placeholder="A Front-End Dev and a Student" required />
+                  </div>
+                  <div className="mb-3">
+                    <button className="btn btn-outline-primary">Get AI suggestions with Premium</button>
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-primary">Save</button>
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
           </div>
         </div>
       </>

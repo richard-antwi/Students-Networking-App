@@ -1,61 +1,3 @@
-// import axios from 'axios';
-// import 'bootstrap';
-// import React, { useState } from 'react';
-// import { useHistory } from 'react-router-dom';
-// import "../App.css";
-
-
-// function Register() {
-//   const [firstName, setfirstName]= useState('');
-//   const [lastName, setlastName]= useState('');
-//   const [userName, setuserName]= useState('');
-//   const [email, setemail]= useState('');
-//   const [dateOfBirth, setdateOfBirth]= useState('');
-//   const [password, setpassword]= useState('');
-//   const [program, setProgram] = useState('');
-//   const [newsletter, setNewsletter] = useState(true);
-
-  
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const userData = {
-//       firstName: firstName,
-//       lastName: lastName,
-//       userName: userName,
-//       email: email,
-//       dateOfBirth: dateOfBirth,
-//       password: password,
-//     };
-//     axios.post('http://localhost:3001/register', userData)
-//     .then(result => console.log(result))
-//     .catch(err => console.log(err));
-// };
-// // Add these state hooks at the beginning of your component function
-// const [loginEmail, setLoginEmail] = useState('');
-// const [loginPassword, setLoginPassword] = useState('');
-// const [rememberPassword, setRememberPassword] = useState(false);
-
-// // Add this login form submit handler
-// const handleLoginSubmit = (e) => {
-//   e.preventDefault();
-//   const history = useHistory();
-//   const loginData = {
-//       email: loginEmail,
-//       password: loginPassword,
-//   };
-//   axios.post('http://localhost:3001/login', loginData)
-//   .then(response => {
-//       console.log(response.data);
-//       localStorage.setItem('token', response.data.token);
-//       history.push('/dashboard'); // Redirect to the dashboard
-//   })
-//   .catch(err => {
-//       console.log(err);
-//       // Display an error message directly on the form
-//       setLoginError(err.response.data.error);
-//   });
-// };
-
 import axios from 'axios';
 import 'bootstrap';
 import React, { useState } from 'react';
@@ -76,24 +18,43 @@ function Register() {
   const [loginPassword, setLoginPassword] = useState('');
   const [rememberPassword, setRememberPassword] = useState(false);
   const [loginError, setLoginError] = useState('');  // Defining setLoginError
+  const [registerError, setRegisterError] = useState('');
   const navigate = useNavigate();  // Moved to the top level
+  const [activeTab, setActiveTab] = useState('register');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userData = {
+
+ 
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const userData = {
       firstName,
       lastName,
       userName,
       email,
       password,
-      dateOfBirth,
-     
-    };
-    axios.post('http://localhost:3001/register', userData)
-      .then(result => console.log(result))
-      .catch(err => console.log(err));
-  };
+      dateOfBirth,  // Make sure this and other state hooks are correctly used here
+  }
 
+    axios.post('http://localhost:3001/register', userData)
+      .then(result => {
+        console.log(result);
+
+        alert("Registration successful! You can now log in.");
+        setActiveTab('login');  // Change active tab to login
+  })
+  .catch(err => {
+    console.log(err);
+    // Check if the error response and data are defined
+    if (err.response && err.response.data) {
+        setRegisterError(err.response.data.message || 'Failed to register');
+    } else {
+        setRegisterError("An unexpected error occurred during registration. Please try again.");
+    }
+  });
+ 
+  };
+ 
+  
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     const loginData = {
@@ -107,7 +68,7 @@ function Register() {
       .then(response => {
           console.log(response.data);
           localStorage.setItem('token', response.data.token);
-          navigate('/home'); // Uses history defined at the component level
+          navigate('/'); // Uses history defined at the component level
       })
       .catch(err => {
         console.log(err);
@@ -132,15 +93,19 @@ function Register() {
           {/* Tabs navigation */}
           <ul className="nav nav-tabs" id="myTabs">
             <li className="nav-item">
-              <a className="nav-link active" id="login-tab" data-bs-toggle="tab" href="#login">Login</a>
+              <a className={`nav-link ${activeTab === 'login' ? 'active' : ''}`} id="login-tab"
+              onClick={() => setActiveTab('login')}
+               data-bs-toggle="tab" href="#login">Login</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" id="register-tab" data-bs-toggle="tab" href="#register">Register</a>
+              <a className={`nav-link ${activeTab === 'register' ? 'active' : ''}`} id="register-tab" 
+              onClick={() => setActiveTab('register')}
+              data-bs-toggle="tab" href="#register">Register</a>
             </li>
           </ul>
           {/* Tabs content */}
           <div className="tab-content">
-            <div className="tab-pane fade show active" id="login">
+            <div className={`tab-pane fade ${activeTab === 'login' ? 'show active' : ''}`} id="login">
               {/* Login form content */}
               <section className="vh-100" style={{backgroundColor: 'hsl(0, 0%, 96%)'}}>
                 <div className="container py-5 h-100">
@@ -196,7 +161,7 @@ function Register() {
                 </div>
               </section>
             </div>
-            <div className="tab-pane fade" id="register">
+            <div className={`tab-pane fade ${activeTab === 'register' ? 'show active' : ''}`} id="register">
               {/* Register form content */}
     
               {/* Section: Design Block */}
@@ -217,6 +182,7 @@ function Register() {
                       <div className="col-lg-6 mb-5 mb-lg-0">
                         <div className="card">
                           <div className="card-body py-5 px-md-5">
+                          {registerError && <div className="alert alert-danger" role="alert">{registerError}</div>}
                             <form onSubmit={handleSubmit}>
                               {/* 2 column grid layout with text inputs for the first and last names */}
                               <div className="row">

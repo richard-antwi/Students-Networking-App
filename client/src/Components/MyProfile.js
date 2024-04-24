@@ -4,12 +4,11 @@ import {Link} from 'react-router-dom';
 import avatar from '../Images/avatar.webp';
 import img11 from '../Images/img11.png';
 import coverPhoto from '../Images/coverPhoto.jpg';
-// import { faCamera } from '@fortawesome/free-solid-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
 function MyProfile() {
   const [coverImagePath] = useState(coverPhoto);
@@ -25,6 +24,43 @@ function MyProfile() {
     navigate('/accountsettings'); // This should be the path to your Settings component in your router setup.
   };
 
+   // State to store input values
+   const [formData, setFormData] = useState({
+     firstName: '',
+     lastName: '',
+     additionalName: '',
+     namePronunciation: '',
+     headline: '',
+     industry: '',
+     schoolSelect: '',
+     showSchool: false,
+     countryRegion: '',
+     city: '',
+     // ... add other fields as necessary
+   });
+ 
+   const handleChange = (event) => {
+     const { name, type, checked, value } = event.target;
+     setFormData((prevFormData) => ({
+       ...prevFormData,
+       [name]: type === 'checkbox' ? checked : value,
+     }));
+   };
+ 
+   const handleSubmit = async (event) => {
+     event.preventDefault();
+     try {
+       // Replace '/update-profile' with the correct URL to your API endpoint
+       const response = await axios.post('http://localhost:3001/update-profile', formData);
+       console.log(response.data);
+       setModalShow(false); // Close modal on success
+       // Handle success, e.g. by setting a success message or redirecting
+     } catch (error) {
+       console.error('Failed to update profile', error);
+       // Handle error, e.g. by setting an error message
+     }
+   };
+ 
   
       return (
         <>
@@ -615,50 +651,162 @@ function MyProfile() {
               </div>
             </div>
 
-             {/* Bootstrap Modal */}
+
+
+
+             {/* Bootstrap Modal for User Profile update */}
              <div className={`modal ${modalShow ? 'show' : ''}`} tabIndex={-1} role="dialog" style={{ display: modalShow ? 'block' : 'none' }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Edit intro</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" onClick={handleCloseModal} className="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
               <div className="modal-body">
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className="form-group">
                     <label htmlFor="firstName">First name*</label>
-                    <input type="text" className="form-control" id="firstName" placeholder="Richard" required />
+                    <input type="text" className="form-control" 
+                    id="firstName" placeholder="Richard"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange} required />
                   </div>
                   <div className="form-group">
                     <label htmlFor="lastName">Last name*</label>
-                    <input type="text" className="form-control" id="lastName" placeholder="Antwi" required />
+                    <input type="text" className="form-control" 
+                    id="lastName" placeholder="Antwi" 
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}required />
                   </div>
                   <div className="form-group">
                     <label htmlFor="additionalName">Additional name</label>
-                    <input type="text" className="form-control" id="additionalName" />
+                    <input type="text" className="form-control"
+                     id="additionalName"
+                     name="aditionalName"
+                    value={formData.additionalName}
+                    onChange={handleChange} />
                   </div>
                   <div className="form-group">
                     <label htmlFor="namePronunciation">Name pronunciation</label>
-                    <input type="text" className="form-control" id="namePronunciation" placeholder="This can only be added using our mobile app" disabled />
+                    <input type="text" className="form-control" 
+                    id="namePronunciation" placeholder="This can only be added using our mobile app" 
+                    name="namePronunciation"
+                    value={formData.namePronunciation}
+                    onChange={handleChange}
+                    disabled />
                   </div>
                   <div className="form-group">
                     <label htmlFor="headline">Headline*</label>
-                    <input type="text" className="form-control" id="headline" placeholder="A Front-End Dev and a Student" required />
+                    <input type="text" className="form-control"
+                     id="headline" placeholder="A Front-End Dev and a Student"
+                     name="headline"
+                    value={formData.headline}
+                    onChange={handleChange}
+                    required />
                   </div>
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <button className="btn btn-outline-primary">Get AI suggestions with Premium</button>
-                  </div>
+                  </div> */}
+
+                  <div>
+        {/* Current Position */}
+        <div className="mb-3">
+          <label htmlFor="currentPosition" className="form-label">Current position</label>
+          <div className="d-grid gap-2">
+            <button className="btn btn-outline-primary" type="button">+ Add new position</button>
+          </div>
+        </div>
+        {/* Industry */}
+        <div className="mb-3">
+          <label htmlFor="industrySelect" className="form-label">Industry*</label>
+          <select
+            className="form-select"
+              id="industrySelect"
+              name="industry" // Name attribute for form data keys
+              value={formData.industry} // This should be a state variable like formData.industry
+              onChange={handleChange} // Same handler used for other inputs
+            >
+            <option value="">Choose...</option>
+            <option value="tech">Technology, Information and Internet</option>
+                {/* Add more options here */}
+            </select>
+          <div className="form-text">Learn more about <Link to="/">industry options</Link>.</div>
+        </div>
+        {/* Education */}
+        <div className="mb-3">
+          <label htmlFor="schoolSelect" className="form-label">School*</label>
+          <select className="form-select"
+           name="schoolSelect"
+           value={formData.schoolSelect}
+           onChange={handleChange} id="schoolSelect">
+            <option selected>Choose...</option>
+            <option value={1}>University of Cape Coast</option>
+            {/* Add more options here */}
+          </select>
+          <div className="form-check mt-2">
+          <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="showSchoolCheck"
+                  name="showSchool" // Use the same name as the state field
+                  checked={formData.showSchool} // Use checked for checkboxes
+                  onChange={handleChange} // Same handler as other inputs
+                />
+              <label className="form-check-label" htmlFor="showSchoolCheck">
+              Show school in my intro
+          </label>
+          </div>
+          <div className="d-grid gap-2 mt-3">
+            <button className="btn btn-outline-primary" type="button">+ Add new education</button>
+          </div>
+        </div>
+       
+        <div>
+        {/* Location Section */}
+        <div className="mb-3">
+          <label htmlFor="countryRegion" className="form-label">Country/Region*</label>
+          <input type="text" className="form-control" 
+          id="countryRegion" placeholder="Ghana" 
+          name="countryRegion"
+          checked={formData.countryRegion}
+          onChange={handleChange}
+          required />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="city" className="form-label">City</label>
+          <input type="text" className="form-control" 
+          id="city" placeholder="Accra, Greater Accra Region"
+          name="city"
+          checked={formData.city}
+          onChange={handleChange} />
+        </div>
+        {/* Contact Info Section */}
+        <div className="mt-4">
+          <h6>Contact info</h6>
+          <p className="text-secondary">Add or edit your profile URL, email, and more</p>
+          <button type="button" className="btn btn-link p-0">Edit contact info</button>
+        </div>
+      </div>
+        {/* Add location fields as necessary */}
+      </div>
                 </form>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-primary">Save</button>
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onClick={handleCloseModal} className="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
         </div>
+
+
+
+
+
 
 
           </div>

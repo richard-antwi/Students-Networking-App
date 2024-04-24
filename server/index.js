@@ -43,6 +43,7 @@ app.get('/', (req, res) => {
     res.send('Server is running!');
 });
 
+  //Register API
 app.post('/register', async (req, res) => {
     try {
         const user = await UserModel.create(req.body);
@@ -55,6 +56,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
+    //Login API
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
@@ -69,6 +71,24 @@ app.post('/login', async (req, res) => {
     }
   });
   
+//User Profile API (Update)
+  // Assuming UserProfile is imported from where it's defined
+app.post('/user/profile/update', async (req, res) => {
+  try {
+    const userId = req.user._id; // Assuming you have the user's ID from authentication middleware
+    const profileUpdate = req.body;
+
+    const updatedProfile = await UserProfile.findOneAndUpdate({ _id: userId }, profileUpdate, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.json(updatedProfile);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

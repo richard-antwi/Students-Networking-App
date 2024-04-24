@@ -97,6 +97,12 @@ function MyProfile() {
       console.error('Failed to update profile:', error);
     }
   };
+
+  const toggleViewMore = () => {
+    console.log('View more clicked');
+    // Add logic to expand or navigate, based on your application's needs
+  };
+  
   
  
   
@@ -304,7 +310,9 @@ function MyProfile() {
                     </div>
                     {/* View More button */}
                     <div className="text-center mt-3">
-                      <span className="view-more-btn" onclick="toggleViewMore()">View More</span>
+                    
+                    <span className="view-more-btn" onClick={toggleViewMore}>View More</span>
+
                     </div>
                   </div>
                 </div>
@@ -426,7 +434,7 @@ function MyProfile() {
                         consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                       </p>
                       {/* "Read More" link */}
-                      <Link href="#" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                      <Link href="#" className="text-primary" id="readMoreLink" role="button" onClick="toggleText()">
                         Read More
                       </Link>
                     </div>
@@ -547,7 +555,7 @@ function MyProfile() {
                         consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                       </p>
                       {/* "Read More" link */}
-                      <Link to="/" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                      <Link to="/" className="text-primary" id="readMoreLink" role="button" onClick="toggleText()">
                         Read More
                       </Link>
                     </div>
@@ -790,8 +798,8 @@ function MyProfile() {
            name="schoolSelect"
            value={formData.schoolSelect}
            onChange={handleChange} id="schoolSelect">
-            <option selected>Choose...</option>
-            <option value={1}>University of Cape Coast</option>
+            <option value="">Choose...</option>
+            <option value="1">University of Cape Coast</option>
             {/* Add more options here */}
           </select>
           <div className="form-check mt-2">

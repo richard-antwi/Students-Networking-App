@@ -31,12 +31,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("MongoDB connected"))
-.catch(err => console.error("Failed to connect to MongoDB", err));
+.catch(err => console.error(err));
+
 
 // Define routes
 app.get('/', (req, res) => {
@@ -74,6 +72,7 @@ app.post('/login', async (req, res) => {
 //User Profile API (Update)
   // Assuming UserProfile is imported from where it's defined
 app.post('/user/profile/update', async (req, res) => {
+  console.log(req.body);
   try {
     const userId = req.user._id; // Assuming you have the user's ID from authentication middleware
     const profileUpdate = req.body;

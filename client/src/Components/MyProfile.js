@@ -21,45 +21,83 @@ function MyProfile() {
   const navigate = useNavigate();
 
   const goToSettings = () => {
-    navigate('/accountsettings'); // This should be the path to your Settings component in your router setup.
+    navigate('/accountsettings'); 
   };
 
    // State to store input values
    const [formData, setFormData] = useState({
-     firstName: '',
-     lastName: '',
-     additionalName: '',
-     namePronunciation: '',
-     headline: '',
-     industry: '',
-     schoolSelect: '',
-     showSchool: false,
-     countryRegion: '',
-     city: '',
-     // ... add other fields as necessary
-   });
+    firstName: '',  // Ensure initial value is not undefined
+    lastName: '',
+    additionalName: '',
+    namePronunciation: '',
+    headline: '',
+    currentPosition: [], 
+    industry: '',
+    education: [], // Make sure arrays are handled properly if they are used in inputs
+    countryRegion: '',
+    city: '',
+    email: '', 
+    phone: '',
+    address: '',
+  });
+  
  
    const handleChange = (event) => {
-     const { name, type, checked, value } = event.target;
-     setFormData((prevFormData) => ({
-       ...prevFormData,
-       [name]: type === 'checkbox' ? checked : value,
-     }));
-   };
+    const { name, type, checked, value } = event.target;
+  
+    // Handle inputs for arrays differently, e.g., currentPosition
+    if (name.startsWith("currentPosition")) {
+      // Example of handling array changes, needs custom logic based on your form
+      const index = parseInt(name.split("-")[1]); // Assuming name="currentPosition-0"
+      const field = name.split("-")[2]; // Assuming name="currentPosition-0-title"
+  
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        currentPosition: prevFormData.currentPosition.map((item, idx) => {
+          if (idx === index) {
+            return { ...item, [field]: value };
+          }
+          return item;
+        })
+      }));
+    } else {
+      // Handle other inputs normally
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    }
+  };
+  const handleAddPosition = () => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      currentPosition: [
+        ...prevFormData.currentPosition,
+        {
+          title: '',
+          company: '',
+          startDate: null,
+          endDate: null,
+          currentlyWorkingHere: false
+        }
+      ]
+    }));
+  };
+  
+
+  
  
-   const handleSubmit = async (event) => {
-     event.preventDefault();
-     try {
-       // Replace '/update-profile' with the correct URL to your API endpoint
-       const response = await axios.post('http://localhost:3001/update-profile', formData);
-       console.log(response.data);
-       setModalShow(false); // Close modal on success
-       // Handle success, e.g. by setting a success message or redirecting
-     } catch (error) {
-       console.error('Failed to update profile', error);
-       // Handle error, e.g. by setting an error message
-     }
-   };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3001/user/profile/update', formData);
+      console.log('Profile updated:', response.data);
+      setModalShow(false); // Assuming this is your method to close the modal
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+    }
+  };
+  
  
   
       return (
@@ -716,9 +754,18 @@ function MyProfile() {
         {/* Current Position */}
         <div className="mb-3">
           <label htmlFor="currentPosition" className="form-label">Current position</label>
-          <div className="d-grid gap-2">
-            <button className="btn btn-outline-primary" type="button">+ Add new position</button>
-          </div>
+          {Array.isArray(formData.currentPosition) && formData.currentPosition.map((position, index) => (
+            <div key={index}>
+              <input
+                name={`currentPosition-${index}-title`}
+                value={position.title}
+                onChange={handleChange}
+                placeholder="Title"
+                />
+                {/* Repeat for other fields */}
+            </div>
+          ))}
+        <button type="button" onClick={handleAddPosition}>Add Position</button>
         </div>
         {/* Industry */}
         <div className="mb-3">

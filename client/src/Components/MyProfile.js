@@ -9,9 +9,15 @@ import coverPhoto from '../Images/coverPhoto.jpg';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function MyProfile() {
   const [coverImagePath] = useState(coverPhoto);
+  const [modalShow, setModalShow] = useState(false);
+
+    const handleOpenModal = () => setModalShow(true);
+    const handleCloseModal = () => setModalShow(false);
+
 
   const navigate = useNavigate();
 
@@ -35,19 +41,21 @@ function MyProfile() {
           <div className="container-fluid">
             <div className="row">
               {/* Left Section */}
-              <div className="col-md-3 bg-light mt-5 ">
+              <div className="col-md-3 bg-light ">
                 <div className="card avatar-card">
-                <div className="image-container position-relative">
+                <div className="image-container position-relative align-items-center" style={{ height: '80px' }}>       
                   <i className="fas fa-camera position-absolute top-50 start-50 translate-middle" 
                       style={{
                           border: '1px solid rgb(245, 78, 78)', 
                           padding: '6px', 
                           borderRadius: '50%', 
                           backgroundColor: 'rgb(245, 78, 78)', 
-                          color: 'white'
+                          color: 'white',
+                          cursor: 'pointer',
+                          zIndex: 1,
                       }}>
                     </i>
-                  <img src={avatar} alt="Avatar" className="card-img-top avatar-img" 
+                  <img src={avatar} alt="Avatar" className="card-img-top avatar-img  " 
                       style={{width: '100px',
                         height: '100px',
                         objectFit: 'cover',
@@ -55,6 +63,19 @@ function MyProfile() {
                         margin: '0 auto',
                         overflow: 'hidden',
                         zIndex: '0' }}/>
+
+                        <i className="fas fa-edit position-absolute top-50 start-50 translate-middle" 
+                      style={{
+                          border: '1px solid rgb(50, 50, 200)', 
+                          padding: '6px', 
+                          borderRadius: '50%', 
+                          backgroundColor: 'rgb(50, 50, 254)', 
+                          color: 'white',
+                          cursor: 'pointer',
+                          zIndex: 1,
+                      }}
+                      onClick={handleOpenModal}>
+                    </i>
   
                 </div>
 
@@ -595,7 +616,7 @@ function MyProfile() {
             </div>
 
              {/* Bootstrap Modal */}
-        <div className="modal" tabIndex={-1} role="dialog" id="editIntroModal">
+             <div className={`modal ${modalShow ? 'show' : ''}`} tabIndex={-1} role="dialog" style={{ display: modalShow ? 'block' : 'none' }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">

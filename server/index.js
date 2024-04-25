@@ -69,24 +69,47 @@ app.post('/login', async (req, res) => {
     }
   });
   
+
+  const authenticateToken = async (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN_HERE
+
+    if (token == null) return res.sendStatus(401); // No token provided
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded; // Add the decoded user ID to request
+        next(); // Proceed to the next middleware or route handler
+    } catch (err) {
+        return res.sendStatus(403); // Invalid token
+    }
+};
+
 //User Profile API (Update)
   // Assuming UserProfile is imported from where it's defined
-app.post('/user/profile/update', async (req, res) => {
-  console.log(req.body);
-  try {
-    const userId = req.user._id; // Assuming you have the user's ID from authentication middleware
-    const profileUpdate = req.body;
-
-    const updatedProfile = await UserProfile.findOneAndUpdate({ _id: userId }, profileUpdate, {
-      new: true,
-      runValidators: true,
-    });
-
-    res.json(updatedProfile);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
+  app.post('/user/profile/update', authenticateToken, async (req, res) => {
+    console.log("Update Payload:", req.body);
+    try {
+        const userId = req.user.id; // Assuming the JWT contains an 'id' field
+        const profileUpdate = req.body;
+        
+        const updatedProfile = await UserProfile.findOneAndUpdate({ _id: userId }, profileUpdate, {
+            new: true,
+            runValidators: true,
+        });
+        
+        if (updatedProfile) {
+            res.json(updatedProfile);
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        console.error("Update Error:", error);
+        res.status(400).json({ message: "Failed to update profile", error: error.message });
+    }
 });
+
+  
 
 
 // Error handling middleware

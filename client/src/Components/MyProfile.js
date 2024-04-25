@@ -33,6 +33,7 @@ function MyProfile() {
     headline: '',
     currentPosition: [], 
     industry: '',
+    showSchool: false,
     education: [], // Make sure arrays are handled properly if they are used in inputs
     countryRegion: '',
     city: '',
@@ -89,13 +90,35 @@ function MyProfile() {
  
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:3001/user/profile/update', formData);
-      console.log('Profile updated:', response.data);
-      setModalShow(false); // Assuming this is your method to close the modal
-    } catch (error) {
-      console.error('Failed to update profile:', error);
-    }
+    console.log('Sending update with formData:', formData);
+    const token = localStorage.getItem('authToken');  // Retrieve the token
+    axios.post('http://localhost:3001/user/profile/update', formData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        console.log('Profile updated:', response.data);
+        setModalShow(false); // Assuming this closes a modal dialog
+    })
+    .catch(error => {
+        console.error('Failed to update profile:', error);
+        // Handle error based on its status code or message
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error(error.response.data);
+            console.error(error.response.status);
+            console.error(error.response.headers);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error', error.message);
+        }
+    });
+};
   };
 
   const toggleViewMore = () => {
@@ -710,8 +733,9 @@ function MyProfile() {
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
+              <form onSubmit={handleSubmit}>
               <div className="modal-body">
-                <form onSubmit={handleSubmit}>
+                
                   <div className="form-group">
                     <label htmlFor="firstName">First name*</label>
                     <input type="text" className="form-control" 
@@ -732,7 +756,7 @@ function MyProfile() {
                     <label htmlFor="additionalName">Additional name</label>
                     <input type="text" className="form-control"
                      id="additionalName"
-                     name="aditionalName"
+                     name="additionalName"
                     value={formData.additionalName}
                     onChange={handleChange} />
                   </div>
@@ -808,7 +832,7 @@ function MyProfile() {
                   type="checkbox"
                   id="showSchoolCheck"
                   name="showSchool" // Use the same name as the state field
-                  checked={formData.showSchool} // Use checked for checkboxes
+                  checked={formData.showSchool ?? false} // Use checked for checkboxes
                   onChange={handleChange} // Same handler as other inputs
                 />
               <label className="form-check-label" htmlFor="showSchoolCheck">
@@ -848,12 +872,13 @@ function MyProfile() {
       </div>
         {/* Add location fields as necessary */}
       </div>
-                </form>
+                
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-primary">Save</button>
+                <button type="submit" className="btn btn-primary">Save</button>
                 <button type="button" onClick={handleCloseModal} className="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
+              </form>
             </div>
           </div>
         </div>

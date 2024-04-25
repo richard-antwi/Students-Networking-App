@@ -91,7 +91,15 @@ function MyProfile() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('Sending update with formData:', formData);
+
     const token = localStorage.getItem('authToken');  // Retrieve the token
+if (!token) {
+  console.error('No token found');
+  // Handle scenario, e.g., redirect to login
+} else {
+  console.log('Using token:', token);
+}
+
     axios.post('http://localhost:3001/user/profile/update', formData, {
         headers: {
             Authorization: `Bearer ${token}`
@@ -119,7 +127,8 @@ function MyProfile() {
         }
     });
 };
-  };
+
+  
 
   const toggleViewMore = () => {
     console.log('View more clicked');
@@ -847,22 +856,22 @@ function MyProfile() {
         <div>
         {/* Location Section */}
         <div className="mb-3">
-          <label htmlFor="countryRegion" className="form-label">Country/Region*</label>
-          <input type="text" className="form-control" 
-          id="countryRegion" placeholder="Ghana" 
-          name="countryRegion"
-          checked={formData.countryRegion}
-          onChange={handleChange}
-          required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="city" className="form-label">City</label>
-          <input type="text" className="form-control" 
-          id="city" placeholder="Accra, Greater Accra Region"
-          name="city"
-          checked={formData.city}
-          onChange={handleChange} />
-        </div>
+  <label htmlFor="countryRegion" className="form-label">Country/Region*</label>
+  <input type="text" className="form-control" 
+  id="countryRegion" placeholder="Ghana" 
+  name="countryRegion"
+  value={formData.countryRegion}
+  onChange={handleChange}
+  required />
+</div>
+<div className="mb-3">
+  <label htmlFor="city" className="form-label">City</label>
+  <input type="text" className="form-control" 
+  id="city" placeholder="Accra, Greater Accra Region"
+  name="city"
+  value={formData.city}
+  onChange={handleChange} />
+</div>
         {/* Contact Info Section */}
         <div className="mt-4">
           <h6>Contact info</h6>

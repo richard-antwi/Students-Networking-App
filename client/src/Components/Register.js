@@ -11,79 +11,71 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
- 
-  
+
   const [newsletter, setNewsletter] = useState(true);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [rememberPassword, setRememberPassword] = useState(false);
-  const [loginError, setLoginError] = useState('');  // Defining setLoginError
+  const [loginError, setLoginError] = useState('');
   const [registerError, setRegisterError] = useState('');
-  const navigate = useNavigate();  // Moved to the top level
+  const [isRegistering, setIsRegistering] = useState(false); // Loading state for registration
+  const [isLoggingIn, setIsLoggingIn] = useState(false); // Loading state for login
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('register');
 
-
- 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const userData = {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsRegistering(true);
+    const userData = {
       firstName,
       lastName,
       userName,
       email,
       password,
-      dateOfBirth,  // Make sure this and other state hooks are correctly used here
-  }
+      dateOfBirth,
+    };
 
-    axios.post('http://localhost:3001/register', userData)
-      .then(result => {
-        console.log(result);
-
-        alert("Registration successful! You can now log in.");
-        setActiveTab('login');  // Change active tab to login
-  })
-  .catch(err => {
-    console.log(err);
-    // Check if the error response and data are defined
-    if (err.response && err.response.data) {
+    try {
+      const result = await axios.post('http://localhost:3001/register', userData, { timeout: 5000 });
+      console.log(result);
+      alert("Registration successful! You can now log in.");
+      setActiveTab('login');
+    } catch (err) {
+      // console.log(err);
+      if (err.code === 'ECONNABORTED') {
+        setRegisterError('Registration timeout, please try again.');
+      } else if (err.response && err.response.data) {
         setRegisterError(err.response.data.message || 'Failed to register');
-    } else {
+      } else {
         setRegisterError("An unexpected error occurred during registration. Please try again.");
+      }
     }
-  });
- 
+    setIsRegistering(false);
   };
- 
-  
-  const handleLoginSubmit = (e) => {
+
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    setIsLoggingIn(true);
     const loginData = {
       email: loginEmail,
       password: loginPassword,
     };
 
-    
-    console.log(loginData);
-    axios.post('http://localhost:3001/login', loginData)
-      .then(response => {
-          console.log(response.data);
-          localStorage.setItem('token', response.data.token);
-          navigate('/'); // Uses history defined at the component level
-      })
-      .catch(err => {
-        console.log(err);
-        // Check if the error response and data are defined
-        if (err.response && err.response.data) {
-            setLoginError(err.response.data.error);
-        } else {
-            // Provide a generic error message if the expected data isn't present
-            setLoginError("An unexpected error occurred. Please try again." + err.message);
-        }
-    });
-    
+    try {
+      const response = await axios.post('http://localhost:3001/login', loginData);
+      console.log(response.data);
+      localStorage.setItem('token', response.data.token);
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+      if (err.response && err.response.data) {
+        setLoginError(err.response.data.error);
+      } else {
+        setLoginError("An unexpected error occurred. Please try again." + err.message);
+      }
+    }
+    setIsLoggingIn(false);
   };
-
-
 
 
  
@@ -148,7 +140,8 @@ const handleSubmit = (e) => {
                               />
                               <label className="form-check-label" htmlFor="form1Example3"> Remember password </label>
                           </div>
-                          <button className="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                          <button className="btn btn-primary btn-lg btn-block" disabled={isLoggingIn} type="submit">
+                            {isLoggingIn ? 'Logging in...' : 'Login'} </button>
                           </form>
                           <hr className="my-4" />
                           {/* <button className="btn btn-lg btn-block btn-primary" style={{backgroundColor: '#dd4b39'}} type="submit"><i className="fab fa-google me-2" /> Sign in with google</button> */}
@@ -262,8 +255,9 @@ const handleSubmit = (e) => {
                                 {/* <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Example33" defaultChecked /> */}
                               </div>
                               {/* Submit button */}
-                              <button type="submit" className="btn btn-primary btn-block mb-4">
-                                Sign up
+                              <button type="submit" disabled={isRegistering} className="btn btn-primary btn-block mb-4">
+                              {isRegistering ? 'Registering...' : 'Sign Up'}
+                                {/* Sign up */}
                               </button>
                               {/* Register buttons */}
                               <div className="text-center">

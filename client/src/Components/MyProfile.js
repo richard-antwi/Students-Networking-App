@@ -85,49 +85,34 @@ function MyProfile() {
     }));
   };
   
-
-  
  
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Sending update with formData:', formData);
-
-    const token = localStorage.getItem('authToken');  // Retrieve the token
-if (!token) {
-  console.error('No token found');
-  // Handle scenario, e.g., redirect to login
-} else {
-  console.log('Using token:', token);
-}
-
-    axios.post('http://localhost:3001/user/profile/update', formData, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    .then(response => {
-        console.log('Profile updated:', response.data);
-        setModalShow(false); // Assuming this closes a modal dialog
-    })
-    .catch(error => {
-        console.error('Failed to update profile:', error);
-        // Handle error based on its status code or message
-        if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            console.error(error.response.data);
-            console.error(error.response.status);
-            console.error(error.response.headers);
-        } else if (error.request) {
-            // The request was made but no response was received
-            console.error(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.error('Error', error.message);
-        }
-    });
-};
-
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      alert('You are not logged in. Redirecting to login page.');
+      navigate('/login');
+      return;
+    }
+  
+    try {
+      const response = await axios.post('http://localhost:3001/user/profile/update', formData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('Profile updated:', response.data);
+      setModalShow(false);
+      alert('Profile updated successfully!');
+    } catch (error) {
+      if (error.response) {
+        console.error('Failed to update profile:', error.response.data);
+        alert(`Error: ${error.response.data.message}`);
+      } else {
+        console.error('Network error:', error.message);
+        alert('Failed to update profile due to network error.');
+      }
+    }
+  };
   
 
   const toggleViewMore = () => {
@@ -135,8 +120,6 @@ if (!token) {
     // Add logic to expand or navigate, based on your application's needs
   };
   
-  
- 
   
       return (
         <>

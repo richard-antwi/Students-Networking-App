@@ -8,6 +8,7 @@ const rateLimit = require('express-rate-limit');
 
 
 const UserModel = require('./models/UserModel'); // Adjusted for a likely correct path
+const UserProfile = require('./models/UserProfile');
 
 // Initialize the Express app
 const app = express();
@@ -93,10 +94,11 @@ app.post('/login', async (req, res) => {
         const userId = req.user.id; // Assuming the JWT contains an 'id' field
         const profileUpdate = req.body;
         
-        const updatedProfile = await UserProfile.findOneAndUpdate({ _id: userId }, profileUpdate, {
-            new: true,
-            runValidators: true,
-        });
+        const updatedProfile = await UserProfile.findOneAndUpdate(
+            { _id: userId },
+            profileUpdate,
+            { new: true, runValidators: true }
+        );
         
         if (updatedProfile) {
             res.json(updatedProfile);
@@ -114,12 +116,21 @@ app.post('/login', async (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    if (err.name === 'MongoError' && err.code === 11000) {
-      res.status(409).json({ message: 'User already exists with the provided username or email.' });
-    } else {
-      res.status(500).json({ message: 'Internal server error' });
-    }
+  console.error(err);  // Log error information for debugging
+
+  if (err.name === 'ValidationError') {
+      return res.status(400).json({ message: 'Validation Error', errors: err.errors });
+  } else if (err.name === 'MongoError' && err.code === 11000) {
+      return res.status(409).json({ message: 'Duplicate key error: some provided data is already in use.' });
+  } else if (err instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({ message: 'Invalid token.' });
+  } else if (err instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ message: 'Token has expired.' });
+  } else {
+      return res.status(500).json({ message: 'Internal Server Error', error: err.message });
+  }
 });
+
 
 // Start the server
 app.listen(process.env.PORT || 3001, () => {

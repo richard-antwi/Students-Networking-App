@@ -79,6 +79,7 @@ app.post('/login', async (req, res) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Decoded JWT:", decoded);
         req.user = decoded; // Add the decoded user ID to request
         next(); // Proceed to the next middleware or route handler
     } catch (err) {
@@ -88,28 +89,57 @@ app.post('/login', async (req, res) => {
 
 //User Profile API (Update)
   // Assuming UserProfile is imported from where it's defined
-  app.post('/user/profile/update', authenticateToken, async (req, res) => {
-    console.log("Update Payload:", req.body);
-    try {
-        const userId = req.user.id; // Assuming the JWT contains an 'id' field
-        const profileUpdate = req.body;
+//   app.post('/user/profile/update', authenticateToken, async (req, res) => {
+//     console.log("Update Payload:", req.body);
+//     try {
+//         const userId = req.user.id; // Assuming the JWT contains an 'id' field
+//         const profileUpdate = req.body;
+//         console.log("User ID from token:", req.user.id);
+//         const updatedProfile = await UserProfile.findOneAndUpdate(
+//           { _id: userId },
+//           profileUpdate,
+//           { new: true, runValidators: true }
+//         );
         
-        const updatedProfile = await UserProfile.findOneAndUpdate(
-            { _id: userId },
-            profileUpdate,
-            { new: true, runValidators: true }
-        );
-        
-        if (updatedProfile) {
-            res.json(updatedProfile);
-        } else {
-            res.status(404).json({ message: "User not found" });
-        }
-    } catch (error) {
-        console.error("Update Error:", error);
-        res.status(400).json({ message: "Failed to update profile", error: error.message });
-    }
+//         if (!updatedProfile) {
+//           console.log("No profile found for user ID:", userId);
+//           return res.status(404).json({ message: "User not found" });
+//         }
+    
+//         console.log("Profile updated successfully:", updatedProfile);
+//         res.json(updatedProfile);
+//       } catch (error) {
+//         console.error("Error updating profile:", error);
+//         res.status(500).json({ message: "Failed to update profile", error: error.toString() });
+//       }
+// });
+
+app.post('/user/profile/update', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+  const profileUpdate = req.body;
+
+  try {
+      // Attempt to find and update the profile, or create a new one if it doesn't exist
+      const updatedProfile = await UserProfile.findOneAndUpdate(
+          { _id: userId },
+          profileUpdate,
+          { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true } // Ensures creation if not found
+      );
+
+      if (updatedProfile) {
+          console.log("Profile updated or created successfully:", updatedProfile);
+          return res.json(updatedProfile);
+      } else {
+          // It's unlikely to get here since upsert should either update or create
+          console.log("No profile found and none created for user:", userId);
+          return res.status(404).json({ message: "User not found and profile not created" });
+      }
+  } catch (error) {
+      console.error("Error updating or creating profile:", error);
+      res.status(500).json({ message: "Failed to update or create profile", error: error.message });
+  }
 });
+
 
   
 

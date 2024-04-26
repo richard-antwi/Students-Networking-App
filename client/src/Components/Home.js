@@ -4,7 +4,24 @@ import {Link} from 'react-router-dom';
 import {  faBookmark, faClock, faEnvelope, faGraduationCap, faMapMarkerAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import React, { useState } from 'react';
 function Home() {
+  // State to manage visibility or content expansion
+  const [viewMore, setViewMore] = useState(false);
+
+  // Function to toggle the viewMore state
+  const toggleViewMore = () => {
+      setViewMore(!viewMore);  // Toggle the state to show or hide more content
+      console.log("View More toggled to:", !viewMore);  // Log the new state for debugging
+  
+  };
+   // State to manage whether the full text is shown
+   const [isTextExpanded, setTextExpanded] = useState(false);
+
+   // Function to toggle the text display
+   const toggleText = () => {
+       setTextExpanded(!isTextExpanded);  // Toggle the state
+   };
   return (
     <>
   
@@ -133,7 +150,7 @@ function Home() {
                   </div>
                   {/* View More button */}
                   <div className="text-center mt-3">
-                    <span className="view-more-btn" onClick="toggleViewMore()">View More</span>
+                    <span className="view-more-btn" onClick={toggleViewMore}>View More</span>
                   </div>
                 </div>
               </div>
@@ -230,7 +247,7 @@ function Home() {
                       consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                     </p>
                     {/* "Read More" link */}
-                    <Link to="/" href="read.html" className="text-primary" id="readMoreLink" role="button" onClick="toggleText()">
+                    <Link to="/" className="text-primary" id="readMoreLink" role="button" onClick={toggleText}>
                       Read More
                     </Link>
                   </div>
@@ -515,7 +532,7 @@ function Home() {
                       consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                     </p>
                     {/* "Read More" link */}
-                    <Link to="/" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                    <Link to="/" className="text-primary" id="readMoreLink" role="button" onClick={toggleText}>
                       Read More
                     </Link>
                   </div>
@@ -739,7 +756,7 @@ function Home() {
                   </div>
                   {/* View More button */}
                   <div className="text-center mt-3">
-                    <span className="view-more-btn" onClick="toggleViewMore()">View More</span>
+                    <span className="view-more-btn" onClick={toggleViewMore}>View More</span>
                   </div>
                 </div>
               </div>

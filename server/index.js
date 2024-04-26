@@ -87,33 +87,7 @@ app.post('/login', async (req, res) => {
     }
 };
 
-//User Profile API (Update)
-  // Assuming UserProfile is imported from where it's defined
-//   app.post('/user/profile/update', authenticateToken, async (req, res) => {
-//     console.log("Update Payload:", req.body);
-//     try {
-//         const userId = req.user.id; // Assuming the JWT contains an 'id' field
-//         const profileUpdate = req.body;
-//         console.log("User ID from token:", req.user.id);
-//         const updatedProfile = await UserProfile.findOneAndUpdate(
-//           { _id: userId },
-//           profileUpdate,
-//           { new: true, runValidators: true }
-//         );
-        
-//         if (!updatedProfile) {
-//           console.log("No profile found for user ID:", userId);
-//           return res.status(404).json({ message: "User not found" });
-//         }
-    
-//         console.log("Profile updated successfully:", updatedProfile);
-//         res.json(updatedProfile);
-//       } catch (error) {
-//         console.error("Error updating profile:", error);
-//         res.status(500).json({ message: "Failed to update profile", error: error.toString() });
-//       }
-// });
-
+//User Profile API (Update) and create new profile if non exist
 app.post('/user/profile/update', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const profileUpdate = req.body;
@@ -142,7 +116,6 @@ app.post('/user/profile/update', authenticateToken, async (req, res) => {
 
 
   
-
 
 // Error handling middleware
 app.use((err, req, res, next) => {

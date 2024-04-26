@@ -1,4 +1,6 @@
 import './App.css';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 import Home from './Components/Home';
 import About from './Components/About';
 import Messages from './Components/Messages';
@@ -18,6 +20,19 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import HelpCenter from './Components/HelpCenter';
 
 function App() {
+  useEffect(() => {
+    // Add Axios interceptor
+    const interceptorId = axios.interceptors.request.use(function (config) {
+      const token = localStorage.getItem('token');
+      config.headers.Authorization = token ? `Bearer ${token}` : '';
+      return config;
+    });
+
+    // Clean up the interceptor when the component unmounts
+    return () => {
+      axios.interceptors.request.eject(interceptorId);
+    };
+  }, []); // Empty dependency array ensures that this effect only runs once
   return (
     <BrowserRouter>
       <div className="App">

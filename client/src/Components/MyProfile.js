@@ -173,9 +173,14 @@ function MyProfile() {
 
     fetchProfileData();
   }, []);
-console.log(profileData.profileImagePath);
+  const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
+
+// Construct the image URL
+const imageUrl = `http://localhost:3001/${imagePath}`;
+console.log(imageUrl);
       return (
         <>
+       
         <div className="mt-3">
           {/* Profile Section with Cover Image */}
           <div style={{ backgroundImage: `url(${coverImagePath})` }} className="cover-image" id ="handleImagesChange">
@@ -220,7 +225,7 @@ console.log(profileData.profileImagePath);
                   {/* Avatar Image */}
                   {profileData.profileImagePath && (
                   <img
-                    src={`http://localhost:3001/uploads/${profileData.profileImagePath}`}
+                  src={imageUrl}
                     alt="Profile" 
                     className="card-img-top avatar-img" 
                     style={{

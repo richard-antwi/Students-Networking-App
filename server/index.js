@@ -5,6 +5,8 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const multer = require('multer');
+const path = require('path');
 
 
 const UserModel = require('./models/UserModel'); // Adjusted for a likely correct path
@@ -14,7 +16,11 @@ const UserProfile = require('./models/UserProfile');
 const app = express();
 
 // Apply Helmet for security headers
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+  })
+);
 
 // Set up rate limiting
 const limiter = rateLimit({
@@ -27,9 +33,13 @@ app.use(limiter);
 app.use(express.json());
 const corsOptions = {
     origin: 'http://localhost:3000',
+    credentials: true,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
+
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
@@ -111,6 +121,89 @@ app.post('/user/profile/update', authenticateToken, async (req, res) => {
   } catch (error) {
       console.error("Error updating or creating profile:", error);
       res.status(500).json({ message: "Failed to update or create profile", error: error.message });
+  }
+});
+
+
+// Configure multer for file storage
+// Set storage engine
+const storage = multer.diskStorage({
+  destination: './uploads/',
+  filename: function(req, file, cb) {
+    // Naming format for uploaded files: Date-Time_originalname
+    cb(null, Date.now() + '_' + file.originalname);
+  }
+});
+
+// Initialize upload variable
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 5000000 }, // 5 MB limit for files
+  fileFilter: function(req, file, cb) {
+    checkFileType(file, cb);
+  }
+}).single('profileImage');
+
+// Check File Type
+function checkFileType(file, cb) {
+  // Allowed file extensions
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check extension
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime type
+  const mimetype = filetypes.test(file.mimetype);
+
+  if(mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
+
+
+app.post('/upload', authenticateToken, (req, res) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ message: err });
+    }
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file selected!' });
+    }
+
+    const filePath = req.file.path;  // File path for the uploaded image
+
+    try {
+      const updatedProfile = await UserProfile.findOneAndUpdate(
+        { _id: req.user.id },
+        { profileImagePath: filePath },
+        { new: true, upsert: true }  // Ensures creation if not found and returns the new document
+      );
+
+      if (!updatedProfile) {
+        return res.status(404).json({ message: "Profile not found and couldn't be created" });
+      }
+
+      res.json({
+        message: 'File uploaded and profile updated!',
+        filePath: filePath,
+        data: updatedProfile
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Database update failed', error });
+    }
+  });
+});
+
+
+app.get('/user/profile', authenticateToken, async (req, res) => {
+  try {
+    const userProfile = await UserProfile.findOne({ _id: req.user.id });
+    if (!userProfile) {
+      return res.status(404).send('Profile not found.');
+    }
+    res.json(userProfile);
+  } catch (error) {
+    res.status(500).send('Server error');
   }
 });
 

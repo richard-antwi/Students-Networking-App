@@ -132,6 +132,10 @@ const userProfileSchema = new mongoose.Schema({
     phone: String,
     address: String,
   },
+  profileImagePath: {
+    type: String,
+    default: ''
+  },
   
 }, { timestamps: true });
 

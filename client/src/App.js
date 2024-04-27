@@ -1,38 +1,24 @@
 import './App.css';
-// import React, { useEffect } from 'react';
-// import axios from 'axios';
-import Home from './Components/Home';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import About from './Components/About';
-import Messages from './Components/Messages';
 import AccountSettings from './Components/AccountSettings';
-import FrequentlyAskedQuestions from './Components/FrequentlyAskedQuestions';
-import PolicyPrivacy from './Components/PolicyPrivacy';
 import Forum from './Components/Forum';
 import ForumNav from './Components/ForumNav';
+import ForumPostView from './Components/ForumPostView';
+import FrequentlyAskedQuestions from './Components/FrequentlyAskedQuestions';
+import HelpCenter from './Components/HelpCenter';
+import Home from './Components/Home';
+import Layout from './Components/Layout'; 
+import Messages from './Components/Messages';
+import MyProfile from './Components/MyProfile';
+import PolicyPrivacy from './Components/PolicyPrivacy';
 import Profiles from './Components/Profiles';
 import Projects from './Components/Projects';
-import MyProfile from './Components/MyProfile';
-import ForumPostView from './Components/ForumPostView';
 import Register from './Components/Register';
-import Layout from './Components/Layout'; // Make sure to import the Layout component
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import HelpCenter from './Components/HelpCenter';
 
 function App() {
-  // useEffect(() => {
-  //   // Add Axios interceptor
-  //   const interceptorId = axios.interceptors.request.use(function (config) {
-  //     const token = localStorage.getItem('token');
-  //     config.headers.Authorization = token ? `Bearer ${token}` : '';
-  //     return config;
-  //   });
-
-  //   // Clean up the interceptor when the component unmounts
-  //   return () => {
-  //     axios.interceptors.request.eject(interceptorId);
-  //   };
-  // }, []); // Empty dependency array ensures that this effect only runs once
+  
   return (
     <BrowserRouter>
       <div className="App">
@@ -63,57 +49,4 @@ function App() {
 }
 
 export default App;
-
-
-// // App.js
-// import './App.css';
-// import LayoutWithNav from './Components/LayoutWithNav';
-// import Home from './Components/Home';
-// import About from './Components/About';
-// import Messages from './Components/Messages';
-// import Layout from './Components/Layout';
-// import AccountSettings from './Components/AccountSettings';
-// import Forum from './Components/Forum';
-// import ForumNav from './Components/ForumNav';
-// import Profiles from './Components/Profiles';
-// import Projects from './Components/Projects';
-// import MyProfile from './Components/MyProfile';
-// import ForumPostView from './Components/ForumPostView';
-// import Register from './Components/Register';
-// import { BrowserRouter, Routes, Route,  } from 'react-router-dom';
-// import {Outlet} from 'react-router-dom';
-// import '@fortawesome/fontawesome-free/css/all.min.css';
-
-// function App() {
-//   return (
-//     <>
-//     <BrowserRouter>
-//       <div className="App">
-//         <Routes>
-//           {/* For routes that include NavBar */}
-//           <Route path="/" element={<LayoutWithNav><Home /></LayoutWithNav>} />
-//           <Route path="messages" element={<LayoutWithNav><Messages /></LayoutWithNav>} />
-//           <Route path="about" element={<LayoutWithNav><About /></LayoutWithNav>} />
-//           <Route path="forum" element={<LayoutWithNav><Layout><Forum /></Layout></LayoutWithNav>} />
-//           <Route path="projects" element={<LayoutWithNav><Layout><Projects /></Layout></LayoutWithNav>} />
-//           <Route path="forumnav" element={<LayoutWithNav><ForumNav /></LayoutWithNav>} />
-//           <Route path="profiles" element={<LayoutWithNav><Profiles /></LayoutWithNav>} />
-//           <Route path="myprofile" element={<LayoutWithNav><MyProfile /></LayoutWithNav>} />
-//           <Route path="forumpostview" element={<LayoutWithNav><ForumPostView /></LayoutWithNav>} />
-//           <Route path="accountsettings" element={<LayoutWithNav><AccountSettings /></LayoutWithNav>} />
-          
-//           {/* For routes without NavBar */}
-//           <Route path="register" element={<Register />} />
-//         </Routes>
-//       </div>
-//     </BrowserRouter>
-//      <Outlet />
-//      </>
-//   );
-// }
-
-
-
-// export default App;
-
 

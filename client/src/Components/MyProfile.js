@@ -5,7 +5,7 @@ import avatar from '../Images/avatar.webp';
 import img11 from '../Images/img11.png';
 import coverPhoto from '../Images/coverPhoto.jpg';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
@@ -120,7 +120,60 @@ function MyProfile() {
     // Add logic to expand or navigate, based on your application's needs
   };
   
-  
+  const [uploading, setUploading] = useState(false);
+  const [profileData, setProfileData] = useState({ profileImagePath: '' });
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('profileImage', file);
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:3001/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
+          },
+        });
+        setProfileData(prevData => ({ ...prevData, profileImagePath: response.data.filePath }));
+        alert('Upload successful!');
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('Failed to upload image.');
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
+
+  const triggerFileSelectPopup = () => {
+    document.getElementById('fileInput').click();
+  };
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found for fetching profile data');
+        return;
+      }
+      try {
+        const response = await axios.get('http://localhost:3001/user/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data.profileImagePath) {
+          setProfileData(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile data:', error);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+console.log(profileData.profileImagePath);
       return (
         <>
         <div className="mt-3">
@@ -138,41 +191,64 @@ function MyProfile() {
               {/* Left Section */}
               <div className="col-md-3 bg-light ">
                 <div className="card avatar-card">
-                <div className="image-container position-relative align-items-center" style={{ height: '80px' }}>       
-                  <i className="fas fa-camera position-absolute top-50 start-50 translate-middle" 
-                      style={{
-                          border: '1px solid rgb(245, 78, 78)', 
-                          padding: '6px', 
-                          borderRadius: '50%', 
-                          backgroundColor: 'rgb(245, 78, 78)', 
-                          color: 'white',
-                          cursor: 'pointer',
-                          zIndex: 1,
-                      }}>
-                    </i>
-                  <img src={avatar} alt="Avatar" className="card-img-top avatar-img  " 
-                      style={{width: '100px',
-                        height: '100px',
-                        objectFit: 'cover',
-                        borderRadius: '50%',
-                        margin: '0 auto',
-                        overflow: 'hidden',
-                        zIndex: '0' }}/>
+                <div className="image-container d-flex justify-content-center align-items-center position-relative" style={{ height: '120px' }}>       
+                              {/* Hidden File Input */}
+                  <input
+                    type="file"
+                    id="fileInput"
+                    style={{ display: 'none' }}
+                    onChange={handleImageUpload}
+                  />
+                  {/* Camera Icon */}
+                  <i className="fas fa-camera position-absolute"
+                  onClick={triggerFileSelectPopup} 
+                    style={{
+                      left: '50%', // Centered, then moved half the width of the avatar to the left
+                      transform: 'translate(-185%, -50%)', // Adjust position relative to the avatar
+                      border: '1px solid rgb(245, 78, 78)', 
+                      padding: '6px', 
+                      borderRadius: '50%', 
+                      backgroundColor: 'rgb(245, 78, 78)', 
+                      color: 'white',
+                      cursor: 'pointer',
+                      zIndex: 2, // Above the avatar
+                    }}
+                    
+                  />
+                  {uploading && <p>Uploading...</p>}
 
-                        <i className="fas fa-edit position-absolute top-50 start-50 translate-middle" 
-                      style={{
-                          border: '1px solid rgb(50, 50, 200)', 
-                          padding: '6px', 
-                          borderRadius: '50%', 
-                          backgroundColor: 'rgb(50, 50, 254)', 
-                          color: 'white',
-                          cursor: 'pointer',
-                          zIndex: 1,
-                      }}
-                      onClick={handleOpenModal}>
-                    </i>
-  
-                </div>
+                  {/* Avatar Image */}
+                  {profileData.profileImagePath && (
+                  <img
+                    src={`http://localhost:3001/uploads/${profileData.profileImagePath}`}
+                    alt="Profile" 
+                    className="card-img-top avatar-img" 
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '50%',
+                      zIndex: 1, // Ensure the avatar is below the icons
+                   }}
+                  />)}
+
+                {/* Edit Icon */}
+                <i className="fas fa-edit position-absolute" 
+                  style={{
+                    left: '50%', // Centered, then moved half the width of the avatar to the right
+                    transform: 'translate(85%, -50%)', // Adjust position relative to the avatar
+                    border: '1px solid rgb(50, 50, 200)', 
+                    padding: '6px', 
+                    borderRadius: '50%', 
+                    backgroundColor: 'rgb(50, 50, 254)', 
+                    color: 'white',
+                    cursor: 'pointer',
+                    zIndex: 2, // Above the avatar
+                  }}
+                  onClick={handleOpenModal}
+                />
+              </div>
+
 
                   <div className="card-body">
                     <div className="d-flex justify-content-between mb-3">

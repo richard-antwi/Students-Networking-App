@@ -5,7 +5,10 @@ import {  faBookmark, faClock, faEnvelope, faGraduationCap, faMapMarkerAlt, faPl
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import React, { useState } from 'react';
+import { ProfileContext } from './ProfileContext'; //to import profile image
+import { useContext } from 'react'; //to import for profile image
 function Home() {
+  const { imageUrl } = useContext(ProfileContext);
   // State to manage visibility or content expansion
   const [viewMore, setViewMore] = useState(false);
 
@@ -34,7 +37,7 @@ function Home() {
               <div className="card">
                 {/* Top part of the card with different color */}
                 <div className="card-header text-center " style={{padding: '15px', margin: 0, background: 'linear-gradient(to bottom, #007bff 50%, #ffffff 50%)', color: '#fff'}}>
-                  <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}} />
+                  <img src={imageUrl} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}} />
                 </div>
                 <div className="card-body text-center">
                   {/* User Details */}
@@ -164,7 +167,7 @@ function Home() {
                   <div className="row">
                     {/* Avatar on the left */}
                     <div className="col-md-3">
-                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '60px', height: '60px'}} />
+                      <img src={imageUrl} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '60px', height: '60px'}} />
                     </div>
                     {/* Buttons on the right */}
                     <div className="col-md-9 text-right mt-3">

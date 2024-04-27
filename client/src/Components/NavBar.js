@@ -5,8 +5,8 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import { faBolt, faCity, faHome, faMessage, faPuzzlePiece, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, Outlet } from 'react-router-dom';
-import { ProfileContext } from './ProfileContext';
-import { useContext } from 'react';
+import { ProfileContext } from './ProfileContext'; //to import profile image
+import { useContext } from 'react'; //to import for profile image
 
 
 function NavBar() {

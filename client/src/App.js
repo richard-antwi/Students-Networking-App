@@ -1,6 +1,6 @@
-import './App.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './App.css';
 import About from './Components/About';
 import AccountSettings from './Components/AccountSettings';
 import Forum from './Components/Forum';
@@ -9,21 +9,21 @@ import ForumPostView from './Components/ForumPostView';
 import FrequentlyAskedQuestions from './Components/FrequentlyAskedQuestions';
 import HelpCenter from './Components/HelpCenter';
 import Home from './Components/Home';
-import Layout from './Components/Layout'; 
+import Layout from './Components/Layout';
 import Messages from './Components/Messages';
 import MyProfile from './Components/MyProfile';
+import NavBar from './Components/NavBar';
 import PolicyPrivacy from './Components/PolicyPrivacy';
+import { ProfileProvider } from './Components/ProfileContext';
 import Profiles from './Components/Profiles';
 import Projects from './Components/Projects';
 import Register from './Components/Register';
-// import NavBar from './Components/NavBar';
-import { ProfileImageProvider } from './Components/ProfileImageContext';
 
 function App() {
   
   return (
     <>
-    <ProfileImageProvider>
+    <ProfileProvider>
            
        
     <BrowserRouter>
@@ -44,15 +44,18 @@ function App() {
             <Route path="frequentlyaskedquestions" element={<FrequentlyAskedQuestions />} />
             <Route path="policyprivacy" element={<PolicyPrivacy />} />
             <Route path="helpcenter" element={<HelpCenter />} />
+            
           </Route>
 
           {/* Route without NavBar */}
           <Route path="register" element={<Register />} />
+          <Route path="navbar" element={<NavBar />} />
+
         </Routes>
     
       </div>
     </BrowserRouter>
-    </ProfileImageProvider>
+    </ProfileProvider>
     </>
   );
 }

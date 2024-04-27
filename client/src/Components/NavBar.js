@@ -1,16 +1,21 @@
-import '../App.css';
 import React from 'react';
-import avatar from '../Images/avatar.webp';
-import {Outlet, Link} from 'react-router-dom';
-import { faBolt, faHome, faMessage, faPuzzlePiece, faUser,faCity } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../App.css';
+// import avatar from '../Images/avatar.webp';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { faBolt, faCity, faHome, faMessage, faPuzzlePiece, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, Outlet } from 'react-router-dom';
+import { ProfileContext } from './ProfileContext';
+import { useContext } from 'react';
 
 
 function NavBar() {
+  const { imageUrl } = useContext(ProfileContext);
+
   return (
     <>
       {/* Navigation Bar */}
+      
       <nav className="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
       <a className="navbar-brand" href="home.html">Social Networking App</a>
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +77,8 @@ function NavBar() {
           <li>
             <div className="dropdown mr-5">
               <Link to="/" className="nav-link dropdown-toggle" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src={avatar} alt="Avatar" className="avatar-img small-avatar" />
+                {/* <img src={avatar} alt="Avatar" className="avatar-img small-avatar" /> */}
+                <img src={imageUrl} alt="Profile" className="avatar-img small-avatar" />
                 John Doe
               </Link>
               <div className="dropdown-menu mr-7" aria-labelledby="profileDropdown">
@@ -119,7 +125,7 @@ function NavBar() {
                 <Link to="helpcenter" className="dropdown-item" >Help Center</Link>
                 <Link to="/" className="dropdown-item" href="terms_and_conditions.html">Terms &amp; Conditions</Link>
                 <div className="dropdown-divider" />
-                <div className>
+                <div className ="dropdown-item">
                   <Link to="/" className="dropdown-item" href="logout.html">Logout</Link>
                 </div>
               </div>

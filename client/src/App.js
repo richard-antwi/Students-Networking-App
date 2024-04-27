@@ -17,10 +17,15 @@ import Profiles from './Components/Profiles';
 import Projects from './Components/Projects';
 import Register from './Components/Register';
 // import NavBar from './Components/NavBar';
+import { ProfileImageProvider } from './Components/ProfileImageContext';
 
 function App() {
   
   return (
+    <>
+    <ProfileImageProvider>
+           
+       
     <BrowserRouter>
       <div className="App">
         <Routes>
@@ -47,6 +52,8 @@ function App() {
     
       </div>
     </BrowserRouter>
+    </ProfileImageProvider>
+    </>
   );
 }
 

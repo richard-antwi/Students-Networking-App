@@ -25,6 +25,29 @@ function Home() {
    const toggleText = () => {
        setTextExpanded(!isTextExpanded);  // Toggle the state
    };
+
+   //fetch suggetions
+   useEffect(() => {
+    const fetchSuggestions = async () => {
+      const response = await fetch('/api/suggestions', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${userToken}`, // Make sure to send the correct authorization token
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setSuggestions(data);
+      } else {
+        console.error('Failed to fetch suggestions');
+      }
+    };
+  
+    fetchSuggestions();
+  }, []);
+  
   return (
     <>
   

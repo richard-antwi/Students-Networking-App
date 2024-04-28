@@ -17,6 +17,8 @@ import { ProfileProvider } from './Components/ProfileContext';
 import Profiles from './Components/Profiles';
 import Projects from './Components/Projects';
 import Register from './Components/Register';
+import NavBar from './Components/NavBar';
+
 
 function App() {
   
@@ -48,6 +50,7 @@ function App() {
 
           {/* Route without NavBar */}
           <Route path="register" element={<Register />} />
+          <Route path="navbar" element={<NavBar />} />
           
 
         </Routes>

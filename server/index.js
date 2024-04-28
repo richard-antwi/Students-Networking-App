@@ -208,7 +208,62 @@ app.get('/user/profile', authenticateToken, async (req, res) => {
 });
 
 
-  
+//suggestions
+async function getSuggestions(userId) {
+  const currentUser = await UserProfile.findById(userId);
+  if (!currentUser) {
+    return []; // No user profile means no suggestions
+  }
+
+  // Build a query to find users with similar interests or other attributes
+  let query = {
+    _id: { $ne: userId } // Exclude current user from suggestions
+  };
+
+  let score = {}; // Initialize a scoring object
+
+  // Add conditions to the query and increase scores based on matching attributes
+  if (currentUser.interests) {
+    query.interests = { $in: currentUser.interests };
+    score['interests'] = 1; // Example score increment
+  }
+  if (currentUser.location && currentUser.location.city) {
+    query['location.city'] = currentUser.location.city;
+    score['location'] = 1;
+  }
+  // Continue for other attributes like industry, education, etc.
+
+  // Fetch potential friends based on the constructed query
+  const potentialFriends = await UserProfile.find(query).lean();
+
+  // Calculate the total score for each potential friend based on the matching criteria
+  return potentialFriends.map(friend => {
+    let totalScore = 0;
+    Object.keys(score).forEach(key => {
+      if (friend[key] && currentUser[key] && friend[key] === currentUser[key]) {
+        totalScore += score[key];
+      }
+    });
+    return { friend, score: totalScore };
+  })
+  .filter(friend => friend.score > 0) // Filter out users with no matching criteria
+  .sort((a, b) => b.score - a.score); // Sort by highest score first
+}
+
+
+// Endpoint to get friend suggestions
+app.get('/api/suggestions', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming your authentication middleware adds `user` to `req`
+    const suggestions = await getSuggestions(userId);
+    res.json(suggestions);
+  } catch (error) {
+    console.error('Failed to fetch suggestions:', error);
+    res.status(500).json({ message: 'Failed to fetch suggestions', error: error.toString() });
+  }
+});
+
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

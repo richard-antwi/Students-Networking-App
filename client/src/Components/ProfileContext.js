@@ -1,8 +1,9 @@
 import React, { createContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
+import avatar from '../Images/avatar.webp'; // Import default profile image
 
 const initialState = {
-  profileImagePath: '',
+  profileImagePath: '', // Initially empty
   loading: true,
   error: null
 };
@@ -35,7 +36,8 @@ const ProfileProvider = ({ children }) => {
     const fetchProfileData = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        dispatch({ type: 'FETCH_ERROR', payload: { error: 'No token found for fetching profile data' } });
+        // If no token found, set default image path
+        dispatch({ type: 'FETCH_SUCCESS', payload: { profileImagePath: avatar } });
         return;
       }
       try {
@@ -44,8 +46,12 @@ const ProfileProvider = ({ children }) => {
         });
         if (response.data.profileImagePath) {
           dispatch({ type: 'FETCH_SUCCESS', payload: { profileImagePath: response.data.profileImagePath } });
+        } else {
+          // If no profile image found, set default image path
+          dispatch({ type: 'FETCH_SUCCESS', payload: { profileImagePath: avatar } });
         }
       } catch (error) {
+        // If error fetching profile data, set default image path
         dispatch({ type: 'FETCH_ERROR', payload: { error: 'Failed to fetch profile data' } });
       }
     };
@@ -53,12 +59,13 @@ const ProfileProvider = ({ children }) => {
     fetchProfileData();
   }, []);
 
-  const { profileImagePath, loading, error } = state;
+  const { profileImagePath, loading } = state;
 
+  // Construct the image URL
   const imageUrl = loading ? '' : `http://localhost:3001/${profileImagePath.replace(/\\/g, '/')}`;
 
   return (
-    <ProfileContext.Provider value={{ imageUrl, loading, error }}>
+    <ProfileContext.Provider value={{ imageUrl, loading }}>
       {children}
     </ProfileContext.Provider>
   );

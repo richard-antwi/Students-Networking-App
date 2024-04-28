@@ -1,6 +1,6 @@
 import React from 'react';
 import '../App.css';
-import avatar from '../Images/avatar.webp';
+// import avatar from '../Images/avatar.webp';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { faBolt, faCity, faHome, faMessage, faPuzzlePiece, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,7 +10,12 @@ import { useContext } from 'react'; //to import for profile image
 
 
 function NavBar() {
-  const { imageUrl } = useContext(ProfileContext);
+  const { imageUrl, loading } = useContext(ProfileContext);
+
+  if (loading) {
+    return <div>Loading...</div>; // Render a loading indicator while fetching profile data
+  }
+  
 
   return (
     <>
@@ -77,12 +82,7 @@ function NavBar() {
           <li>
             <div className="dropdown mr-5">
               <Link to="/" className="nav-link dropdown-toggle" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {/* <img src={avatar} alt="Avatar" className="avatar-img small-avatar" /> */}
-                {imageUrl ? (
-                    <img src={imageUrl} alt="Profile" className="avatar-img small-avatar" />
-                  ) : (
-                    <img src={avatar} alt="Default Profile" className="avatar-img small-avatar" />
-                  )}
+                <img src={imageUrl} alt="Avatar" className="avatar-img small-avatar" />
                 John Doe
               </Link>
               <div className="dropdown-menu mr-7" aria-labelledby="profileDropdown">

@@ -12,7 +12,6 @@ import Home from './Components/Home';
 import Layout from './Components/Layout';
 import Messages from './Components/Messages';
 import MyProfile from './Components/MyProfile';
-import NavBar from './Components/NavBar';
 import PolicyPrivacy from './Components/PolicyPrivacy';
 import { ProfileProvider } from './Components/ProfileContext';
 import Profiles from './Components/Profiles';
@@ -49,7 +48,7 @@ function App() {
 
           {/* Route without NavBar */}
           <Route path="register" element={<Register />} />
-          <Route path="navbar" element={<NavBar />} />
+          
 
         </Routes>
     

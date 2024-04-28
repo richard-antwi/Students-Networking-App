@@ -1,16 +1,41 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
+
+const initialState = {
+  profileImagePath: '',
+  loading: true,
+  error: null
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'FETCH_SUCCESS':
+      return {
+        ...state,
+        profileImagePath: action.payload.profileImagePath,
+        loading: false
+      };
+    case 'FETCH_ERROR':
+      return {
+        ...state,
+        error: action.payload.error,
+        loading: false
+      };
+    default:
+      return state;
+  }
+};
 
 const ProfileContext = createContext();
 
 const ProfileProvider = ({ children }) => {
-  const [profileData, setProfileData] = useState({ profileImagePath: '' });
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const fetchProfileData = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        console.error('No token found for fetching profile data');
+        dispatch({ type: 'FETCH_ERROR', payload: { error: 'No token found for fetching profile data' } });
         return;
       }
       try {
@@ -18,29 +43,22 @@ const ProfileProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data.profileImagePath) {
-          // Use functional update to set profileData
-          setProfileData(prevProfileData => ({
-            ...prevProfileData,
-            ...response.data
-          }));
+          dispatch({ type: 'FETCH_SUCCESS', payload: { profileImagePath: response.data.profileImagePath } });
         }
-      
       } catch (error) {
-        console.error('Failed to fetch profile data:', error);
+        dispatch({ type: 'FETCH_ERROR', payload: { error: 'Failed to fetch profile data' } });
       }
     };
-  
+
     fetchProfileData();
-  }, []); // No dependency here
-  
-  useEffect(() => {
-    const imageUrl = `http://localhost:3001/${profileData.profileImagePath.replace(/\\/g, '/')}`;
-    console.log(imageUrl);
-  }, [profileData]);
-  
+  }, []);
+
+  const { profileImagePath, loading, error } = state;
+
+  const imageUrl = loading ? '' : `http://localhost:3001/${profileImagePath.replace(/\\/g, '/')}`;
 
   return (
-    <ProfileContext.Provider value={{ imageUrl: `http://localhost:3001/${profileData.profileImagePath.replace(/\\/g, '/')}` }}>
+    <ProfileContext.Provider value={{ imageUrl, loading, error }}>
       {children}
     </ProfileContext.Provider>
   );

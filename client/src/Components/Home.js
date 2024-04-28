@@ -37,7 +37,12 @@ function Home() {
               <div className="card">
                 {/* Top part of the card with different color */}
                 <div className="card-header text-center " style={{padding: '15px', margin: 0, background: 'linear-gradient(to bottom, #007bff 50%, #ffffff 50%)', color: '#fff'}}>
-                  <img src={imageUrl} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}} />
+                  {/* <img src={imageUrl || avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}} /> */}
+                  {imageUrl ? (
+                    <img src={imageUrl} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}}  />
+                  ) : (
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}}  />
+                  )}
                 </div>
                 <div className="card-body text-center">
                   {/* User Details */}

@@ -223,19 +223,34 @@ console.log(imageUrl);
                   {uploading && <p>Uploading...</p>}
 
                   {/* Avatar Image */}
-                  {profileData.profileImagePath && (
-                  <img
-                  src={imageUrl}
-                    alt="Profile" 
-                    className="card-img-top avatar-img" 
-                    style={{
-                      width: '100px',
-                      height: '100px',
-                      objectFit: 'cover',
-                      borderRadius: '50%',
-                      zIndex: 1, // Ensure the avatar is below the icons
-                   }}
-                  />)}
+                 {/* Avatar Image */}
+                  {profileData.profileImagePath ? (
+                    <img
+                      src={imageUrl}
+                      alt="Profile"
+                      className="card-img-top avatar-img"
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                        zIndex: 1, // Ensure the avatar is below the icons
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={avatar} // Your default profile image path
+                      alt="Default Profile"
+                      className="card-img-top avatar-img"
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                        zIndex: 1, // Ensure the avatar is below the icons
+                      }}
+                    />
+                  )}
 
                 {/* Edit Icon */}
                 <i className="fas fa-edit position-absolute" 

@@ -4,12 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
 import { ProfileContext } from './ProfileContext';
 import avatar from '../Images/avatar.webp';
-// import axios from 'axios';
+import axios from 'axios';
 
 function Home() {
   const { imageUrl } = useContext(ProfileContext);
   const [viewMore, setViewMore] = useState(false);
   const [isTextExpanded, setTextExpanded] = useState(false);
+  const [error, setError] = useState(null);
 
 const toggleText = () => {
     setTextExpanded(!isTextExpanded);
@@ -17,28 +18,22 @@ const toggleText = () => {
 const [suggestions, setSuggestions] = useState([]);
 
 useEffect(() => {
-  // Make a GET request to fetch friend suggestions
-  fetch('/api/suggestions', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      // Add any necessary authentication headers
-    },
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Update the suggestions state with the received data
-      setSuggestions(data.suggestions);
-    })
-    .catch(error => {
+  const fetchSuggestions = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/suggestions', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setSuggestions(response.data.suggestions);
+    } catch (error) {
       console.error('Failed to fetch friend suggestions:', error);
-      // Handle the error
-    });
+      setError(error.message);
+    }
+  };
+
+  fetchSuggestions();
 }, []);
-
-
-
-
 
   const toggleViewMore = () => {
     setViewMore(!viewMore);
@@ -74,6 +69,9 @@ useEffect(() => {
               <Link to="/myprofile" className="btn btn-primary mt-3">View Profile</Link>
             </div>
           </div>
+          {error && <p>Error: {error}</p>}
+          {/* {loading && <p>Loading...</p>} */}
+
           <div className="card mt-5">
             <div className="card-header d-flex justify-content-between align-items-center" style={{ backgroundColor: '#fff' }}>
               <h5 className="mb-0">Suggestions</h5>
@@ -81,19 +79,18 @@ useEffect(() => {
             </div>
             <div className="card-body">
               
-                {suggestions.map(suggestion => (
-                  <div key={suggestion.user._id} className="d-flex justify-content-between align-items-center my-3">
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
+            {suggestions.map((user, index) => (
+                  <div key={index} className="d-flex justify-content-between align-items-center my-3">
+                    <img src={user.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
                     <div className="text-left">
-                      <h6 className="mb-1">{suggestion.user.firstName} {suggestion.user.lastName}</h6>
-                      <p className="mb-0 text-muted">{suggestion.user.occupation}</p>
+                      <h6 className="mb-1">{user.name}</h6>
+                      <p className="mb-0 text-muted">{user.occupation}</p>
                     </div>
                     <div className="text-right" style={{ border: '#bdbebd solid 1px', padding: '4px' }}>
                       <FontAwesomeIcon icon={faPlus} />
                     </div>
                   </div>
-                ))
-              }
+                ))}
               <div className="text-center mt-3">
                 <button className="btn btn-outline-primary" onClick={toggleViewMore}>{viewMore ? 'View Less' : 'View More'}</button>
               </div>

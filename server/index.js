@@ -202,38 +202,53 @@ app.get('/user/profile', authenticateToken, async (req, res) => {
 
 // Function to get friend suggestions based on user and profile data
 async function getSuggestions(userId) {
-  const currentUser = await User.findById(userId);
+  const currentUser = await UserModel.findById(userId);
   if (!currentUser) {
     return [];
   }
   // Start with a basic query that matches users based on a simple attribute (like registration date proximity)
   let query = {
     _id: { $ne: userId }, // Exclude current user
-    createdAt: { $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }, // Example: users who joined within the last year
+    // Define the date threshold for new users: 5 days ago
+    createdAt: { $gte: new Date(new Date().getTime() - (5 * 24 * 60 * 60 * 1000))},
+    // createdAt: { $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }, // Example: users who joined within the last year
   };
-  const basicMatches = await User.find(query).lean();
+  const basicMatches = await UserModel.find(query).lean();
 
-  // Attempt to refine these matches using profile data if available
+  //Attempt to refine these matches using profile data if available
   const refinedMatches = await Promise.all(basicMatches.map(async (user) => {
-    const userProfile = await UserProfile.findOne({ userId: user._id });
+    const userProfile = await UserProfile.findOne({ userId: user._id }).lean();
+    const currentUserProfile = await UserProfile.findOne({ userId: userId }).lean();
 
     let score = 0;
-
-    // Further refine match if the current user has a profile
-    if (userProfile) {
-      // Example: Increase score if they are in the same city
-      if (userProfile.location.city === currentUser.location.city) {
-        score += 1;
-      }
-      // Add more conditions as needed
+    // Increase score if they are in the same city
+    if (userProfile && currentUserProfile && userProfile.location && currentUserProfile.location && 
+        userProfile.location.city === currentUserProfile.location.city) {
+      score += 1;
     }
+
+    // Increase score if they are in the same industry
+    if (userProfile && currentUserProfile && userProfile.industry && currentUserProfile.industry &&
+        userProfile.industry === currentUserProfile.industry) {
+      score += 1;
+    }
+
+    // Increase score if they have the same field of study
+    if (userProfile && currentUserProfile && userProfile.education && currentUserProfile.education) {
+      const userFields = new Set(userProfile.education.map(edu => edu.fieldOfStudy));
+      currentUserProfile.education.forEach(edu => {
+        if (edu.fieldOfStudy && userFields.has(edu.fieldOfStudy)) {
+          score += 1;
+        }
+      });
+    }
+
     return { user, score };
   }));
 
   // Filter and sort based on score
   const filteredMatches = refinedMatches.filter(match => match.score > 0);
   filteredMatches.sort((a, b) => b.score - a.score);
-
   return filteredMatches;
 }
 

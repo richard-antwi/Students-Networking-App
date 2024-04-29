@@ -1,53 +1,69 @@
-// import './App.css';
-import avatar from '../Images/avatar.webp';
-import {Link} from 'react-router-dom';
-import {  faBookmark, faClock, faEnvelope, faGraduationCap, faMapMarkerAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import React, { useState } from 'react';
-import { ProfileContext } from './ProfileContext'; //to import profile image
-import { useContext } from 'react'; //to import for profile image
+import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
+import { ProfileContext } from './ProfileContext';
+import avatar from '../Images/avatar.webp';
+import axios from 'axios';
+
 function Home() {
   const { imageUrl } = useContext(ProfileContext);
-  // State to manage visibility or content expansion
   const [viewMore, setViewMore] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isTextExpanded, setTextExpanded] = useState(false);
 
-  // Function to toggle the viewMore state
-  const toggleViewMore = () => {
-      setViewMore(!viewMore);  // Toggle the state to show or hide more content
-      console.log("View More toggled to:", !viewMore);  // Log the new state for debugging
-  
-  };
-   // State to manage whether the full text is shown
-   const [isTextExpanded, setTextExpanded] = useState(false);
+const toggleText = () => {
+    setTextExpanded(!isTextExpanded);
+};
 
-   // Function to toggle the text display
-   const toggleText = () => {
-       setTextExpanded(!isTextExpanded);  // Toggle the state
-   };
 
-   //fetch suggetions
-   useEffect(() => {
-    const fetchSuggestions = async () => {
-      const response = await fetch('/api/suggestions', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${userToken}`, // Make sure to send the correct authorization token
-          'Content-Type': 'application/json'
-        }
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        setSuggestions(data);
-      } else {
-        console.error('Failed to fetch suggestions');
+useEffect(() => {
+  let isMounted = true; // Flag to check if component is still mounted
+  setLoading(true);
+  setError(null); // Clear previous errors on a new request
+
+  const fetchSuggestions = async () => {
+    const token = localStorage.getItem('token');
+    console.log(token)
+    if (!token) {
+      console.error('No token found for fetching profile data');
+      if (isMounted) {
+        setError('Authentication error: No token provided');
+        setLoading(false);
       }
-    };
-  
-    fetchSuggestions();
-  }, []);
-  
+      return;
+    }
+    try {
+      const response = await axios.get('http://localhost:3001/api/suggestions', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (isMounted) {
+        setSuggestions(response.data); // Axios automatically parses JSON data
+      }
+    } catch (err) {
+      if (isMounted) {
+        setError(err.response && err.response.data ? err.response.data.message : 'Failed to fetch suggestions');
+        console.error('Fetch error:', err);
+      }
+    } finally {
+      if (isMounted) {
+        setLoading(false); // Disable loading only if component is still mounted
+      }
+    }
+  };
+
+  fetchSuggestions();
+
+  return () => { isMounted = false; }; // Cleanup function to set isMounted flag as false
+}, []);
+
+
+
+  const toggleViewMore = () => {
+    setViewMore(!viewMore);
+  };
   return (
     <>
   
@@ -55,137 +71,61 @@ function Home() {
         <div className="container-fluid mt-5">
           <div className="row ">
             {/* Left Side Section */}
-            <div className="col-md-3 side-section">
-              {/* Add your content for the left section here */}
-              <div className="card">
-                {/* Top part of the card with different color */}
-                <div className="card-header text-center " style={{padding: '15px', margin: 0, background: 'linear-gradient(to bottom, #007bff 50%, #ffffff 50%)', color: '#fff'}}>
-                  <img src={imageUrl} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}} />
-                  {/* {imageUrl ? (
-                    <img src={imageUrl} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}}  />
-                  ) : (
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '100px', height: '100px'}}  />
-                  )} */}
+        <div className="col-md-3 side-section">
+          <div className="card">
+            <div className="card-header text-center" style={{ padding: '15px', margin: 0, background: 'linear-gradient(to bottom, #007bff 50%, #ffffff 50%)', color: '#fff' }}>
+              <img src={imageUrl || avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{ width: '100px', height: '100px' }} />
+            </div>
+            <div className="card-body text-center">
+              {/* User Details */}
+              <h5 className="card-title">John Doe</h5>
+              <p className="card-text">Skills or Interests</p>
+              {/* Followers and Following */}
+              <div className="row">
+                <div className="col">
+                  <p className="mb-0">Following</p>
+                  <p className="font-weight-bold">100</p>
                 </div>
-                <div className="card-body text-center">
-                  {/* User Details */}
-                  <h5 className="card-title">John Doe</h5>
-                  <p className="card-text">Skills or Interests</p>
-                  {/* Followers and Following */}
-                  <div className="col">
-                    <p className="mb-0">Following</p>
-                    <p className="font-weight-bold">100</p>
-                  </div>
-                  <div className="col">
-                    <p className="mb-0">Followers</p>
-                    <p className="font-weight-bold">500</p>
-                  </div>
-                  <hr />
-                  {/* View Profile Button */}
-                  <Link to="myprofile" className="primary  mt-3">View Profile</Link>
+                <div className="col">
+                  <p className="mb-0">Followers</p>
+                  <p className="font-weight-bold">500</p>
                 </div>
               </div>
-              <div className="card mt-5">
-                <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: '#fff'}}>
-                  {/* Heading on the left */}
-                  <h5 className="mb-0">Suggestions</h5>
-                  {/* Three dots on the right */}
-                  <span>⋮</span>
-                </div>
-                <div className="card-body">
-                  {/* Avatar, Name, and Interest */}
-                  <div className="d-flex justify-content-between align-items-center">
-                    {/* Avatar on the left */}
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                    {/* Name and Interest */}
+              <hr />
+              <Link to="/myprofile" className="btn btn-primary mt-3">View Profile</Link>
+            </div>
+          </div>
+          <div className="card mt-5">
+            <div className="card-header d-flex justify-content-between align-items-center" style={{ backgroundColor: '#fff' }}>
+              <h5 className="mb-0">Suggestions</h5>
+              <span>⋮</span>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <p>Loading...</p>
+              ) : error ? (
+                <p>Error: {error}</p>
+              ) : (
+                suggestions.map((user, index) => (
+                  <div key={index} className="d-flex justify-content-between align-items-center my-3">
+                    <img src={user.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
                     <div className="text-left">
-                      <h6 className="mb-1">John Doe</h6>
-                      <p className="mb-0 text-muted">Web Developer</p>
+                      <h6 className="mb-1">{user.name}</h6>
+                      <p className="mb-0 text-muted">{user.occupation}</p>
                     </div>
-                    {/* Icon at the extreme right */}
-                    <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      {/* <i className="fas fa-plus" /> */}
+                    <div className="text-right" style={{ border: '#bdbebd solid 1px', padding: '4px' }}>
                       <FontAwesomeIcon icon={faPlus} />
                     </div>
                   </div>
-                  <div className="d-flex justify-content-between align-items-center my-3">
-                    {/* Avatar on the left */}
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                    {/* Name and Interest */}
-                    <div className="text-left">
-                      <h6 className="mb-1">John Doe</h6>
-                      <p className="mb-0 text-muted">Web Developer</p>
-                    </div>
-                    {/* Icon at the extreme right */}
-                    <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      {/* <i className="fas fa-plus" /> */}
-                      <FontAwesomeIcon icon={faPlus} />
-                      
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center my-3">
-                    {/* Avatar on the left */}
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                    {/* Name and Interest */}
-                    <div className="text-left">
-                      <h6 className="mb-1">John Doe</h6>
-                      <p className="mb-0 text-muted">Web Developer</p>
-                    </div>
-                    {/* Icon at the extreme right */}
-                    <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      {/* <i className="fas fa-plus" /> */}
-                      <FontAwesomeIcon icon={faPlus} />
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center my-3">
-                    {/* Avatar on the left */}
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                    {/* Name and Interest */}
-                    <div className="text-left">
-                      <h6 className="mb-1">John Doe</h6>
-                      <p className="mb-0 text-muted">Web Developer</p>
-                    </div>
-                    {/* Icon at the extreme right */}
-                    <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      {/* <i className="fas fa-plus" /> */}
-                      <FontAwesomeIcon icon={faPlus} />
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center my-3">
-                    {/* Avatar on the left */}
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                    {/* Name and Interest */}
-                    <div className="text-left">
-                      <h6 className="mb-1">John Doe</h6>
-                      <p className="mb-0 text-muted">Web Developer</p>
-                    </div>
-                    {/* Icon at the extreme right */}
-                    <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      {/* <i className="fas fa-plus" /> */}
-                      <FontAwesomeIcon icon={faPlus} />
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center my-3">
-                    {/* Avatar on the left */}
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                    {/* Name and Interest */}
-                    <div className="text-left">
-                      <h6 className="mb-1">John Doe</h6>
-                      <p className="mb-0 text-muted">Web Developer</p>
-                    </div>
-                    {/* Icon at the extreme right */}
-                    <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                      {/* <i className="fas fa-plus" /> */}
-                      <FontAwesomeIcon icon={faPlus} />
-                    </div>
-                  </div>
-                  {/* View More button */}
-                  <div className="text-center mt-3">
-                    <span className="view-more-btn" onClick={toggleViewMore}>View More</span>
-                  </div>
-                </div>
+                ))
+              )}
+              <div className="text-center mt-3">
+                <button className="btn btn-outline-primary" onClick={toggleViewMore}>{viewMore ? 'View Less' : 'View More'}</button>
               </div>
             </div>
+          </div>
+        </div>
+
             {/* Center Section */}
             <div className="col-md-6">
               {/* Feed Section */}

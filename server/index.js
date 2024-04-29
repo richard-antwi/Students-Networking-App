@@ -210,58 +210,61 @@ app.get('/user/profile', authenticateToken, async (req, res) => {
 
 //suggestions
 async function getSuggestions(userId) {
-  const currentUser = await UserProfile.findById(userId);
+  const currentUser = await User.findById(userId);
   if (!currentUser) {
-    return []; // No user profile means no suggestions
+    return [];
   }
 
-  // Build a query to find users with similar interests or other attributes
+  // Start with a basic query that matches users based on a simple attribute (like registration date proximity)
   let query = {
-    _id: { $ne: userId } // Exclude current user from suggestions
+    _id: { $ne: userId }, // Exclude current user
+    createdAt: { $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) } // Example: users who joined within the last year
   };
 
-  let score = {}; // Initialize a scoring object
+  const basicMatches = await User.find(query).lean();
 
-  // Add conditions to the query and increase scores based on matching attributes
-  if (currentUser.interests) {
-    query.interests = { $in: currentUser.interests };
-    score['interests'] = 1; // Example score increment
-  }
-  if (currentUser.location && currentUser.location.city) {
-    query['location.city'] = currentUser.location.city;
-    score['location'] = 1;
-  }
-  // Continue for other attributes like industry, education, etc.
+  // Attempt to refine these matches using profile data if available
+  const refinedMatches = await Promise.all(basicMatches.map(async (user) => {
+    const userProfile = await UserProfile.findOne({ userId: user._id });
+    const currentUserProfile = await UserProfile.findOne({ userId: userId });
 
-  // Fetch potential friends based on the constructed query
-  const potentialFriends = await UserProfile.find(query).lean();
-
-  // Calculate the total score for each potential friend based on the matching criteria
-  return potentialFriends.map(friend => {
-    let totalScore = 0;
-    Object.keys(score).forEach(key => {
-      if (friend[key] && currentUser[key] && friend[key] === currentUser[key]) {
-        totalScore += score[key];
+    let score = 0;
+    // Further refine match if both users have profiles
+    if (userProfile && currentUserProfile) {
+      // Example: Increase score if they are in the same city
+      if (userProfile.location.city === currentUserProfile.location.city) {
+        score += 1;
       }
-    });
-    return { friend, score: totalScore };
-  })
-  .filter(friend => friend.score > 0) // Filter out users with no matching criteria
-  .sort((a, b) => b.score - a.score); // Sort by highest score first
+      // Add more conditions as needed
+    }
+
+    return { user, score };
+  }));
+
+  // Filter and sort based on score
+  const filteredMatches = refinedMatches.filter(match => match.score > 0);
+  filteredMatches.sort((a, b) => b.score - a.score);
+
+  return filteredMatches;
 }
+
+
 
 
 // Endpoint to get friend suggestions
 app.get('/api/suggestions', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming your authentication middleware adds `user` to `req`
+    const userId = req.user.id; 
     const suggestions = await getSuggestions(userId);
-    res.json(suggestions);
+    const jsonResponse = { suggestions }; // Define jsonResponse containing suggestions
+    console.log("Sending response for /api/suggestions: ", jsonResponse);
+    res.json(jsonResponse);
   } catch (error) {
     console.error('Failed to fetch suggestions:', error);
     res.status(500).json({ message: 'Failed to fetch suggestions', error: error.toString() });
   }
 });
+
 
 
 

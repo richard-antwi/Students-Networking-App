@@ -4,60 +4,39 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
 import { ProfileContext } from './ProfileContext';
 import avatar from '../Images/avatar.webp';
-import axios from 'axios';
+// import axios from 'axios';
 
 function Home() {
   const { imageUrl } = useContext(ProfileContext);
   const [viewMore, setViewMore] = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [isTextExpanded, setTextExpanded] = useState(false);
 
 const toggleText = () => {
     setTextExpanded(!isTextExpanded);
 };
-
+const [suggestions, setSuggestions] = useState([]);
 
 useEffect(() => {
-  let isMounted = true; // Flag to check if component is still mounted
-  setLoading(true);
-  setError(null); // Clear previous errors on a new request
-
-  const fetchSuggestions = async () => {
-    const token = localStorage.getItem('token');
-    console.log(token)
-    if (!token) {
-      console.error('No token found for fetching profile data');
-      if (isMounted) {
-        setError('Authentication error: No token provided');
-        setLoading(false);
-      }
-      return;
-    }
-    try {
-      const response = await axios.get('http://localhost:3001/api/suggestions', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (isMounted) {
-        setSuggestions(response.data); // Axios automatically parses JSON data
-      }
-    } catch (err) {
-      if (isMounted) {
-        setError(err.response && err.response.data ? err.response.data.message : 'Failed to fetch suggestions');
-        console.error('Fetch error:', err);
-      }
-    } finally {
-      if (isMounted) {
-        setLoading(false); // Disable loading only if component is still mounted
-      }
-    }
-  };
-
-  fetchSuggestions();
-
-  return () => { isMounted = false; }; // Cleanup function to set isMounted flag as false
+  // Make a GET request to fetch friend suggestions
+  fetch('/api/suggestions', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      // Add any necessary authentication headers
+    },
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Update the suggestions state with the received data
+      setSuggestions(data.suggestions);
+    })
+    .catch(error => {
+      console.error('Failed to fetch friend suggestions:', error);
+      // Handle the error
+    });
 }, []);
+
+
 
 
 
@@ -101,24 +80,20 @@ useEffect(() => {
               <span>⋮</span>
             </div>
             <div className="card-body">
-              {loading ? (
-                <p>Loading...</p>
-              ) : error ? (
-                <p>Error: {error}</p>
-              ) : (
-                suggestions.map((user, index) => (
-                  <div key={index} className="d-flex justify-content-between align-items-center my-3">
-                    <img src={user.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
+              
+                {suggestions.map(suggestion => (
+                  <div key={suggestion.user._id} className="d-flex justify-content-between align-items-center my-3">
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
                     <div className="text-left">
-                      <h6 className="mb-1">{user.name}</h6>
-                      <p className="mb-0 text-muted">{user.occupation}</p>
+                      <h6 className="mb-1">{suggestion.user.firstName} {suggestion.user.lastName}</h6>
+                      <p className="mb-0 text-muted">{suggestion.user.occupation}</p>
                     </div>
                     <div className="text-right" style={{ border: '#bdbebd solid 1px', padding: '4px' }}>
                       <FontAwesomeIcon icon={faPlus} />
                     </div>
                   </div>
                 ))
-              )}
+              }
               <div className="text-center mt-3">
                 <button className="btn btn-outline-primary" onClick={toggleViewMore}>{viewMore ? 'View Less' : 'View More'}</button>
               </div>

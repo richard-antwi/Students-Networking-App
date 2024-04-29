@@ -11,7 +11,6 @@ const path = require('path');
 
 const UserModel = require('./models/UserModel'); // Adjusted for a likely correct path
 const UserProfile = require('./models/UserProfile');
-
 // Initialize the Express app
 const app = express();
 
@@ -21,7 +20,6 @@ app.use(
     crossOriginResourcePolicy: { policy: "cross-origin" }
   })
 );
-
 // Set up rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -37,7 +35,6 @@ const corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
-
 // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -45,7 +42,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.error(err));
-
 
 // Define routes
 app.get('/', (req, res) => {
@@ -80,7 +76,6 @@ app.post('/login', async (req, res) => {
     }
   });
   
-
   const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN_HERE
@@ -123,7 +118,6 @@ app.post('/user/profile/update', authenticateToken, async (req, res) => {
       res.status(500).json({ message: "Failed to update or create profile", error: error.message });
   }
 });
-
 
 // Configure multer for file storage
 // Set storage engine
@@ -194,7 +188,6 @@ app.post('/upload', authenticateToken, (req, res) => {
   });
 });
 
-
 app.get('/user/profile', authenticateToken, async (req, res) => {
   try {
     const userProfile = await UserProfile.findOne({ _id: req.user.id });
@@ -207,37 +200,33 @@ app.get('/user/profile', authenticateToken, async (req, res) => {
   }
 });
 
-
-//suggestions
+// Function to get friend suggestions based on user and profile data
 async function getSuggestions(userId) {
   const currentUser = await User.findById(userId);
   if (!currentUser) {
     return [];
   }
-
   // Start with a basic query that matches users based on a simple attribute (like registration date proximity)
   let query = {
     _id: { $ne: userId }, // Exclude current user
-    createdAt: { $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) } // Example: users who joined within the last year
+    createdAt: { $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }, // Example: users who joined within the last year
   };
-
   const basicMatches = await User.find(query).lean();
 
   // Attempt to refine these matches using profile data if available
   const refinedMatches = await Promise.all(basicMatches.map(async (user) => {
     const userProfile = await UserProfile.findOne({ userId: user._id });
-    const currentUserProfile = await UserProfile.findOne({ userId: userId });
 
     let score = 0;
-    // Further refine match if both users have profiles
-    if (userProfile && currentUserProfile) {
+
+    // Further refine match if the current user has a profile
+    if (userProfile) {
       // Example: Increase score if they are in the same city
-      if (userProfile.location.city === currentUserProfile.location.city) {
+      if (userProfile.location.city === currentUser.location.city) {
         score += 1;
       }
       // Add more conditions as needed
     }
-
     return { user, score };
   }));
 
@@ -248,15 +237,12 @@ async function getSuggestions(userId) {
   return filteredMatches;
 }
 
-
-
-
 // Endpoint to get friend suggestions
 app.get('/api/suggestions', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.id; 
+    const userId = req.user.id;
     const suggestions = await getSuggestions(userId);
-    const jsonResponse = { suggestions }; // Define jsonResponse containing suggestions
+    const jsonResponse = { suggestions };
     console.log("Sending response for /api/suggestions: ", jsonResponse);
     res.json(jsonResponse);
   } catch (error) {
@@ -264,9 +250,6 @@ app.get('/api/suggestions', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch suggestions', error: error.toString() });
   }
 });
-
-
-
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -284,7 +267,6 @@ app.use((err, req, res, next) => {
       return res.status(500).json({ message: 'Internal Server Error', error: err.message });
   }
 });
-
 
 // Start the server
 app.listen(process.env.PORT || 3001, () => {

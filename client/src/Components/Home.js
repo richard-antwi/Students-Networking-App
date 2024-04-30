@@ -4,36 +4,56 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
 import { ProfileContext } from './ProfileContext';
 import avatar from '../Images/avatar.webp';
-import axios from 'axios';
+// import axios from 'axios';
 
 function Home() {
   const { imageUrl } = useContext(ProfileContext);
   const [viewMore, setViewMore] = useState(false);
   const [isTextExpanded, setTextExpanded] = useState(false);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
 
 const toggleText = () => {
     setTextExpanded(!isTextExpanded);
 };
-const [suggestions, setSuggestions] = useState([]);
 
-useEffect(() => {
-  const fetchSuggestions = async () => {
-    try {
-      const response = await axios.get('http://localhost:3001/api/suggestions', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setSuggestions(response.data.suggestions);
-    } catch (error) {
-      console.error('Failed to fetch friend suggestions:', error);
-      setError(error.message);
-    }
-  };
+  const [suggestions, setSuggestions] = useState([]);
+  // const [setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  fetchSuggestions();
-}, []);
+  useEffect(() => {
+      const fetchSuggestions = async () => {
+          // setLoading(true);
+          setError('');
+          try {
+              const token = localStorage.getItem('token'); // Assuming token is stored in local storage
+              const response = await fetch('http://localhost:3001/api/suggestions', {
+                  method: 'GET',
+                  headers: {
+                      'Authorization': `Bearer ${token}`,
+                      'Content-Type': 'application/json'
+                  }
+              });
+
+              if (!response.ok) {
+                  throw new Error('Failed to fetch suggestions');
+              }
+
+              const data = await response.json();
+              setSuggestions(data.suggestions || []); 
+              console.log('Suggestions:', data);
+
+              
+              // console.log(setSuggestions(data.suggestions))
+          } catch (err) {
+              setError(err.message);
+          } 
+          // finally {
+          //     // setLoading(false);
+          // }
+      };
+        console.log()
+      fetchSuggestions();
+  }, []);
 
   const toggleViewMore = () => {
     setViewMore(!viewMore);
@@ -79,12 +99,13 @@ useEffect(() => {
             </div>
             <div className="card-body">
               
-            {suggestions.map((user, index) => (
-                  <div key={index} className="d-flex justify-content-between align-items-center my-3">
-                    <img src={user.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
+            {suggestions.map(suggestion => (
+                  <div key={suggestion.user._id} className="d-flex justify-content-between align-items-center my-3">
+                    {console.log(suggestion.user.firstName)}
+                    <img src={suggestion.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
                     <div className="text-left">
-                      <h6 className="mb-1">{user.name}</h6>
-                      <p className="mb-0 text-muted">{user.occupation}</p>
+                      <h6 className="mb-1">{suggestion.user.firstName}</h6>
+                      <p className="mb-0 text-muted">{suggestion.user.Occupation}</p>
                     </div>
                     <div className="text-right" style={{ border: '#bdbebd solid 1px', padding: '4px' }}>
                       <FontAwesomeIcon icon={faPlus} />

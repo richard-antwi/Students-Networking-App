@@ -101,11 +101,11 @@ const toggleText = () => {
               
             {suggestions.map(suggestion => (
                   <div key={suggestion.user._id} className="d-flex justify-content-between align-items-center my-3">
-                    {console.log(suggestion.user.firstName)}
+                    {/* {console.log(suggestion.user.firstName)} */}
                     <img src={suggestion.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
                     <div className="text-left">
-                      <h6 className="mb-1">{suggestion.user.firstName}</h6>
-                      <p className="mb-0 text-muted">{suggestion.user.Occupation}</p>
+                      <h6 className="mb-1">{suggestion.user.firstName} {suggestion.user.lastName}</h6>
+                      <p className="mb-0 text-muted">{suggestion.user.headline}</p>
                     </div>
                     <div className="text-right" style={{ border: '#bdbebd solid 1px', padding: '4px' }}>
                       <FontAwesomeIcon icon={faPlus} />

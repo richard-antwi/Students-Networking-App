@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
-import { ProfileContext } from './ProfileContext';
+// import { ProfileContext } from './ProfileContext';
 import avatar from '../Images/avatar.webp';
-// import axios from 'axios';
+import axios from 'axios';
 
 function Home() {
-  const { imageUrl } = useContext(ProfileContext);
+  // const { imageUrl } = useContext(ProfileContext);
   const [viewMore, setViewMore] = useState(false);
   const [isTextExpanded, setTextExpanded] = useState(false);
   // const [error, setError] = useState(null);
@@ -19,6 +19,38 @@ const toggleText = () => {
   const [suggestions, setSuggestions] = useState([]);
   // const [setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [profileData, setProfileData] = useState({ profileImagePath: '',firstName: '',
+  lastName: '',
+  userName: '',
+  headline: '', });
+  useEffect(() => {
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/user/profile', {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (response.data) {
+                setProfileData({
+                    firstName: response.data.firstName,
+                    lastName: response.data.lastName,
+                    userName: response.data.userName,
+                    headline: response.data.profile.headline,
+                    profileImagePath: response.data.profile.profileImagePath
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    fetchUserData();
+}, []);
+
+  const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
+
+// Construct the image URL
+const imageUrl = `http://localhost:3001/${imagePath}`;
+console.log(imageUrl)
 
   useEffect(() => {
       const fetchSuggestions = async () => {
@@ -68,12 +100,16 @@ const toggleText = () => {
         <div className="col-md-3 side-section">
           <div className="card">
             <div className="card-header text-center" style={{ padding: '15px', margin: 0, background: 'linear-gradient(to bottom, #007bff 50%, #ffffff 50%)', color: '#fff' }}>
+            {profileData.profileImagePath ? (
               <img src={imageUrl || avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{ width: '100px', height: '100px' }} />
-            </div>
+            ) : (
+              <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{ width: '100px', height: '100px' }} />
+            )}
+              </div>
             <div className="card-body text-center">
               {/* User Details */}
-              <h5 className="card-title">John Doe</h5>
-              <p className="card-text">Skills or Interests</p>
+              <h5 className="card-title"> {profileData.firstName} {profileData.lastName}</h5>
+              <p className="card-text"> {profileData.headline}</p>
               {/* Followers and Following */}
               <div className="row">
                 <div className="col">
@@ -128,7 +164,11 @@ const toggleText = () => {
                   <div className="row">
                     {/* Avatar on the left */}
                     <div className="col-md-3">
-                      <img src={imageUrl} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '60px', height: '60px'}} />
+                    {profileData.profileImagePath ? (
+                    <img src={imageUrl} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '60px', height: '60px'}} />
+                  ) : (
+                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mb-3" style={{width: '60px', height: '60px'}} />
+                  )}
                     </div>
                     {/* Buttons on the right */}
                     <div className="col-md-9 text-right mt-3">

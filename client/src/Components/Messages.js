@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap';
 import avatar from '../Images/avatar.webp';
 import coverPhoto from '../Images/coverPhoto.jpg';
+import axios from 'axios';
 
 function Messages() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [profileData, setProfileData] = useState({ profileImagePath: '',firstName: '',
+  lastName: '',
+  userName: '',
+  headline: '', });
 
   // Define currentUser statically for demonstration purposes
   const currentUser = { name: "John Doe" };
@@ -42,7 +47,32 @@ function Messages() {
     })
     .catch(error => console.error("Sending message failed", error));
   };
-  
+  useEffect(() => {
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/user/profile', {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (response.data) {
+                setProfileData({
+                    firstName: response.data.firstName,
+                    lastName: response.data.lastName,
+                    userName: response.data.userName,
+                    profileImagePath: response.data.profile.profileImagePath
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    fetchUserData();
+}, []);
+const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
+
+// Construct the image URL
+const imageUrl = `http://localhost:3001/${imagePath}`;
+console.log(imageUrl)
     return (
         <>
         <div>
@@ -136,7 +166,7 @@ function Messages() {
                       <img src={avatar} alt="User Avatar" className="avatar-img mr-2" style={{width: '40px', height: '40px'}} />
                       {/* User's name and online status */}
                       <div>
-                        <h6 className="mb-0">John Doe</h6>
+                        <h6 className="mb-0">{profileData.firstName} {profileData.lastName}</h6>
                         <small className="text-success">Online</small>
                       </div>
                     </div>

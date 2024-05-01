@@ -16,26 +16,27 @@ function NavBar() {
   lastName: '',
   userName: '' });
   useEffect(() => {
-    const fetchProfileData = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found for fetching profile data');
-        return;
-      }
-      try {
-        const response = await axios.get('http://localhost:3001/user/profile', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (response.data.profileImagePath) {
-          setProfileData(response.data);
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get('http://localhost:3001/user/profile', {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (response.data) {
+                setProfileData({
+                    firstName: response.data.firstName,
+                    lastName: response.data.lastName,
+                    userName: response.data.userName,
+                    profileImagePath: response.data.profile.profileImagePath
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
         }
-      } catch (error) {
-        console.error('Failed to fetch profile data:', error);
-      }
     };
 
-    fetchProfileData();
-  }, []);
+    fetchUserData();
+}, []);
+
   const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
 
 // Construct the image URL

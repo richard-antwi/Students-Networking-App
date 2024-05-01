@@ -268,8 +268,6 @@ async function getSuggestions(userId) {
   }
 }
 
-
-// Endpoint to get friend suggestions
 // Endpoint to get friend suggestions
 app.get('/api/suggestions', authenticateToken, async (req, res) => {
   try {

@@ -13,7 +13,7 @@ import Layout from './Components/Layout';
 import Messages from './Components/Messages';
 import MyProfile from './Components/MyProfile';
 import PolicyPrivacy from './Components/PolicyPrivacy';
-import { ProfileProvider } from './Components/ProfileContext';
+// import { ProfileProvider } from './Components/ProfileContext';
 import Profiles from './Components/Profiles';
 import Projects from './Components/Projects';
 import Register from './Components/Register';
@@ -24,7 +24,7 @@ function App() {
   
   return (
     <>
-    <ProfileProvider>
+    {/* <ProfileProvider> */}
            
        
     <BrowserRouter>
@@ -57,7 +57,7 @@ function App() {
     
       </div>
     </BrowserRouter>
-    </ProfileProvider>
+    {/* </ProfileProvider> */}
     </>
   );
 }

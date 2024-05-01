@@ -13,6 +13,8 @@ const path = require('path');
 // const UserProfile = require('./models/UserProfile');
 
 const User = require('./models/User');
+const Friendship = require('./models/Friendship');
+
 // Initialize the Express app
 const app = express();
 
@@ -135,9 +137,6 @@ app.post('/user/profile/update', authenticateToken, async (req, res) => {
   }
 });
 
-
-
-
 // Configure multer for file storage
 // Set storage engine
 const storage = multer.diskStorage({
@@ -227,7 +226,6 @@ async function getSuggestions(userId) {
   if (!currentUser) {
       return [];
   }
-
   let query = {
       _id: { $ne: userId }, // Exclude current user
       'profile.createdAt': { $gte: new Date(new Date().getTime() - (15 * 24 * 60 * 60 * 1000))},
@@ -253,7 +251,6 @@ async function getSuggestions(userId) {
       }
       return { user, score };
   });
-
   const filteredMatches = refinedMatches.filter(match => match.score > 0);
   filteredMatches.sort((a, b) => b.score - a.score);
 
@@ -281,7 +278,6 @@ app.get('/api/suggestions', authenticateToken, async (req, res) => {
 });
 
 //Endpoint to add freinds.
-// Requires authentication
 // POST /api/friendships
 app.post('/api/friendships', authenticateToken, async (req, res) => {
   const { recipientId } = req.body;

@@ -822,6 +822,101 @@ console.log(imageUrl);
                     </div>
                   </div>
                 </div>
+                <div className="card mt-5">
+                  <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: '#fff'}}>
+                    {/* Heading on the left */}
+                    <h5 className="mb-0">People Viewed Profile</h5>
+                    {/* Three dots on the right */}
+                    <span>⋮</span>
+                  </div>
+                  <div className="card-body">
+                    {/* Avatar, Name, and Interest */}
+                    <div className="d-flex justify-content-between align-items-center">
+                      {/* Avatar on the left */}
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      {/* Name and Interest */}
+                      <div className="text-left">
+                        <h6 className="mb-1">John Doe</h6>
+                        <p className="mb-0 text-muted">Web Developer</p>
+                      </div>
+                      {/* Icon at the extreme right */}
+                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
+                        <i className="fas fa-plus" />
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center my-3">
+                      {/* Avatar on the left */}
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      {/* Name and Interest */}
+                      <div className="text-left">
+                        <h6 className="mb-1">John Doe</h6>
+                        <p className="mb-0 text-muted">Web Developer</p>
+                      </div>
+                      {/* Icon at the extreme right */}
+                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
+                        <i className="fas fa-plus" />
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center my-3">
+                      {/* Avatar on the left */}
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      {/* Name and Interest */}
+                      <div className="text-left">
+                        <h6 className="mb-1">John Doe</h6>
+                        <p className="mb-0 text-muted">Web Developer</p>
+                      </div>
+                      {/* Icon at the extreme right */}
+                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
+                        <i className="fas fa-plus" />
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center my-3">
+                      {/* Avatar on the left */}
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      {/* Name and Interest */}
+                      <div className="text-left">
+                        <h6 className="mb-1">John Doe</h6>
+                        <p className="mb-0 text-muted">Web Developer</p>
+                      </div>
+                      {/* Icon at the extreme right */}
+                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
+                        <i className="fas fa-plus" />
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center my-3">
+                      {/* Avatar on the left */}
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      {/* Name and Interest */}
+                      <div className="text-left">
+                        <h6 className="mb-1">John Doe</h6>
+                        <p className="mb-0 text-muted">Web Developer</p>
+                      </div>
+                      {/* Icon at the extreme right */}
+                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
+                        <i className="fas fa-plus" />
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center my-3">
+                      {/* Avatar on the left */}
+                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                      {/* Name and Interest */}
+                      <div className="text-left">
+                        <h6 className="mb-1">John Doe</h6>
+                        <p className="mb-0 text-muted">Web Developer</p>
+                      </div>
+                      {/* Icon at the extreme right */}
+                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
+                        <i className="fas fa-plus" />
+                      </div>
+                    </div>
+                    {/* View More button */}
+                    <div className="text-center mt-3">
+                    
+                    <span className="view-more-btn" onClick={toggleViewMore}>View More</span>
+
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

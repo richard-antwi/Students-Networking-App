@@ -210,6 +210,7 @@ app.post('/upload', authenticateToken, (req, res) => {
 app.get('/user/profile', authenticateToken, async (req, res) => {
   try {
     const userProfile = await User.findOne({ _id: req.user.id });
+    console.log(userProfile);
     if (!userProfile) {
       return res.status(404).send('Profile not found.');
     }

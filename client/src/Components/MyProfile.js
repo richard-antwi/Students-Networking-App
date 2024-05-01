@@ -69,20 +69,36 @@ function MyProfile() {
       }));
     }
   };
-  const handleAddPosition = () => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      currentPosition: [
-        ...prevFormData.currentPosition,
-        {
-          title: '',
-          company: '',
-          startDate: null,
-          endDate: null,
-          currentlyWorkingHere: false
-        }
-      ]
-    }));
+ 
+  const [positions, setPositions] = useState([{
+    title: '',
+    company: '',
+    startDate: '',
+    endDate: '',
+    currentlyWorkingHere: false
+  }]);
+
+  const addPosition = () => {
+    const newPosition = {
+      title: '',
+      company: '',
+      startDate: '',
+      endDate: '',
+      currentlyWorkingHere: false
+    };
+    setPositions([...positions, newPosition]);
+  };
+  
+  const removePosition = index => {
+    const newPositions = [...positions];
+    newPositions.splice(index, 1);
+    setPositions(newPositions);
+  };
+  
+  const handlePositionChange = (index, field, value) => {
+    const newPositions = [...positions];
+    newPositions[index] = {...newPositions[index], [field]: value};
+    setPositions(newPositions);
   };
   
  
@@ -874,18 +890,63 @@ console.log(imageUrl);
         {/* Current Position */}
         <div className="mb-3">
           <label htmlFor="currentPosition" className="form-label">Current position</label>
-          {Array.isArray(formData.currentPosition) && formData.currentPosition.map((position, index) => (
-            <div key={index}>
-              <input
-                name={`currentPosition-${index}-title`}
-                value={position.title}
-                onChange={handleChange}
-                placeholder="Title"
-                />
-                {/* Repeat for other fields */}
+                  {positions.map((position, index) => (
+          <div key={index} className="position-group">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Title"
+              value={position.title}
+              onChange={e => handlePositionChange(index, 'title', e.target.value)}
+            />
+            <div className="form-group mt-2">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Company"
+              value={position.company}
+              onChange={e => handlePositionChange(index, 'company', e.target.value)}
+            />
             </div>
-          ))}
-        <button type="button" onClick={handleAddPosition}>Add Position</button>
+            <div className="form-group mt-2">
+            <label htmlFor="startDate" className="form-label">Start Date</label>
+            <input
+              type="date"
+              className="form-control"
+              id="startDate"
+              placeholder="Start Date"
+              value={position.startDate}
+              onChange={e => handlePositionChange(index, 'startDate', e.target.value)}
+            />
+            </div>
+            <div className="form-group mt-2">
+            <label htmlFor="endDate" className="form-label">End Date</label>
+            <input
+              type="date"
+              id="endDate"
+              className="form-control"
+              placeholder="End Date"
+              value={position.endDate}
+              onChange={e => handlePositionChange(index, 'endDate', e.target.value)}
+            />
+            </div>
+             <div className="form-check mt-2">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="currentlyWorkingHere"
+              checked={position.currentlyWorkingHere ?? false}
+              onChange={e => handlePositionChange(index, 'currentlyWorkingHere', e.target.checked)}
+            />
+             <label className="form-check-label" htmlFor="currentlyWorkingHere">
+              Still working Here
+          </label>
+            </div>             
+            <button type="button" className="btn btn-primary" onClick={() => removePosition(index)}>Remove</button>
+          </div>
+        ))}
+        <button type="button" className="btn btn-primary" onClick={addPosition}>Add Another Position</button>
+
         </div>
         {/* Industry */}
         <div className="mb-3">

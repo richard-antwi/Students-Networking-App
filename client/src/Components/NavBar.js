@@ -1,21 +1,46 @@
-import React from 'react';
+// import React from 'react';
 import '../App.css';
-// import avatar from '../Images/avatar.webp';
+import avatar from '../Images/avatar.webp';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { faBolt, faCity, faHome, faMessage, faPuzzlePiece, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, Outlet } from 'react-router-dom';
-import { ProfileContext } from './ProfileContext'; //to import profile image
-import { useContext } from 'react'; //to import for profile image
+// import { ProfileContext } from './ProfileContext'; //to import profile image
+// import { useContext } from 'react'; //to import for profile image
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 
 
 function NavBar() {
-  const { imageUrl, loading } = useContext(ProfileContext);
+  const [profileData, setProfileData] = useState({ profileImagePath: '',firstName: '',
+  lastName: '',
+  userName: '' });
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found for fetching profile data');
+        return;
+      }
+      try {
+        const response = await axios.get('http://localhost:3001/user/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data.profileImagePath) {
+          setProfileData(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile data:', error);
+      }
+    };
 
-  if (loading) {
-    return <div>Loading...</div>; // Render a loading indicator while fetching profile data
-  }
-  
+    fetchProfileData();
+  }, []);
+  const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
+
+// Construct the image URL
+const imageUrl = `http://localhost:3001/${imagePath}`;
+console.log(imageUrl);
 
   return (
     <>
@@ -81,10 +106,15 @@ function NavBar() {
           </li>
           <li>
             <div className="dropdown mr-5">
-              <Link to="/" className="nav-link dropdown-toggle" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <Link to="/" className="nav-link dropdown-toggle" role="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {profileData.profileImagePath ? (
                 <img src={imageUrl} alt="Avatar" className="avatar-img small-avatar" />
-                John Doe
-              </Link>
+              ) : (
+                <img src={avatar} alt="Default Avatar" className="avatar-img small-avatar" />
+              )}
+              {profileData.firstName} {profileData.lastName}
+            </Link>
+
               <div className="dropdown-menu mr-7" aria-labelledby="profileDropdown">
                 {/* Dropdown items go here */}
                 <div className="dropdown-item">

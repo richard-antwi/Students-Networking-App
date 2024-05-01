@@ -195,6 +195,52 @@ function MyProfile() {
 // Construct the image URL
 const imageUrl = `http://localhost:3001/${imagePath}`;
 console.log(imageUrl);
+
+
+//Friend Request: Acceptance and decline
+const [friendRequests, setFriendRequests] = useState([]);
+
+useEffect(() => {
+  fetchFriendRequests();
+}, []);
+
+const fetchFriendRequests = async () => {
+  const token = localStorage.getItem('token');
+  try {
+    const response = await axios.get('http://localhost:3001/api/friend-requests', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setFriendRequests(response.data);
+  } catch (error) {
+    console.error('Error fetching friend requests:', error);
+  }
+};
+
+const handleAccept = async (friendshipId) => {
+  const token = localStorage.getItem('token');
+  try {
+    await axios.patch(`http://localhost:3001/api/friendships/${friendshipId}/accept`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    fetchFriendRequests(); // Refresh the list
+    alert('Friend request accepted');
+  } catch (error) {
+    console.error('Failed to accept friend request:', error);
+  }
+};
+
+const handleDecline = async (friendshipId) => {
+  const token = localStorage.getItem('token');
+  try {
+    await axios.patch(`http://localhost:3001/api/friendships/${friendshipId}/decline`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    fetchFriendRequests(); // Refresh the list
+    alert('Friend request declined');
+  } catch (error) {
+    console.error('Failed to decline friend request:', error);
+  }
+};
       return (
         <>
        
@@ -350,100 +396,26 @@ console.log(imageUrl);
                   </div>
                 </div>
                 <div className="card mt-5">
-                  <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: '#fff'}}>
-                    {/* Heading on the left */}
-                    <h5 className="mb-0">People Viewed Profile</h5>
-                    {/* Three dots on the right */}
-                    <span>⋮</span>
-                  </div>
-                  <div className="card-body">
-                    {/* Avatar, Name, and Interest */}
-                    <div className="d-flex justify-content-between align-items-center">
-                      {/* Avatar on the left */}
-                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                      {/* Name and Interest */}
-                      <div className="text-left">
-                        <h6 className="mb-1">John Doe</h6>
-                        <p className="mb-0 text-muted">Web Developer</p>
-                      </div>
-                      {/* Icon at the extreme right */}
-                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                        <i className="fas fa-plus" />
-                      </div>
+              <div className="card-header d-flex justify-content-between align-items-center" style={{ backgroundColor: '#fff' }}>
+                <h5 className="mb-0">Friend Requests</h5>
+                <span>⋮</span>
+              </div>
+              <div className="card-body">
+                {friendRequests.map(request => (
+                  <div key={request._id} className="d-flex justify-content-between align-items-center my-3">
+                    <img src={request.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
+                    <div className="text-left">
+                      <h6 className="mb-1">{request.requester}</h6>
+                      {/* <p className="mb-0 text-muted">{request.headline}</p> */}
                     </div>
-                    <div className="d-flex justify-content-between align-items-center my-3">
-                      {/* Avatar on the left */}
-                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                      {/* Name and Interest */}
-                      <div className="text-left">
-                        <h6 className="mb-1">John Doe</h6>
-                        <p className="mb-0 text-muted">Web Developer</p>
-                      </div>
-                      {/* Icon at the extreme right */}
-                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                        <i className="fas fa-plus" />
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center my-3">
-                      {/* Avatar on the left */}
-                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                      {/* Name and Interest */}
-                      <div className="text-left">
-                        <h6 className="mb-1">John Doe</h6>
-                        <p className="mb-0 text-muted">Web Developer</p>
-                      </div>
-                      {/* Icon at the extreme right */}
-                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                        <i className="fas fa-plus" />
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center my-3">
-                      {/* Avatar on the left */}
-                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                      {/* Name and Interest */}
-                      <div className="text-left">
-                        <h6 className="mb-1">John Doe</h6>
-                        <p className="mb-0 text-muted">Web Developer</p>
-                      </div>
-                      {/* Icon at the extreme right */}
-                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                        <i className="fas fa-plus" />
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center my-3">
-                      {/* Avatar on the left */}
-                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                      {/* Name and Interest */}
-                      <div className="text-left">
-                        <h6 className="mb-1">John Doe</h6>
-                        <p className="mb-0 text-muted">Web Developer</p>
-                      </div>
-                      {/* Icon at the extreme right */}
-                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                        <i className="fas fa-plus" />
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center my-3">
-                      {/* Avatar on the left */}
-                      <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                      {/* Name and Interest */}
-                      <div className="text-left">
-                        <h6 className="mb-1">John Doe</h6>
-                        <p className="mb-0 text-muted">Web Developer</p>
-                      </div>
-                      {/* Icon at the extreme right */}
-                      <div className="text-right" style={{border: '#bdbebd solid 1px', padding: '4px'}}>
-                        <i className="fas fa-plus" />
-                      </div>
-                    </div>
-                    {/* View More button */}
-                    <div className="text-center mt-3">
-                    
-                    <span className="view-more-btn" onClick={toggleViewMore}>View More</span>
-
+                    <div className="text-right">
+                      <button className="btn btn-success" onClick={() => handleAccept(request._id)}>Accept</button>
+                      <button className="btn btn-danger" onClick={() => handleDecline(request._id)}>Decline</button>
                     </div>
                   </div>
-                </div>
+                ))}
+              </div>
+              </div>
               </div>
               {/* Center Section */}
               <div className="col-md-6 bg-light ">

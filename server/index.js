@@ -310,47 +310,80 @@ app.post('/api/friendships', authenticateToken, async (req, res) => {
   }
 });
 
+app.get('/api/friend-requests', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    // Fetch friend requests and populate requester details
+    const friendRequests = await Friendship.find({
+      recipient: userId,
+      status: 'pending'
+    })
+    .populate('requester', 'firstName lastName') // Adjust the fields as per your User model
+    .exec();
+
+    const requestsWithUserDetails = friendRequests.map(fr => ({
+      id: fr._id,
+      requester: fr.requester.firstName + " " + fr.requester.lastName, // Combining first and last name
+      status: fr.status
+    }));
+
+    res.json(requestsWithUserDetails);
+  } catch (error) {
+    console.error('Error fetching friend requests:', error);
+    res.status(500).json({ message: 'Failed to fetch friend requests', error: error.message });
+  }
+});
+
+
 
 // PATCH /api/friendships/:id/accept
 // Requires authentication
 app.patch('/api/friendships/:id/accept', authenticateToken, async (req, res) => {
   try {
-      const friendship = await Friendship.findOneAndUpdate({
-          _id: req.params.id,
-          recipient: req.user.id
-      }, {
-          status: 'accepted'
-      }, { new: true });
+    const friendshipId = req.params.id;
+    const updatedFriendship = await Friendship.findOneAndUpdate({
+      _id: friendshipId,
+      recipient: req.user.id,
+      status: 'pending'
+    }, {
+      status: 'accepted'
+    }, { new: true });
 
-      if (!friendship) {
-          return res.status(404).json({ message: "Friend request not found or not authorized to accept." });
-      }
+    if (!updatedFriendship) {
+      return res.status(404).json({ message: "Friend request not found or not authorized to accept." });
+    }
 
-      res.json(friendship);
+    res.json(updatedFriendship);
   } catch (error) {
-      res.status(500).json({ message: "Error accepting friendship.", error: error.message });
+    console.error('Error accepting friendship:', error);
+    res.status(500).json({ message: "Error accepting friendship.", error: error.message });
   }
 });
+
 // PATCH /api/friendships/:id/decline
 // Requires authentication
 app.patch('/api/friendships/:id/decline', authenticateToken, async (req, res) => {
   try {
-      const friendship = await Friendship.findOneAndUpdate({
-          _id: req.params.id,
-          recipient: req.user.id
-      }, {
-          status: 'declined'
-      }, { new: true });
+    const friendshipId = req.params.id;
+    const updatedFriendship = await Friendship.findOneAndUpdate({
+      _id: friendshipId,
+      recipient: req.user.id,
+      status: 'pending'
+    }, {
+      status: 'declined'
+    }, { new: true });
 
-      if (!friendship) {
-          return res.status(404).json({ message: "Friend request not found or not authorized to decline." });
-      }
+    if (!updatedFriendship) {
+      return res.status(404).json({ message: "Friend request not found or not authorized to decline." });
+    }
 
-      res.json(friendship);
+    res.json(updatedFriendship);
   } catch (error) {
-      res.status(500).json({ message: "Error declining friendship.", error: error.message });
+    console.error('Error declining friendship:', error);
+    res.status(500).json({ message: "Error declining friendship.", error: error.message });
   }
 });
+
 
 
 // Error handling middleware

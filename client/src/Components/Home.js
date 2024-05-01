@@ -87,6 +87,25 @@ console.log(imageUrl)
       fetchSuggestions();
   }, []);
 
+  //add frinds
+  function addFriend(friendId) {
+    const token = localStorage.getItem('token');
+    axios.post(`http://localhost:3001/api/friendships`, {
+        recipientId: friendId
+    }, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(response => {
+        alert('Friend request sent successfully!');
+        // You might want to update the UI here to reflect the friendship status
+    })
+    .catch(error => {
+        console.error('Failed to add friend:', error.response.data.message);
+        alert(`Failed to add friend: ${error.response.data.message}`);
+    });
+}
+
+
   const toggleViewMore = () => {
     setViewMore(!viewMore);
   };
@@ -134,7 +153,6 @@ console.log(imageUrl)
               <span>⋮</span>
             </div>
             <div className="card-body">
-              
             {suggestions.map(suggestion => (
                   <div key={suggestion.user._id} className="d-flex justify-content-between align-items-center my-3">
                     {/* {console.log(suggestion.user.firstName)} */}
@@ -144,7 +162,7 @@ console.log(imageUrl)
                       <p className="mb-0 text-muted">{suggestion.user.headline}</p>
                     </div>
                     <div className="text-right" style={{ border: '#bdbebd solid 1px', padding: '4px' }}>
-                      <FontAwesomeIcon icon={faPlus} />
+                      <FontAwesomeIcon onClick={() => addFriend(suggestion.user._id)} icon={faPlus} />
                     </div>
                   </div>
                 ))}

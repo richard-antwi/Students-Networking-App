@@ -163,7 +163,11 @@ console.log(imageUrl)
                     {/* Center: User's information */}
                     <div className="d-flex align-items-center">
                       {/* User's avatar */}
+                      {profileData.profileImagePath ? (
+                      <img src={imageUrl} alt="User Avatar" className="avatar-img mr-2" style={{width: '40px', height: '40px'}} />
+                    ):(
                       <img src={avatar} alt="User Avatar" className="avatar-img mr-2" style={{width: '40px', height: '40px'}} />
+                    )}
                       {/* User's name and online status */}
                       <div>
                         <h6 className="mb-0">{profileData.firstName} {profileData.lastName}</h6>

@@ -50,7 +50,7 @@ const toggleText = () => {
 
 // Construct the image URL
 const imageUrl = `http://localhost:3001/${imagePath}`;
-console.log(imageUrl)
+// console.log(imageUrl)
 
   useEffect(() => {
       const fetchSuggestions = async () => {

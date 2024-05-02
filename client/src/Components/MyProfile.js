@@ -219,9 +219,9 @@ function MyProfile() {
 }, []);
 
 
-  const imagePath = profileData.profileImagePath ? profileData.profileImagePath.replace(/\\/g, '/') : '';
-const coverPath = profileData.profileCoverPath ? profileData.profileCoverPath.replace(/\\/g, '/') : '';
-
+  
+const coverPath = profileData.profileCoverPath.replace(/\\/g, '/') ;
+const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
 // Construct the image URL
 const imageUrl = imagePath ? `http://localhost:3001/${imagePath}` : null;
 const coverUrl = coverPath ? `http://localhost:3001/${coverPath}` : null;

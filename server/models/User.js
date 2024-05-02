@@ -44,7 +44,11 @@ const UserSchema = new mongoose.Schema({
             phone: String,
             address: String,
         },
-        profileImagePath: { type: String, default: '' }
+        profileImagePath: { type: String, default: '' },
+        coverImagePath: {
+            type: String,
+            default: ''
+          }
     }
 }, { timestamps: true });
 

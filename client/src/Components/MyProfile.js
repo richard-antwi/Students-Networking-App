@@ -9,9 +9,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-
 function MyProfile() {
-  const [coverImagePath] = useState(coverPhoto);
+  // const [coverImagePath] = useState(coverPhoto);
   const [modalShow, setModalShow] = useState(false);
 
     const handleOpenModal = () => setModalShow(true);
@@ -137,7 +136,7 @@ function MyProfile() {
   };
   
   const [uploading, setUploading] = useState(false);
-  const [profileData, setProfileData] = useState({ profileImagePath: '' });
+  const [profileData, setProfileData] = useState({ profileImagePath: '', profileCoverPath: '' });
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -163,9 +162,37 @@ function MyProfile() {
       }
     }
   };
+  const handleCoverUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('coverImage', file);
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.post('http://localhost:3001/upload/cover', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
+          },
+        });
+        setProfileData(prevData => ({ ...prevData, profileCoverPath: response.data.filePath }));
+        alert('Upload successful!');
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('Failed to upload image.');
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
+
 
   const triggerFileSelectPopup = () => {
     document.getElementById('fileInput').click();
+  };
+  const triggerFileSelectPopupCover = () => {
+    document.getElementById('fileInputCover').click();
   };
 
   useEffect(() => {
@@ -179,7 +206,8 @@ function MyProfile() {
                     firstName: response.data.firstName,
                     lastName: response.data.lastName,
                     userName: response.data.userName,
-                    profileImagePath: response.data.profile.profileImagePath
+                    profileImagePath: response.data.profile.profileImagePath,
+                    profileCoverPath: response.data.profile.profileCoverPath
                 });
             }
         } catch (error) {
@@ -190,11 +218,15 @@ function MyProfile() {
     fetchUserData();
 }, []);
 
-  const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
+
+  const imagePath = profileData.profileImagePath ? profileData.profileImagePath.replace(/\\/g, '/') : '';
+const coverPath = profileData.profileCoverPath ? profileData.profileCoverPath.replace(/\\/g, '/') : '';
 
 // Construct the image URL
-const imageUrl = `http://localhost:3001/${imagePath}`;
+const imageUrl = imagePath ? `http://localhost:3001/${imagePath}` : null;
+const coverUrl = coverPath ? `http://localhost:3001/${coverPath}` : null;
 console.log(imageUrl);
+console.log(coverUrl);
 
 
 //Friend Request: Acceptance and decline
@@ -241,15 +273,48 @@ const handleDecline = async (friendshipId) => {
     console.error('Failed to decline friend request:', error);
   }
 };
+
+// To view friends
+const [friends, setFriends] = useState([]);
+// const navigate = useNavigate(); // For navigation with React Router
+
+useEffect(() => {
+  fetchFriends();
+}, []);
+
+const fetchFriends = async () => {
+  const token = localStorage.getItem('token');
+  try {
+    const response = await axios.get('http://localhost:3001/api/friends', { // Ensure you have an endpoint to fetch friends
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setFriends(response.data);
+  } catch (error) {
+    console.error('Error fetching friends:', error);
+  }
+};
+
+const handleMessageFriend = (friendId) => {
+  // Navigate to the messaging page with the friendId
+
+  navigate(`/messages/${friendId}`);
+  // If using modals, you might set state here to open a modal instead
+};
+
       return (
         <>
        
         <div className="mt-3">
           {/* Profile Section with Cover Image */}
-          <div style={{ backgroundImage: `url(${coverImagePath})` }} className="cover-image" id ="handleImagesChange">
-          {/* <input type="file" onChange={handleImageChange} /> */}
-          <div className="change-cover-btn mt-5">
-            <i className="fas fa-camera" /> Change Cover Picture
+          <div className="cover-image" id="handleCoverChange" style={{ backgroundImage: `url(${coverUrl || coverPhoto})` }}>
+          <input
+                    type="file"
+                    id="fileInputCover"
+                    style={{ display: 'none' }}
+                    onChange={handleCoverUpload}
+                  />
+          <div className="change-cover-btn mt-5" onClick={triggerFileSelectPopupCover}>
+            <i className="fas fa-camera"  /> Change Cover Picture
           </div>
         </div>
         
@@ -420,7 +485,7 @@ const handleDecline = async (friendshipId) => {
               {/* Center Section */}
               <div className="col-md-6 bg-light ">
                 {/* Left Section */}
-                <h5 className="mt-3">John Doe</h5>
+                <h5 className="mt-3">{profileData.firstName} {profileData.lastName}</h5>
                 <div className="mt-">
                   <p className="mb-2 d-inline">Graphic Designer at Self Employed</p>
                   {/* Star Rating */}
@@ -796,8 +861,28 @@ const handleDecline = async (friendshipId) => {
                 </div>
                 <div className="card mt-5">
                   <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: '#fff'}}>
+                    <h5 className="mb-0">Friends</h5>
+                    <span>⋮</span>
+                  </div>
+                  <div className="card-body">
+                    {friends.map(friend => (
+                      <div key={friend._id} className="d-flex justify-content-between align-items-center my-3">
+                        <img src={friend.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                        <div className="text-left">
+                          <h6 className="mb-1">{friend.firstName} {friend.lastName}</h6>
+                          <p className="mb-0 text-muted">{friend.headline}</p>
+                        </div>
+                        <button className="btn btn-primary" onClick={() => handleMessageFriend(friend._id)}>
+                          Message
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="card mt-5">
+                  <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: '#fff'}}>
                     {/* Heading on the left */}
-                    <h5 className="mb-0">People Viewed Profile</h5>
+                    <h5 className="mb-0">Friends</h5>
                     {/* Three dots on the right */}
                     <span>⋮</span>
                   </div>
@@ -896,7 +981,7 @@ const handleDecline = async (friendshipId) => {
 
 
              {/* Bootstrap Modal for User Profile update */}
-             <div className={`modal ${modalShow ? 'show' : ''}`} tabIndex={-1} role="dialog" style={{ display: modalShow ? 'block' : 'none' }}>
+            <div className={`modal ${modalShow ? 'show' : ''}`} tabIndex={-1} role="dialog" style={{ display: modalShow ? 'block' : 'none' }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">

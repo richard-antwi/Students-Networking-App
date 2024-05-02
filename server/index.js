@@ -155,22 +155,16 @@ const upload = multer({
     checkFileType(file, cb);
   }
 }).single('profileImage');
-
-// Check File Type
-function checkFileType(file, cb) {
-  // Allowed file extensions
-  const filetypes = /jpeg|jpg|png|gif/;
-  // Check extension
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime type
-  const mimetype = filetypes.test(file.mimetype);
-
-  if(mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
+// Storage for cover images
+const coverStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/covers/'); // Ensure this directory exists or is handled by multer
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '_' + file.originalname);
   }
-}
+});
+
 
 
 app.post('/upload', authenticateToken, (req, res) => {
@@ -181,7 +175,6 @@ app.post('/upload', authenticateToken, (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file selected!' });
     }
-
     const filePath = req.file.path;
     try {
       const updatedProfile = await User.findOneAndUpdate(
@@ -189,11 +182,9 @@ app.post('/upload', authenticateToken, (req, res) => {
         { 'profile.profileImagePath': filePath },
         { new: true, upsert: true }
       );
-
       if (!updatedProfile) {
         return res.status(404).json({ message: "Profile not found and couldn't be created" });
       }
-
       res.json({
         message: 'File uploaded and profile updated!',
         filePath: filePath,
@@ -204,6 +195,61 @@ app.post('/upload', authenticateToken, (req, res) => {
     }
   });
 });
+
+const storageCover = multer.diskStorage({
+  destination: function(req, file, cb) {
+      cb(null, 'uploads/covers/'); // Make sure this directory exists
+  },
+  filename: function(req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const uploadCover = multer({ 
+  storage: storageCover,
+  fileFilter: function (req, file, cb) {
+      if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+          cb(null, true);
+      } else {
+          cb(null, false); // reject file
+          return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+      }
+  }
+}).single('coverImage');
+
+
+
+// Endpoint for uploading cover images
+app.post('/upload/cover', authenticateToken, uploadCover, async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+
+  const userId = req.user.id;
+  const filePath = req.file.path;  // Assuming this holds the new cover image path from your multer middleware
+
+  try {
+      const updatedUser = await User.findByIdAndUpdate(userId, {
+          $set: {
+              "profile.coverImagePath": filePath  // Correct field path
+          }
+      }, { new: true, runValidators: true });
+
+      if (!updatedUser) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json({
+          message: 'Cover image updated successfully!',
+          data: updatedUser
+      });
+  } catch (error) {
+      console.error('Failed to update cover image:', error);
+      res.status(500).json({ message: 'Failed to update cover image', error: error.message });
+  }
+});
+
 
 
 app.get('/user/profile', authenticateToken, async (req, res) => {
@@ -331,6 +377,32 @@ app.get('/api/friend-requests', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Error fetching friend requests:', error);
     res.status(500).json({ message: 'Failed to fetch friend requests', error: error.message });
+  }
+});
+
+
+
+// Fetch list of friends
+app.get('/api/friends', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+  try {
+    // Find friendships where the current user is involved and the status is 'accepted'
+    const friendships = await Friendship.find({
+      $and: [
+        { status: 'accepted' },
+        { $or: [{ requester: userId }, { recipient: userId }] }
+      ]
+    }).populate('requester recipient', 'firstName lastName avatar headline'); // Adjust fields as needed
+
+    // Map through the friendships to return friend details not including the current user
+    const friends = friendships.map(f => {
+      return f.requester._id.toString() === userId ? f.recipient : f.requester;
+    });
+
+    res.json(friends);
+  } catch (error) {
+    console.error('Failed to retrieve friends:', error);
+    res.status(500).json({ message: "Failed to retrieve friends", error: error.toString() });
   }
 });
 

@@ -220,7 +220,7 @@ function MyProfile() {
 
 
   
-const coverPath = profileData.profileCoverPath.replace(/\\/g, '/') ;
+const coverPath = profileData.profileCoverPath ;
 const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
 // Construct the image URL
 const imageUrl = imagePath ? `http://localhost:3001/${imagePath}` : null;
@@ -466,8 +466,8 @@ const handleMessageFriend = (friendId) => {
                 <span>⋮</span>
               </div>
               <div className="card-body">
-                {friendRequests.map(request => (
-                  <div key={request._id} className="d-flex justify-content-between align-items-center my-3">
+              {friendRequests.map((request, index) => (
+                   <div key={request._id || index} className="d-flex justify-content-between align-items-center my-3"> {/* Use `request._id` if available, otherwise index */}
                     <img src={request.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
                     <div className="text-left">
                       <h6 className="mb-1">{request.requester}</h6>

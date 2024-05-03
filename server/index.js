@@ -228,7 +228,6 @@ app.post('/upload/cover', authenticateToken, uploadCover, async (req, res) => {
 
   const userId = req.user.id;
   const filePath = req.file.path;  // Assuming this holds the new cover image path from your multer middleware
-
   try {
       const updatedUser = await User.findByIdAndUpdate(userId, {
           $set: {
@@ -239,7 +238,6 @@ app.post('/upload/cover', authenticateToken, uploadCover, async (req, res) => {
       if (!updatedUser) {
           return res.status(404).json({ message: 'User not found' });
       }
-
       res.json({
           message: 'Cover image updated successfully!',
           data: updatedUser
@@ -249,7 +247,6 @@ app.post('/upload/cover', authenticateToken, uploadCover, async (req, res) => {
       res.status(500).json({ message: 'Failed to update cover image', error: error.message });
   }
 });
-
 
 
 app.get('/user/profile', authenticateToken, async (req, res) => {
@@ -380,8 +377,6 @@ app.get('/api/friend-requests', authenticateToken, async (req, res) => {
   }
 });
 
-
-
 // Fetch list of friends
 app.get('/api/friends', authenticateToken, async (req, res) => {
   const userId = req.user.id;
@@ -405,8 +400,6 @@ app.get('/api/friends', authenticateToken, async (req, res) => {
     res.status(500).json({ message: "Failed to retrieve friends", error: error.toString() });
   }
 });
-
-
 
 // PATCH /api/friendships/:id/accept
 // Requires authentication
@@ -456,9 +449,6 @@ app.patch('/api/friendships/:id/decline', authenticateToken, async (req, res) =>
   }
 });
 
-
-
-// Error handling middleware
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);  // Log error information for debugging

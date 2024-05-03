@@ -361,13 +361,14 @@ app.get('/api/friend-requests', authenticateToken, async (req, res) => {
       recipient: userId,
       status: 'pending'
     })
-    .populate('requester', 'firstName lastName') // Adjust the fields as per your User model
+    .populate('requester', 'firstName lastName headline profile.profileImagePath') // Adjust the fields as per your User model
     .exec();
 
     const requestsWithUserDetails = friendRequests.map(fr => ({
       id: fr._id,
       requester: fr.requester.firstName + " " + fr.requester.lastName, // Combining first and last name
-      status: fr.status
+      status: fr.status,
+      profileImagePath: fr.requester.profileImagePath
     }));
 
     res.json(requestsWithUserDetails);
@@ -387,7 +388,7 @@ app.get('/api/friends', authenticateToken, async (req, res) => {
         { status: 'accepted' },
         { $or: [{ requester: userId }, { recipient: userId }] }
       ]
-    }).populate('requester recipient', 'firstName lastName avatar headline'); // Adjust fields as needed
+    }).populate('requester recipient', 'firstName lastName profileImagePath headline'); // Adjust fields as needed
 
     // Map through the friendships to return friend details not including the current user
     const friends = friendships.map(f => {

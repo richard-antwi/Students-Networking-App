@@ -237,6 +237,7 @@ const fetchFriendRequests = async () => {
     const response = await axios.get('http://localhost:3001/api/friend-requests', {
       headers: { Authorization: `Bearer ${token}` }
     });
+    console.log(response.data); 
     setFriendRequests(response.data);
   } catch (error) {
     console.error('Error fetching friend requests:', error);
@@ -461,9 +462,9 @@ const handleMessageFriend = (friendId) => {
                 <span>⋮</span>
               </div>
               <div className="card-body">
-              {friendRequests.map((request, index) => (
-                   <div key={request._id || index} className="d-flex justify-content-between align-items-center my-3"> {/* Use `request._id` if available, otherwise index */}
-                    <img src={request.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
+              {friendRequests.map((request) => (
+                   <div key={request._id} className="d-flex justify-content-between align-items-center my-3"> {/* Use `request._id` if available, otherwise index */}
+                    <img   src={request.user?.profileImagePath ? `http://localhost:3001/uploads/${request.user.profileImagePath.replace(/\\/g, '/')}` : avatar}  alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
                     <div className="text-left">
                       <h6 className="mb-1">{request.requester}</h6>
                       {/* <p className="mb-0 text-muted">{request.headline}</p> */}

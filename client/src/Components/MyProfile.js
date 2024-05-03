@@ -1,14 +1,13 @@
-import '../App.css';
-import 'bootstrap';
-import {Link} from 'react-router-dom';
-import avatar from '../Images/avatar.webp';
-import img11 from '../Images/img11.png';
-import coverPhoto from '../Images/coverPhoto.jpg';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import '../App.css';
+import avatar from '../Images/avatar.webp';
+import coverPhoto from '../Images/coverPhoto.jpg';
+import img11 from '../Images/img11.png';
 function MyProfile() {
   // const [coverImagePath] = useState(coverPhoto);
   const [modalShow, setModalShow] = useState(false);
@@ -201,13 +200,17 @@ function MyProfile() {
             const response = await axios.get('http://localhost:3001/user/profile', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
-            if (response.data) {
+            if (response.data && response.data.profile) {
+              const profileCoverPath = response.data.profile.coverImagePath
+              ? `http://localhost:3001/${response.data.profile.coverImagePath.replace(/\\/g, '/')}`
+              : null;
                 setProfileData({
                     firstName: response.data.firstName,
                     lastName: response.data.lastName,
                     userName: response.data.userName,
+                    headline: response.data.profile.headline,
                     profileImagePath: response.data.profile.profileImagePath,
-                    profileCoverPath: response.data.profile.profileCoverPath
+                    profileCoverPath
                 });
             }
         } catch (error) {
@@ -217,21 +220,13 @@ function MyProfile() {
 
     fetchUserData();
 }, []);
-
-
-  
-const coverPath = profileData.profileCoverPath ;
 const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
 // Construct the image URL
 const imageUrl = imagePath ? `http://localhost:3001/${imagePath}` : null;
-const coverUrl = coverPath ? `http://localhost:3001/${coverPath}` : null;
-console.log(imageUrl);
-console.log(coverUrl);
 
 
 //Friend Request: Acceptance and decline
 const [friendRequests, setFriendRequests] = useState([]);
-
 useEffect(() => {
   fetchFriendRequests();
 }, []);
@@ -306,7 +301,7 @@ const handleMessageFriend = (friendId) => {
        
         <div className="mt-3">
           {/* Profile Section with Cover Image */}
-          <div className="cover-image" id="handleCoverChange" style={{ backgroundImage: `url(${coverUrl || coverPhoto})` }}>
+          <div className="cover-image" id="handleCoverChange" style={{ backgroundImage: `url(${profileData.profileCoverPath || coverPhoto})` }}>
           <input
                     type="file"
                     id="fileInputCover"
@@ -487,7 +482,7 @@ const handleMessageFriend = (friendId) => {
                 {/* Left Section */}
                 <h5 className="mt-3">{profileData.firstName} {profileData.lastName}</h5>
                 <div className="mt-">
-                  <p className="mb-2 d-inline">Graphic Designer at Self Employed</p>
+                  <p className="mb-2 d-inline">{profileData.headline}</p>
                   {/* Star Rating */}
                   <div className="rating d-inline ml-2">
                     <i className="fas fa-star" style={{color: 'rgb(158, 231, 74)'}} />

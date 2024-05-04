@@ -137,6 +137,24 @@ app.post('/user/profile/update', authenticateToken, async (req, res) => {
   }
 });
 
+// Define a function to check file types
+const checkFileType = (file, cb) => {
+  // Allowed filetypes
+  const filetypes = /jpeg|jpg|png/;
+  // Check the extension
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check the mimetype
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+      // If file type is allowed, accept it
+      return cb(null, true);
+  } else {
+      // Otherwise, reject it
+      cb('Error: Images only!');
+  }
+};
+
 // Configure multer for file storage
 // Set storage engine
 const storage = multer.diskStorage({
@@ -326,6 +344,12 @@ app.post('/api/friendships', authenticateToken, async (req, res) => {
   const { recipientId } = req.body;
   const requesterId = req.user.id; // Extracted from token
 
+  // Validate recipientId
+  if (!recipientId) {
+    return res.status(400).json({ message: "Recipient ID is required." });
+  }
+
+  // Ensure requesterId and recipientId are not the same
   if (recipientId === requesterId) {
       return res.status(400).json({ message: "Cannot add yourself as a friend." });
   }
@@ -341,7 +365,6 @@ app.post('/api/friendships', authenticateToken, async (req, res) => {
       if (existingFriendship) {
           return res.status(409).json({ message: "Friendship already exists or request pending." });
       }
-
       const newFriendship = new Friendship({
           requester: requesterId,
           recipient: recipientId
@@ -352,6 +375,7 @@ app.post('/api/friendships', authenticateToken, async (req, res) => {
       res.status(500).json({ message: "Failed to send friend request.", error: error.toString() });
   }
 });
+
 
 app.get('/api/friend-requests', authenticateToken, async (req, res) => {
   try {
@@ -392,7 +416,12 @@ app.get('/api/friends', authenticateToken, async (req, res) => {
 
     // Map through the friendships to return friend details not including the current user
     const friends = friendships.map(f => {
-      return f.requester._id.toString() === userId ? f.recipient : f.requester;
+      const friend = f.requester._id.toString() === userId ? f.recipient : f.requester;
+      // Access the profile image path from the populated profile field
+      const profileImagePath = friend.profile.profileImagePath;
+      // Attach the profile image path to the friend object
+      friend.profileImagePath = profileImagePath;
+      return friend;
     });
 
     res.json(friends);

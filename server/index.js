@@ -7,8 +7,6 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const path = require('path');
-
-
 // const UserModel = require('./models/UserModel'); // Adjusted for a likely correct path
 // const UserProfile = require('./models/UserProfile');
 
@@ -435,10 +433,14 @@ app.get('/api/friends', authenticateToken, async (req, res) => {
 // Requires authentication
 app.patch('/api/friendships/:id/accept', authenticateToken, async (req, res) => {
   try {
-    const friendshipId = req.params.id;
+    const friendshipId = req.params.id; // Corrected to use req.params.id
+    if (!friendshipId) {
+      return res.status(400).json({ message: "Friendship ID is required." });
+    }
+
     const updatedFriendship = await Friendship.findOneAndUpdate({
       _id: friendshipId,
-      recipient: req.user.id,
+      recipient: req.user.id, // Ensure the requester is the recipient
       status: 'pending'
     }, {
       status: 'accepted'
@@ -455,14 +457,19 @@ app.patch('/api/friendships/:id/accept', authenticateToken, async (req, res) => 
   }
 });
 
+
 // PATCH /api/friendships/:id/decline
 // Requires authentication
 app.patch('/api/friendships/:id/decline', authenticateToken, async (req, res) => {
   try {
-    const friendshipId = req.params.id;
+    const friendshipId = req.user.id;
+    if (!friendshipId) {
+      return res.status(400).json({ message: "Friendship ID is required." });
+    }
+
     const updatedFriendship = await Friendship.findOneAndUpdate({
       _id: friendshipId,
-      recipient: req.user.id,
+      recipient: req.user.id, // Ensure the requester is the recipient
       status: 'pending'
     }, {
       status: 'declined'

@@ -225,77 +225,57 @@ const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
 const imageUrl = imagePath ? `http://localhost:3001/${imagePath}` : null;
 
 
-//Friend Request: Acceptance and decline
-const [friendRequests, setFriendRequests] = useState([]);
-useEffect(() => {
-  fetchFriendRequests();
-}, []);
+ // FriendRequestsComponent starts here
+ const [friendRequests, setFriendRequests] = useState([]);
 
-const fetchFriendRequests = async () => {
-  const token = localStorage.getItem('token');
-  try {
-    const response = await axios.get('http://localhost:3001/api/friend-requests', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    console.log(response.data); 
-    setFriendRequests(response.data);
-  } catch (error) {
-    console.error('Error fetching friend requests:', error);
-  }
-};
+ useEffect(() => {
+   fetchFriendRequests();
+ }, []);
 
-const handleAccept = async (friendshipId) => {
-  const token = localStorage.getItem('token');
-  try {
-    await axios.patch(`http://localhost:3001/api/friendships/${friendshipId}/accept`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    fetchFriendRequests(); // Refresh the list
-    alert('Friend request accepted');
-  } catch (error) {
-    console.error('Failed to accept friend request:', error);
-  }
-};
+ const fetchFriendRequests = async () => {
+   const token = localStorage.getItem('token');
+   try {
+     const response = await axios.get('http://localhost:3001/api/friend-requests', {
+       headers: { Authorization: `Bearer ${token}` }
+     });
+     setFriendRequests(response.data);
+   } catch (error) {
+     console.error('Error fetching friend requests:', error);
+   }
+ };
 
-const handleDecline = async (friendshipId) => {
-  const token = localStorage.getItem('token');
-  try {
-    await axios.patch(`http://localhost:3001/api/friendships/${friendshipId}/decline`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    fetchFriendRequests(); // Refresh the list
-    alert('Friend request declined');
-  } catch (error) {
-    console.error('Failed to decline friend request:', error);
-  }
-};
+ const handleAccept = async (friendshipId) => {
+   const token = localStorage.getItem('token');
+   try {
+     await axios.patch(`http://localhost:3001/api/friendships/${friendshipId}/accept`, {}, {
+       headers: { Authorization: `Bearer ${token}` }
+     });
+     fetchFriendRequests(); // Refresh the list
+     alert('Friend request accepted');
+   } catch (error) {
+     console.error('Failed to accept friend request:', error);
+   }
+ };
 
-// To view friends
-const [friends, setFriends] = useState([]);
-// const navigate = useNavigate(); // For navigation with React Router
+ const handleDecline = async (friendshipId) => {
+   const token = localStorage.getItem('token');
+   try {
+     await axios.patch(`http://localhost:3001/api/friendships/${friendshipId}/decline`, {}, {
+       headers: { Authorization: `Bearer ${token}` }
+     });
+     fetchFriendRequests(); // Refresh the list
+     alert('Friend request declined');
+   } catch (error) {
+     console.error('Failed to decline friend request:', error);
+   }
+ };
 
-useEffect(() => {
-  fetchFriends();
-}, []);
+ const handleMessageFriend = (friendId) => {
+   // Navigate to the messaging page with the friendId
+   navigate(`/messages/${friendId}`);
+   // If using modals, you might set state here to open a modal instead
+ };
 
-const fetchFriends = async () => {
-  const token = localStorage.getItem('token');
-  try {
-    const response = await axios.get('http://localhost:3001/api/friends', { // Ensure you have an endpoint to fetch friends
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    setFriends(response.data);
-  } catch (error) {
-    console.error('Error fetching friends:', error);
-  }
-};
-
-const handleMessageFriend = (friendId) => {
-  // Navigate to the messaging page with the friendId
-
-  navigate(`/messages/${friendId}`);
-  // If using modals, you might set state here to open a modal instead
-};
 
       return (
         <>
@@ -464,7 +444,7 @@ const handleMessageFriend = (friendId) => {
               <div className="card-body">
               {friendRequests.map((request) => (
                    <div key={request._id} className="d-flex justify-content-between align-items-center my-3"> {/* Use `request._id` if available, otherwise index */}
-                    <img   src={request.user?.profileImagePath ? `http://localhost:3001/uploads/${request.user.profileImagePath.replace(/\\/g, '/')}` : avatar}  alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
+                    <img   src={request.user?.profile.profileImagePath ? `http://localhost:3001/uploads/${request.user.profile.profileImagePath.replace(/\\/g, '/')}` : avatar}  alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
                     <div className="text-left">
                       <h6 className="mb-1">{request.requester}</h6>
                       {/* <p className="mb-0 text-muted">{request.headline}</p> */}
@@ -861,7 +841,7 @@ const handleMessageFriend = (friendId) => {
                     <span>⋮</span>
                   </div>
                   <div className="card-body">
-                    {friends.map(friend => (
+                    {friendRequests.map(friend => (
                       <div key={friend._id} className="d-flex justify-content-between align-items-center my-3">
                         <img src={friend.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                         <div className="text-left">

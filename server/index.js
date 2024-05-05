@@ -337,11 +337,15 @@ async function getSuggestions(userId) {
     return filteredMatches;
   } else {
     // Include excluded users in the $match for $sample aggregation
-    const randomUsers = await User.aggregate([
-        { $match: { _id: { $nin: excludedUserIds } } },
-        { $sample: { size: 7 } }
-    ]);
-    return randomUsers.map(user => ({ user, score: 'random' }));
+     // Use the correctly converted ObjectIds for the random user selection
+     const excludedObjectIds = excludedUserIds.map(id => new mongoose.Types.ObjectId(id));
+
+     const randomUsers = await User.aggregate([
+       { $match: { _id: { $nin: excludedObjectIds } } },
+       { $sample: { size: 7 } }
+     ]);
+ 
+     return randomUsers.map(user => ({ user, score: 'random' }));
   }
 }
 

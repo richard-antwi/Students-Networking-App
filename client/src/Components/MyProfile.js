@@ -230,22 +230,22 @@ const imageUrl = imagePath ? `http://localhost:3001/${imagePath}` : null;
  
  
  const [friendRequests, setFriendRequests] = useState([]);
+ const [friends, setFriends] = useState([]);
 //fetch friends starts from here
 useEffect(() => {
+  const fetchFriends = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await axios.get('http://localhost:3001/api/friends', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setFriends(response.data);
+    } catch (error) {
+      console.error('Failed to fetch friends:', error);
+    }
+  };
   fetchFriends();
 }, []);
-
-const fetchFriends = async () => {
-  const token = localStorage.getItem('token');
-  try {
-      const response = await axios.get('http://localhost:3001/api/friends', {
-          headers: { Authorization: `Bearer ${token}` }
-      });
-      setFriendRequests(response.data);
-  } catch (error) {
-      console.error('Failed to fetch friends:', error);
-  }
-};
 
 // FriendRequestsComponent starts here
  useEffect(() => {
@@ -889,7 +889,7 @@ const handleDecline = async (friendshipId) => {
                     <span>⋮</span>
                   </div>
                   <div className="card-body">
-                    {friendRequests.map(friend => (
+                    {friends.map(friend => (
                         <div key={friend.id} className="d-flex justify-content-between align-items-center my-3">
                             <img src={friend.profileImagePath || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                             <div className="text-left">

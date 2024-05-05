@@ -431,61 +431,38 @@ app.get('/api/friends', authenticateToken, async (req, res) => {
 
 // PATCH /api/friendships/:id/accept
 // Requires authentication
-app.patch('/api/friendships/:id/accept', authenticateToken, async (req, res) => {
+// Function to accept a friend request
+const acceptFriendRequest = async (friendshipId) => {
   try {
-    const friendshipId = req.params.id; // Corrected to use req.params.id
-    if (!friendshipId) {
-      return res.status(400).json({ message: "Friendship ID is required." });
-    }
-
-    const updatedFriendship = await Friendship.findOneAndUpdate({
-      _id: friendshipId,
-      recipient: req.user.id, // Ensure the requester is the recipient
-      status: 'pending'
-    }, {
-      status: 'accepted'
-    }, { new: true });
-
-    if (!updatedFriendship) {
-      return res.status(404).json({ message: "Friend request not found or not authorized to accept." });
-    }
-
-    res.json(updatedFriendship);
+      const friendship = await Friendship.findById(friendshipId);
+      if (!friendship) {
+          throw new Error('Friendship not found');
+      }
+      await friendship.acceptFriendRequest();
+      return friendship;
   } catch (error) {
-    console.error('Error accepting friendship:', error);
-    res.status(500).json({ message: "Error accepting friendship.", error: error.message });
+      throw new Error(`Failed to accept friend request: ${error.message}`);
   }
-});
+};
 
-
-// PATCH /api/friendships/:id/decline
-// Requires authentication
-app.patch('/api/friendships/:id/decline', authenticateToken, async (req, res) => {
+// Function to decline a friend request
+const declineFriendRequest = async (friendshipId) => {
   try {
-    const friendshipId = req.user.id;
-    if (!friendshipId) {
-      return res.status(400).json({ message: "Friendship ID is required." });
-    }
-
-    const updatedFriendship = await Friendship.findOneAndUpdate({
-      _id: friendshipId,
-      recipient: req.user.id, // Ensure the requester is the recipient
-      status: 'pending'
-    }, {
-      status: 'declined'
-    }, { new: true });
-
-    if (!updatedFriendship) {
-      return res.status(404).json({ message: "Friend request not found or not authorized to decline." });
-    }
-
-    res.json(updatedFriendship);
+      const friendship = await Friendship.findById(friendshipId);
+      if (!friendship) {
+          throw new Error('Friendship not found');
+      }
+      await friendship.declineFriendRequest();
+      return friendship;
   } catch (error) {
-    console.error('Error declining friendship:', error);
-    res.status(500).json({ message: "Error declining friendship.", error: error.message });
+      throw new Error(`Failed to decline friend request: ${error.message}`);
   }
-});
+};
 
+module.exports = {
+  acceptFriendRequest,
+  declineFriendRequest
+};
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);  // Log error information for debugging

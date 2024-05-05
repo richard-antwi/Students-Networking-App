@@ -1,3 +1,4 @@
+// friendship.model.js
 const mongoose = require('mongoose');
 
 const FriendshipSchema = new mongoose.Schema({
@@ -17,6 +18,17 @@ const FriendshipSchema = new mongoose.Schema({
         default: 'pending'
     }
 }, { timestamps: true });
+
+// Add methods to the schema to handle friend request status update
+FriendshipSchema.methods.acceptFriendRequest = async function() {
+    this.status = 'accepted';
+    await this.save();
+};
+
+FriendshipSchema.methods.declineFriendRequest = async function() {
+    this.status = 'declined';
+    await this.save();
+};
 
 const Friendship = mongoose.model('Friendship', FriendshipSchema);
 

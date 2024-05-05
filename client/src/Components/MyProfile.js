@@ -8,6 +8,8 @@ import '../App.css';
 import avatar from '../Images/avatar.webp';
 import coverPhoto from '../Images/coverPhoto.jpg';
 import img11 from '../Images/img11.png';
+import { acceptFriendRequest, declineFriendRequest } from '../controllers/friend-request-controller';
+
 function MyProfile() {
   // const [coverImagePath] = useState(coverPhoto);
   const [modalShow, setModalShow] = useState(false);
@@ -226,55 +228,58 @@ const imageUrl = imagePath ? `http://localhost:3001/${imagePath}` : null;
 
 
  // FriendRequestsComponent starts here
+ 
  const [friendRequests, setFriendRequests] = useState([]);
 
  useEffect(() => {
-   fetchFriendRequests();
- }, []);
+  fetchFriendRequests();
+}, []);
 
- const fetchFriendRequests = async () => {
-   const token = localStorage.getItem('token');
-   try {
-     const response = await axios.get('http://localhost:3001/api/friend-requests', {
-       headers: { Authorization: `Bearer ${token}` }
-     });
-     setFriendRequests(response.data);
-   } catch (error) {
-     console.error('Error fetching friend requests:', error);
-   }
- };
+const fetchFriendRequests = async () => {
+  const token = localStorage.getItem('token');
+  try {
+    const response = await axios.get('http://localhost:3001/api/friend-requests', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setFriendRequests(response.data);
+  } catch (error) {
+    console.error('Error fetching friend requests:', error);
+  }
+};
 
- const handleAccept = async (friendshipId) => {
-   const token = localStorage.getItem('token');
-   try {
-     await axios.patch(`http://localhost:3001/api/friendships/${friendshipId}/accept`, {}, {
-       headers: { Authorization: `Bearer ${token}` }
-     });
-     fetchFriendRequests(); // Refresh the list
-     alert('Friend request accepted');
-   } catch (error) {
-     console.error('Failed to accept friend request:', error);
-   }
- };
+const handleMessageFriend = (friendId) => {
+  // Navigate to the messaging page with the friendId
+  navigate(`/messages/${friendId}`);
+  // If using modals, you might set state here to open a modal instead
+};
 
- const handleDecline = async (friendshipId) => {
-   const token = localStorage.getItem('token');
-   try {
-     await axios.patch(`http://localhost:3001/api/friendships/${friendshipId}/decline`, {}, {
-       headers: { Authorization: `Bearer ${token}` }
-     });
-     fetchFriendRequests(); // Refresh the list
-     alert('Friend request declined');
-   } catch (error) {
-     console.error('Failed to decline friend request:', error);
-   }
- };
+const handleAccept = async (friendshipId) => {
+  try {
+    // Accept friend request
+    await acceptFriendRequest(friendshipId);
+    fetchFriendRequests(); // Refresh the list
+    alert('Friend request accepted');
+  } catch (error) {
+    console.error('Failed to accept friend request:', error);
+  }
+};
 
- const handleMessageFriend = (friendId) => {
-   // Navigate to the messaging page with the friendId
-   navigate(`/messages/${friendId}`);
-   // If using modals, you might set state here to open a modal instead
- };
+const handleDecline = async (friendshipId) => {
+  try {
+    // Decline friend request
+    await declineFriendRequest(friendshipId);
+    fetchFriendRequests(); // Refresh the list
+    alert('Friend request declined');
+  } catch (error) {
+    console.error('Failed to decline friend request:', error);
+  }
+};
+
+//  const handleMessageFriend = (friendId) => {
+//    // Navigate to the messaging page with the friendId
+//    navigate(`/messages/${friendId}`);
+//    // If using modals, you might set state here to open a modal instead
+//  };
 
 
       return (

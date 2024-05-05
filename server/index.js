@@ -429,40 +429,59 @@ app.get('/api/friends', authenticateToken, async (req, res) => {
   }
 });
 
-// PATCH /api/friendships/:id/accept
-// Requires authentication
 // Function to accept a friend request
 const acceptFriendRequest = async (friendshipId) => {
   try {
-      const friendship = await Friendship.findById(friendshipId);
-      if (!friendship) {
-          throw new Error('Friendship not found');
-      }
-      await friendship.acceptFriendRequest();
-      return friendship;
+    const friendship = await Friendship.findById(friendshipId);
+    if (!friendship) {
+      throw new Error('Friendship not found');
+    }
+    friendship.status = 'accepted';  // Update status to accepted
+    await friendship.save();
+    return friendship;
   } catch (error) {
-      throw new Error(`Failed to accept friend request: ${error.message}`);
+    throw new Error(`Failed to accept friend request: ${error.message}`);
   }
 };
 
 // Function to decline a friend request
 const declineFriendRequest = async (friendshipId) => {
   try {
-      const friendship = await Friendship.findById(friendshipId);
-      if (!friendship) {
-          throw new Error('Friendship not found');
-      }
-      await friendship.declineFriendRequest();
-      return friendship;
+    const friendship = await Friendship.findById(friendshipId);
+    if (!friendship) {
+      throw new Error('Friendship not found');
+    }
+    friendship.status = 'declined';  // Update status to declined
+    await friendship.save();
+    return friendship;
   } catch (error) {
-      throw new Error(`Failed to decline friend request: ${error.message}`);
+    throw new Error(`Failed to decline friend request: ${error.message}`);
   }
 };
+// POST endpoint to accept a friend request
+app.post('/api/friendships/:id/accept', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const friendship = await acceptFriendRequest(id);
+    res.json({ message: "Friend request accepted", friendship });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-module.exports = {
-  acceptFriendRequest,
-  declineFriendRequest
-};
+// POST endpoint to decline a friend request
+app.post('/api/friendships/:id/decline', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const friendship = await declineFriendRequest(id);
+    res.json({ message: "Friend request declined", friendship });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);  // Log error information for debugging

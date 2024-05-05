@@ -8,7 +8,7 @@ import '../App.css';
 import avatar from '../Images/avatar.webp';
 import coverPhoto from '../Images/coverPhoto.jpg';
 import img11 from '../Images/img11.png';
-import { acceptFriendRequest, declineFriendRequest } from '../controllers/friend-request-controller';
+
 
 function MyProfile() {
   // const [coverImagePath] = useState(coverPhoto);
@@ -255,31 +255,28 @@ const handleMessageFriend = (friendId) => {
 
 const handleAccept = async (friendshipId) => {
   try {
-    // Accept friend request
-    await acceptFriendRequest(friendshipId);
-    fetchFriendRequests(); // Refresh the list
+    const response = await axios.post(`http://localhost:3000/api/friendships/${friendshipId}/accept`);
+    console.log(response.data);
     alert('Friend request accepted');
+    // Remove the accepted request from state
+    setFriendRequests(prevRequests => prevRequests.filter(request => request.id !== friendshipId));
   } catch (error) {
     console.error('Failed to accept friend request:', error);
+    alert('Error accepting friend request');
   }
-};
-
-const handleDecline = async (friendshipId) => {
+};const handleDecline = async (friendshipId) => {
   try {
-    // Decline friend request
-    await declineFriendRequest(friendshipId);
-    fetchFriendRequests(); // Refresh the list
+    const response = await axios.post(`http://localhost:3000/api/friendships/${friendshipId}/decline`);
+    console.log(response.data);
     alert('Friend request declined');
+    // Remove the declined request from state
+    setFriendRequests(prevRequests => prevRequests.filter(request => request.id !== friendshipId));
   } catch (error) {
     console.error('Failed to decline friend request:', error);
+    alert('Error declining friend request');
   }
 };
 
-//  const handleMessageFriend = (friendId) => {
-//    // Navigate to the messaging page with the friendId
-//    navigate(`/messages/${friendId}`);
-//    // If using modals, you might set state here to open a modal instead
-//  };
 
 
       return (

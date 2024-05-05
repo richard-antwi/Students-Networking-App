@@ -285,44 +285,66 @@ async function getSuggestions(userId) {
   if (!currentUser) {
       return [];
   }
+  // Find all users who are already friends or have pending requests
+  const existingFriendships = await Friendship.find({
+    $or: [
+      { requester: userId },
+      { recipient: userId }
+    ],
+    status: { $in: ['accepted', 'pending'] }
+  });
+
+  const excludedUserIds = existingFriendships.map(f => 
+    (f.requester.toString() === userId ? f.recipient : f.requester).toString()
+  );
+
+  // Include the current user's ID in the exclusion list
+  excludedUserIds.push(userId.toString());
+
   let query = {
-      _id: { $ne: userId }, // Exclude current user
-      'profile.createdAt': { $gte: new Date(new Date().getTime() - (15 * 24 * 60 * 60 * 1000))},
+    _id: { $nin: excludedUserIds },
+    'profile.createdAt': { $gte: new Date(new Date().getTime() - (15 * 24 * 60 * 60 * 1000))},
   };
+  console.log("Excluded User IDs:", excludedUserIds);
+  console.log("Query being used:", query);
+  
   const users = await User.find(query).lean();
 
   const refinedMatches = users.map(user => {
-      let score = 0;
-      if (user.profile && currentUser.profile) {
-          if (user.profile.city === currentUser.profile.city) {
-              score += 1;
-          }
-          if (user.profile.industry === currentUser.profile.industry) {
-              score += 1;
-          }
-          if (user.profile.headline === currentUser.profile.headline) {
-              score += 1;
-          }
-          if (user.profile.education && currentUser.profile.education &&
-              user.profile.education.fieldOfStudy === currentUser.profile.education.fieldOfStudy) {
-              score += 1;
-          }
-      }
-      return { user, score };
+    let score = 0;
+    if (user.profile && currentUser.profile) {
+        if (user.profile.city === currentUser.profile.city) {
+            score += 1;
+        }
+        if (user.profile.industry === currentUser.profile.industry) {
+            score += 1;
+        }
+        if (user.profile.headline === currentUser.profile.headline) {
+            score += 1;
+        }
+        if (user.profile.education && currentUser.profile.education &&
+            user.profile.education.fieldOfStudy === currentUser.profile.education.fieldOfStudy) {
+            score += 1;
+        }
+    }
+    return { user, score };
   });
+
   const filteredMatches = refinedMatches.filter(match => match.score > 0);
   filteredMatches.sort((a, b) => b.score - a.score);
 
   if (filteredMatches.length > 0) {
-      return filteredMatches;
+    return filteredMatches;
   } else {
-      const randomUsers = await User.aggregate([
-          { $match: { _id: { $ne: userId } } },
-          { $sample: { size: 5 } }
-      ]);
-      return randomUsers.map(user => ({ user, score: 'random' }));
+    // Include excluded users in the $match for $sample aggregation
+    const randomUsers = await User.aggregate([
+        { $match: { _id: { $nin: excludedUserIds } } },
+        { $sample: { size: 7 } }
+    ]);
+    return randomUsers.map(user => ({ user, score: 'random' }));
   }
 }
+
 
 // Endpoint to get friend suggestions
 app.get('/api/suggestions', authenticateToken, async (req, res) => {
@@ -379,19 +401,17 @@ app.get('/api/friend-requests', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
     // Fetch friend requests and populate requester details
-    const friendRequests = await Friendship.find({
-      recipient: userId,
-      status: 'pending'
-    })
-    .populate('requester', 'firstName lastName headline profile.profileImagePath') // Adjust the fields as per your User model
+    const friendRequests = await Friendship.find({recipient: userId, status: 'pending'})
+    .populate('requester', 'firstName lastName profile.headline profile.profileImagePath')
     .exec();
 
     const requestsWithUserDetails = friendRequests.map(fr => ({
       id: fr._id,
       requester: fr.requester.firstName + " " + fr.requester.lastName, // Combining first and last name
       status: fr.status,
-      profileImagePath: fr.requester.profileImagePath
+      profileImagePath: fr.requester.profile.profileImagePath
     }));
+    
 
     res.json(requestsWithUserDetails);
   } catch (error) {

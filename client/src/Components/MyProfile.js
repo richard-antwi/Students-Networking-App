@@ -227,10 +227,27 @@ const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
 const imageUrl = imagePath ? `http://localhost:3001/${imagePath}` : null;
 
 
- // FriendRequestsComponent starts here
+ 
  
  const [friendRequests, setFriendRequests] = useState([]);
+//fetch friends starts from here
+useEffect(() => {
+  fetchFriends();
+}, []);
 
+const fetchFriends = async () => {
+  const token = localStorage.getItem('token');
+  try {
+      const response = await axios.get('http://localhost:3001/api/friends', {
+          headers: { Authorization: `Bearer ${token}` }
+      });
+      setFriendRequests(response.data);
+  } catch (error) {
+      console.error('Failed to fetch friends:', error);
+  }
+};
+
+// FriendRequestsComponent starts here
  useEffect(() => {
   fetchFriendRequests();
 }, []);
@@ -242,10 +259,12 @@ const fetchFriendRequests = async () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     setFriendRequests(response.data);
+    console.log(response.data);  // Check what the data structure looks like
   } catch (error) {
     console.error('Error fetching friend requests:', error);
   }
 };
+
 
 const handleMessageFriend = (friendId) => {
   // Navigate to the messaging page with the friendId
@@ -254,8 +273,20 @@ const handleMessageFriend = (friendId) => {
 };
 
 const handleAccept = async (friendshipId) => {
+  const token = localStorage.getItem('token');
+  console.log('Token:', token);  // Check if the token is retrieved correctly
+  if (!token) {
+    alert('Authentication token not found');
+    return;
+  }
+  if (!friendshipId) {
+    alert('Friend request ID is undefined!');
+    return;
+  }
   try {
-    const response = await axios.post(`http://localhost:3000/api/friendships/${friendshipId}/accept`);
+    const response = await axios.post(`http://localhost:3001/api/friendships/${friendshipId}/accept`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     console.log(response.data);
     alert('Friend request accepted');
     // Remove the accepted request from state
@@ -264,9 +295,22 @@ const handleAccept = async (friendshipId) => {
     console.error('Failed to accept friend request:', error);
     alert('Error accepting friend request');
   }
-};const handleDecline = async (friendshipId) => {
+};
+const handleDecline = async (friendshipId) => {
+  const token = localStorage.getItem('token');
+  console.log('Token:', token);  // Check if the token is retrieved correctly
+  if (!token) {
+    alert('Authentication token not found');
+    return;
+  }
+  if (!friendshipId) {
+    alert('Friend request ID is undefined!');
+    return;
+  }
   try {
-    const response = await axios.post(`http://localhost:3000/api/friendships/${friendshipId}/decline`);
+    const response = await axios.post(`http://localhost:3001/api/friendships/${friendshipId}/decline`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     console.log(response.data);
     alert('Friend request declined');
     // Remove the declined request from state
@@ -438,25 +482,27 @@ const handleAccept = async (friendshipId) => {
                     <hr style={{marginTop: '10px', marginBottom: '10px'}} />
                   </div>
                 </div>
+                {/* //frient request */}
                 <div className="card mt-5">
               <div className="card-header d-flex justify-content-between align-items-center" style={{ backgroundColor: '#fff' }}>
                 <h5 className="mb-0">Friend Requests</h5>
                 <span>⋮</span>
               </div>
               <div className="card-body">
-              {friendRequests.map((request) => (
-                   <div key={request._id} className="d-flex justify-content-between align-items-center my-3"> {/* Use `request._id` if available, otherwise index */}
-                    <img   src={request.user?.profile.profileImagePath ? `http://localhost:3001/uploads/${request.user.profile.profileImagePath.replace(/\\/g, '/')}` : avatar}  alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
-                    <div className="text-left">
-                      <h6 className="mb-1">{request.requester}</h6>
-                      {/* <p className="mb-0 text-muted">{request.headline}</p> */}
-                    </div>
-                    <div className="text-right">
-                      <button className="btn btn-success" onClick={() => handleAccept(request._id)}>Accept</button>
-                      <button className="btn btn-danger" onClick={() => handleDecline(request._id)}>Decline</button>
-                    </div>
+                            {friendRequests.map((request) => (
+                <div key={request.id} className="d-flex justify-content-between align-items-center my-3">
+                  <img src={request.user?.profile.profileImagePath ? `http://localhost:3001/uploads/${request.user.profile.profileImagePath.replace(/\\/g, '/')}` : avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
+                  <div className="text-left">
+                    <h6 className="mb-1">{request.requester}</h6>
+                    {/* <p className="mb-0 text-muted">{request.headline}</p> */}
                   </div>
-                ))}
+                  <div className="text-right">
+                    <button className="btn btn-success" onClick={() => handleAccept(request.id)}>Accept</button>
+                    <button className="btn btn-danger" onClick={() => handleDecline(request.id)}>Decline</button>
+                  </div>
+                </div>
+              ))}
+
               </div>
               </div>
               </div>
@@ -844,18 +890,18 @@ const handleAccept = async (friendshipId) => {
                   </div>
                   <div className="card-body">
                     {friendRequests.map(friend => (
-                      <div key={friend._id} className="d-flex justify-content-between align-items-center my-3">
-                        <img src={friend.avatar || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                        <div className="text-left">
-                          <h6 className="mb-1">{friend.firstName} {friend.lastName}</h6>
-                          <p className="mb-0 text-muted">{friend.headline}</p>
+                        <div key={friend.id} className="d-flex justify-content-between align-items-center my-3">
+                            <img src={friend.profileImagePath || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                            <div className="text-left">
+                                <h6 className="mb-1">{friend.firstName} {friend.lastName}</h6>
+                                <p className="mb-0 text-muted">{friend.headline}</p>
+                            </div>
+                            <button className="btn btn-primary" onClick={() => handleMessageFriend(friend.id)}>
+                                Message
+                            </button>
                         </div>
-                        <button className="btn btn-primary" onClick={() => handleMessageFriend(friend._id)}>
-                          Message
-                        </button>
-                      </div>
                     ))}
-                  </div>
+                </div>
                 </div>
                 <div className="card mt-5">
                   <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: '#fff'}}>

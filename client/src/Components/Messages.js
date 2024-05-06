@@ -1,52 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import 'bootstrap';
 import avatar from '../Images/avatar.webp';
 import coverPhoto from '../Images/coverPhoto.jpg';
 import axios from 'axios';
 
 function Messages() {
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
   const [profileData, setProfileData] = useState({ profileImagePath: '',firstName: '',
   lastName: '',
   userName: '',
   headline: '', });
+const [messages, setMessages] = useState([]);
+const [newMessage, setNewMessage] = useState('');
+const [user, setUser] = useState(null); // Placeholder for user state
 
-  // Define currentUser statically for demonstration purposes
-  const currentUser = { name: "John Doe" };
+ 
 
-  useEffect(() => {
-    fetch('/api/messages')
-      .then(response => response.json())
-      .then(data => setMessages(data))
-      .catch(error => console.error('Error fetching messages:', error));
-  }, []);
+useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (user && token) {
+        const fetchMessages = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3001/api/messages/user/${user.id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setMessages(response.data);
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        };
 
-  const handleMessageSend = () => {
-    if (newMessage.trim() === '') {
-      return;
+        fetchMessages();
     }
-  
-    const messageToSend = {
-      content: newMessage.trim(),
-      sender: currentUser.name,
-      timestamp: new Date().toISOString(),
-    };
-  
-    fetch('/api/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(messageToSend),
-    })
-    .then(response => response.json())
-    .then(data => {
-      setMessages(messages => [...messages, data]);
-      setNewMessage('');
-    })
-    .catch(error => console.error("Sending message failed", error));
+}, [user]); // Depend only on user to refetch when it changes
+
+
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  // Fetch user data
+  const fetchUser = async () => {
+    try {
+      const userResponse = await axios.get('/api/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUser(userResponse.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
   };
+
+  fetchUser();
+}, []);
+const handleMessageSend = useCallback(async () => {
+  if (!newMessage.trim()) return;
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+      console.error('No authentication token found');
+      return;
+  }
+
+  try {
+      const response = await axios.post('http://localhost:3001/api/messages', {
+          content: newMessage,
+          receiver: user.id
+      }, {
+          headers: { Authorization: `Bearer ${token}` }
+      });
+      setMessages(currentMessages => [...currentMessages, response.data]);
+      setNewMessage('');
+  } catch (error) {
+      console.error("Sending message failed", error);
+  }
+}, [newMessage, user]);
+
   useEffect(() => {
     const fetchUserData = async () => {
         try {
@@ -92,67 +118,20 @@ console.log(imageUrl)
                     </div>
                   </div>
                   <div className="card-body">
-                    {/* Your message content goes here */}
-                    <div className="media mb-2">
-                      <img src={avatar} className="mr-3 avatar-img" alt="User Avatar" />
-                      <div className="media-body">
-                        <h6 className="mt-0">John Doe</h6>
-                        <p>Hey, how are you doing?</p>
-                      </div>
-                      <div className="d-flex flex-column align-items-end">
-                        <small className="text-muted">12:30 PM</small>
-                        <span className="badge badge-primary">3</span>
-                      </div>
-                    </div>
-                    <hr className="my-1" />
-                    <div className="media mb-2">
-                      <img src={avatar} className="mr-3 avatar-img" alt="User Avatar" />
-                      <div className="media-body">
-                        <h6 className="mt-0">John Doe</h6>
-                        <p>Hey, how are you doing?</p>
-                      </div>
-                      <div className="d-flex flex-column align-items-end">
-                        <small className="text-muted">12:30 PM</small>
-                        <span className="badge badge-primary">1</span>
-                      </div>
-                    </div>
-                    <hr className="my-1" />
-                    <div className="media mb-2">
-                      <img src={avatar} className="mr-3 avatar-img" alt="User Avatar" />
-                      <div className="media-body">
-                        <h6 className="mt-0">John Doe</h6>
-                        <p>Hey, how are you doing?</p>
-                      </div>
-                      <div className="d-flex flex-column align-items-end">
-                        <small className="text-muted">12:30 PM</small>
-                        <span className="badge badge-primary">10</span>
-                      </div>
-                    </div>
-                    <hr className="my-1" />
-                    <div className="media mb-2">
-                      <img src={avatar} className="mr-3 avatar-img" alt="User Avatar" />
-                      <div className="media-body">
-                        <h6 className="mt-0">John Doe</h6>
-                        <p>Hey, how are you doing?</p>
-                      </div>
-                      <div className="d-flex flex-column align-items-end">
-                        <small className="text-muted">12:30 PM</small>
-                        <span className="badge badge-primary">1</span>
-                      </div>
-                    </div>
-                    <hr className="my-1" />
-                    <div className="media mb-2">
-                      <img src={avatar} className="mr-3 avatar-img" alt="User Avatar" />
-                      <div className="media-body">
-                        <h6 className="mt-0">John Doe</h6>
-                        <p>Hey, how are you doing?</p>
-                      </div>
-                      <div className="d-flex flex-column align-items-end">
-                        <small className="text-muted">12:30 PM</small>
-                        <span className="badge badge-primary">1</span>
-                      </div>
-                    </div>
-                  </div>
+                    {messages.map((msg, index) => (
+                        <div key={index} className="media mb-2">
+                            <img src={msg.sender.profileImagePath || avatar} className="mr-3 avatar-img" alt="User Avatar" />
+                            <div className="media-body">
+                                <h6 className="mt-0">{msg.sender.firstName} {msg.sender.lastName}</h6>
+                                <p>{msg.content}</p>
+                            </div>
+                            <div className="d-flex flex-column align-items-end">
+                                <small className="text-muted">{new Date(msg.timestamp).toLocaleTimeString()}</small>
+                                {/* Display badge if needed */}
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 </div>
               </div>
               {/* Right Section */}
@@ -220,10 +199,10 @@ console.log(imageUrl)
             </div>
                     {/* Input Field and Send Button */}
                     <div className="input-group mt-3">
-                      <input type="text" className="form-control"
-                       placeholder="Type your message..."
-                       value={newMessage}
-                       onChange={(e) => setNewMessage(e.target.value)} />
+                    {messages.map((message, index) => (
+                        <p key={index}>{message.sender.firstName}: {message.content}</p>
+                    ))}
+                    <input type="text" className="form-control" placeholder="Type your message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
                       <div className="input-group-append">
                         <button className="btn btn-primary" type="button" onClick={handleMessageSend}>Send</button>
                       </div>

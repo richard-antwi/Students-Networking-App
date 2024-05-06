@@ -12,6 +12,7 @@ const path = require('path');
 
 const User = require('./models/User');
 const Friendship = require('./models/Friendship');
+const Message = require('./models/Message'); 
 
 // Initialize the Express app
 const app = express();
@@ -503,6 +504,78 @@ app.post('/api/friendships/:id/decline', authenticateToken, async (req, res) => 
     res.status(500).json({ message: error.message });
   }
 });
+
+
+
+// Get messages between two users
+
+app.get('/api/messages', authenticateToken, async (req, res) => {
+  const userId = req.user.id; // Extracted from the authenticated user
+  const { chatWith } = req.query; // ID of the other user in the chat
+
+  try {
+    const messages = await Message.find({
+      $or: [
+        { sender: userId, receiver: chatWith },
+        { receiver: userId, sender: chatWith }
+      ]
+    }).sort({ timestamp: 1 })
+      .populate('sender', 'firstName lastName profileImagePath')
+      .populate('receiver', 'firstName lastName profileImagePath');
+
+    res.json(messages);
+  } catch (error) {
+    console.error('Failed to fetch messages:', error);
+    res.status(500).json({ message: 'Failed to fetch messages', error: error.toString() });
+  }
+});
+
+
+// Send a new message
+app.post('/api/messages', authenticateToken, async (req, res) => {
+  const { content, receiver } = req.body; // Message content and receiver ID from the request body
+  const sender = req.user.id; // Sender ID from token
+
+  if (!content.trim()) {
+    return res.status(400).json({ message: 'Message content cannot be empty' });
+  }
+
+  const newMessage = new Message({
+    sender,
+    receiver,
+    content
+  });
+
+  try {
+    await newMessage.save();
+    res.status(201).json(newMessage);
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ message: 'Failed to send message', error: error.toString() });
+  }
+});
+
+
+// Get messages for a user
+app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
+  const { userId } = req.params;  // ID of the user whose messages to fetch
+
+  try {
+      const messages = await Message.find({
+          // Assuming you have a schema where both sender and receiver can be this user
+          $or: [{ sender: userId }, { receiver: userId }]
+      })
+      .populate('sender', 'firstName lastName profileImagePath')
+      .populate('receiver', 'firstName lastName profileImagePath')
+      .sort({ timestamp: -1 });  // Sort by newest first
+
+      res.json(messages);
+  } catch (error) {
+      console.error('Failed to fetch messages:', error);
+      res.status(500).json({ message: 'Failed to fetch messages', error: error.toString() });
+  }
+});
+
 
 
 

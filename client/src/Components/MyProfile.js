@@ -239,7 +239,11 @@ useEffect(() => {
       const response = await axios.get('http://localhost:3001/api/friends', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setFriends(response.data);
+      if (response.data && Array.isArray(response.data)) {  // Check if response.data is an array
+        setFriends(response.data);
+      } else {
+        console.error("Expected an array of friends, received:", response.data);
+      }
     } catch (error) {
       console.error('Failed to fetch friends:', error);
     }
@@ -267,10 +271,17 @@ const fetchFriendRequests = async () => {
 
 
 const handleMessageFriend = (friendId) => {
-  // Navigate to the messaging page with the friendId
+  console.log("Trying to navigate to messages with friend ID:", friendId);
+  if (!friendId) {
+    console.error('Friend ID is undefined, cannot navigate to messages');
+    alert('Cannot navigate to messages as friend ID is undefined.');
+    return;
+  }
   navigate(`/messages/${friendId}`);
-  // If using modals, you might set state here to open a modal instead
 };
+
+
+
 
 const handleAccept = async (friendshipId) => {
   const token = localStorage.getItem('token');
@@ -889,19 +900,22 @@ const handleDecline = async (friendshipId) => {
                     <span>⋮</span>
                   </div>
                   <div className="card-body">
-                    {friends.map(friend => (
-                        <div key={friend.id} className="d-flex justify-content-between align-items-center my-3">
-                            <img src={friend.profileImagePath || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
-                            <div className="text-left">
-                                <h6 className="mb-1">{friend.firstName} {friend.lastName}</h6>
-                                <p className="mb-0 text-muted">{friend.headline}</p>
-                            </div>
-                            <button className="btn btn-primary" onClick={() => handleMessageFriend(friend.id)}>
-                                Message
-                            </button>
+                    {friends.map((friend, index) => {
+                      console.log(`Friend ${index} ID:`, friend.id); // Log each friend's ID
+                      return (
+                        <div key={friend.id || index} className="d-flex justify-content-between align-items-center my-3">
+                          <img src={friend.profileImagePath || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
+                          <div className="text-left">
+                            <h6 className="mb-1">{friend.firstName} {friend.lastName}</h6>
+                            <p className="mb-0 text-muted">{friend.profile.headline}</p>
+                          </div>
+                          <button className="btn btn-primary" onClick={() => handleMessageFriend(friend.id)}>
+                            Message
+                          </button>
                         </div>
-                    ))}
-                </div>
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="card mt-5">
                   <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: '#fff'}}>

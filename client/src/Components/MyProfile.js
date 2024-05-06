@@ -901,7 +901,7 @@ const handleDecline = async (friendshipId) => {
                   </div>
                   <div className="card-body">
                     {friends.map((friend) => {
-                      console.log(friend._id); // Log each friend's ID
+                      // console.log(friend._id); // Log each friend's ID
                       return (
                         <div key={friend._id} className="d-flex justify-content-between align-items-center my-3">
                           <img src={friend.profileImagePath || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />

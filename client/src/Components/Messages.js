@@ -1,104 +1,109 @@
+import '../App.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import 'bootstrap';
 import avatar from '../Images/avatar.webp';
-import coverPhoto from '../Images/coverPhoto.jpg';
+// import coverPhoto from '../Images/coverPhoto.jpg';
+
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function Messages() {
-  const [profileData, setProfileData] = useState({ profileImagePath: '',firstName: '',
-  lastName: '',
-  userName: '',
-  headline: '', });
-const [messages, setMessages] = useState([]);
-const [newMessage, setNewMessage] = useState('');
-const [user, setUser] = useState(null); // Placeholder for user state
-
+  const { friendId } = useParams();
+  const [profileData, setProfileData] = useState({ profileImagePath: '', firstName: '', lastName: '', userName: '', headline: '' });
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [friends, setFriends] = useState([]);
+  const navigate = useNavigate();
  
-
-useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (user && token) {
-        const fetchMessages = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3001/api/messages/user/${user.id}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                setMessages(response.data);
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-            }
-        };
-
-        fetchMessages();
+  useEffect(() => {
+    const messagesContainer = document.querySelector('.chat-messages');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-}, [user]); // Depend only on user to refetch when it changes
+}, [messages]);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetchFriends(token);
+      fetchUserData(token);
+      if (friendId) {
+        fetchMessages(friendId, token);
+      }
+    }
+  }, [friendId]); // Fetch messages when friendId changes
 
-useEffect(() => {
-  const token = localStorage.getItem('token');
-  // Fetch user data
-  const fetchUser = async () => {
+  const fetchFriends = async (token) => {
     try {
-      const userResponse = await axios.get('/api/user', {
+      const response = await axios.get('http://localhost:3001/api/friends', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setUser(userResponse.data);
+      setFriends(response.data);
+    } catch (error) {
+      console.error('Error fetching friends:', error);
+    }
+  };
+
+  const fetchMessages = async (friendId, token) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/api/messages/user/${friendId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMessages(response.data);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
+  const fetchUserData = async (token) => {
+    try {
+      const response = await axios.get('http://localhost:3001/user/profile', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data) {
+        setProfileData({
+          _id: response.data._id,
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          userName: response.data.userName,
+          profileImagePath: response.data.profile.profileImagePath
+        });
+      }
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
-  fetchUser();
-}, []);
-const handleMessageSend = useCallback(async () => {
-  if (!newMessage.trim()) return;
-
-  const token = localStorage.getItem('token');
-  if (!token) {
+  const handleMessageSend = useCallback(async () => {
+    if (!newMessage.trim()) return;
+    const token = localStorage.getItem('token');
+    if (!token) {
       console.error('No authentication token found');
       return;
-  }
+    }
 
-  try {
+    try {
       const response = await axios.post('http://localhost:3001/api/messages', {
-          content: newMessage,
-          receiver: user.id
+        content: newMessage,
+        receiver: friendId
       }, {
-          headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setMessages(currentMessages => [...currentMessages, response.data]);
       setNewMessage('');
-  } catch (error) {
+      document.getElementById('messageInput').focus();
+    } catch (error) {
       console.error("Sending message failed", error);
-  }
-}, [newMessage, user]);
+    }
+  }, [newMessage, friendId]);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-        try {
-            const response = await axios.get('http://localhost:3001/user/profile', {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
-            if (response.data) {
-                setProfileData({
-                    firstName: response.data.firstName,
-                    lastName: response.data.lastName,
-                    userName: response.data.userName,
-                    profileImagePath: response.data.profile.profileImagePath
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-        }
-    };
+  const navigateToFriend = (id) => {
+    navigate(`/messages/${id}`);
+  };
 
-    fetchUserData();
-}, []);
-const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
+  const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
+  const imageUrl = `http://localhost:3001/${imagePath}`;
 
-// Construct the image URL
-const imageUrl = `http://localhost:3001/${imagePath}`;
-console.log(imageUrl)
     return (
         <>
         <div>
@@ -118,16 +123,17 @@ console.log(imageUrl)
                     </div>
                   </div>
                   <div className="card-body">
-                    {messages.map((msg, index) => (
-                        <div key={index} className="media mb-2">
-                            <img src={msg.sender.profileImagePath || avatar} className="mr-3 avatar-img" alt="User Avatar" />
+                  {friends.map(friend => (
+                        <div key={friend._id} onClick={() => navigateToFriend(friend._id)} className="media mb-2">
+                            <img src={friend.profile.profileImagePath || avatar} className="mr-3 avatar-img" alt="User Avatar" />
                             <div className="media-body">
-                                <h6 className="mt-0">{msg.sender.firstName} {msg.sender.lastName}</h6>
-                                <p>{msg.content}</p>
+                                <h6 className="mt-0">{friend.firstName} {friend.lastName}</h6>
+                                <p>{friend.content}</p>
                             </div>
                             <div className="d-flex flex-column align-items-end">
-                                <small className="text-muted">{new Date(msg.timestamp).toLocaleTimeString()}</small>
+                                <small className="text-muted">{new Date(friend.timestamp).toLocaleTimeString()}</small>
                                 {/* Display badge if needed */}
+                                <span className="badge badge-primary">3</span>
                             </div>
                         </div>
                     ))}
@@ -158,51 +164,51 @@ console.log(imageUrl)
                   </div>
                   {/* Chat Body */}
                   <div className="card-body">
-                    {/* Chat Window */}
-                    <div className="card-body">
-            {/* Chat Window */}
-            <div className="row" style={{ maxHeight: '85vh' }}>
-              {/* Left Column */}
-              <div className="col-md-8">
-                <div className="d-flex align-items-center" style={{ minHeight: '52vh' }}>
-                  {/* Avatar on the left side */}
-                  <img src={avatar} alt="User Avatar" className="avatar-img mr-2" />
-                  {/* Chat messages container */}
-                  <div className="chat-messages">
-                    {/* User's messages */}
-                    {messages.map((message, index) => (
-                      <div className="message my-message" key={index}>
-                        <p>{message.content}</p>
-                      </div>
-                    ))}
-                    <p className="text-muted" id="messageTime">20 minutes ago</p>
+                      <div className="col-md-8">
+                      <div className="row" style={{ maxHeight: '85vh' }}>
+                        {/* Messages Container */}
+                          <div className="col-md-12">
+                    <div className="d-flex flex-column">
+                      {/* Loop over messages */}
+                      {messages.map((message, index) => (
+                        <div key={index} className={`message ${message.sender._id === profileData._id ? 'my-message' : 'other-message'}`}>
+                          <div className="d-flex justify-content-between">
+                            {/* Display sender's avatar and name if the message is from the sender */}
+                            {message.sender._id === profileData._id && (
+                              <>
+                                <img src={message.sender.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
+                                <div>
+                                  <p className="text-right">{message.content}</p>
+                                  <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
+                                </div>
+                              </>
+                            )}
+                            {/* Display receiver's avatar and name if the message is from the receiver */}
+                            {message.sender._id !== profileData._id && (
+                              <>
+                                <img src={message.receiver.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
+                                <div>
+                                  <p>{message.content}</p>
+                                  <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </div>
-                      {/* Right Column */}
-                      <div className="col-md-4">
-                <div className="d-flex align-items-center justify-content-end" style={{ minHeight: '45vh' }}>
-                  {/* Another Chat messages container */}
-                  <div className="chat-messages">
-                    {/* Another user's messages */}
-                    {messages.map((message, index) => (
-                      <div className="message other-message" key={index}>
-                        <p>{message.content}</p>
                       </div>
-                    ))}
-                    <p className="text-muted" id="messageTime">Sat, Aug 24, 1:10pm</p>
-                  </div>
-                  {/* Right Avatar */}
-                  <img src={coverPhoto} alt="Another User Avatar" className="avatar-img ml-2" />
-                </div>
               </div>
-            </div>
+            
                     {/* Input Field and Send Button */}
                     <div className="input-group mt-3">
-                    {messages.map((message, index) => (
+                    {/* {messages.map((message, index) => (
                         <p key={index}>{message.sender.firstName}: {message.content}</p>
-                    ))}
-                    <input type="text" className="form-control" placeholder="Type your message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
+                    ))} */}
+
+
+                    <input type="text" className="form-control" placeholder="Type your message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} id="messageInput" />
                       <div className="input-group-append">
                         <button className="btn btn-primary" type="button" onClick={handleMessageSend}>Send</button>
                       </div>
@@ -247,7 +253,7 @@ console.log(imageUrl)
                         </div>
                       </div>
                     </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>

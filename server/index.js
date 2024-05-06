@@ -558,16 +558,19 @@ app.post('/api/messages', authenticateToken, async (req, res) => {
 
 // Get messages for a user
 app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
-  const { userId } = req.params;  // ID of the user whose messages to fetch
-
+  const { userId } = req.params;  // Correctly extracting userId from params
+  const loggedInUserId = req.user.id;  // ID of the logged-in user
   try {
-      const messages = await Message.find({
-          // Assuming you have a schema where both sender and receiver can be this user
-          $or: [{ sender: userId }, { receiver: userId }]
-      })
+    const messages = await Message.find({
+      $or: [
+        { sender: loggedInUserId, receiver: userId },
+        { receiver: loggedInUserId, sender: userId }
+      ]
+    }).sort({ timestamp: 1 })
       .populate('sender', 'firstName lastName profileImagePath')
-      .populate('receiver', 'firstName lastName profileImagePath')
-      .sort({ timestamp: -1 });  // Sort by newest first
+      .populate('receiver', 'firstName lastName profileImagePath');
+
+      // .sort({ timestamp: -1 });  // Sort by newest first
 
       res.json(messages);
   } catch (error) {

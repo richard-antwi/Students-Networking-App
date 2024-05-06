@@ -226,4 +226,37 @@ color: rgb(204, 200, 224);
 color: rgb(241, 93, 74);
 }
 
+/* messages */
+
+/* Add this in your CSS file */
+.message {
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  max-width: 70%;
+}
+
+.my-message {
+  background-color: #dcf8c6; /* Light green background for sender */
+  margin-left: auto; /* Align to the right */
+  text-align: right;
+  align-self: flex-end;
+}
+
+.other-message {
+  background-color: #f0f0f0; /* Light grey for receiver */
+  margin-right: auto; /* Align to the left */
+  text-align: left;
+  align-self: flex-start;
+}
+
+.avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.chat-messages {
+  max-height: 500px;  /* or any appropriate value */
+  overflow-y: auto;
+}
 

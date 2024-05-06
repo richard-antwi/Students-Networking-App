@@ -164,50 +164,40 @@ function Messages() {
                   </div>
                   {/* Chat Body */}
                   <div className="card-body">
-                      <div className="col-md-8">
-                      <div className="row" style={{ maxHeight: '85vh' }}>
-                        {/* Messages Container */}
-                          <div className="col-md-12">
-                    <div className="d-flex flex-column">
+                      <div className="col-md-12">
+                      <div className="row chat-messages">
                       {/* Loop over messages */}
                       {messages.map((message, index) => (
                         <div key={index} className={`message ${message.sender._id === profileData._id ? 'my-message' : 'other-message'}`}>
-                          <div className="d-flex justify-content-between">
+                          {/* <div className="d-flex justify-content-between"> */}
                             {/* Display sender's avatar and name if the message is from the sender */}
                             {message.sender._id === profileData._id && (
                               <>
-                                <img src={message.sender.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
-                                <div>
-                                  <p className="text-right">{message.content}</p>
+                                <div className="message-text">
+                                  <p className="content">{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
+                                <img src={message.sender.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
                               </>
                             )}
                             {/* Display receiver's avatar and name if the message is from the receiver */}
                             {message.sender._id !== profileData._id && (
                               <>
                                 <img src={message.receiver.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
-                                <div>
-                                  <p>{message.content}</p>
+                                <div className="message-text">
+                                  <p >{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
                               </>
                             )}
-                          </div>
+                          {/* </div> */}
                         </div>
                       ))}
-                    </div>
-                  </div>
                       </div>
-              </div>
+                    </div>
             
                     {/* Input Field and Send Button */}
-                    <div className="input-group mt-3">
-                    {/* {messages.map((message, index) => (
-                        <p key={index}>{message.sender.firstName}: {message.content}</p>
-                    ))} */}
-
-
+                   <div className="input-group mt-3">
                     <input type="text" className="form-control" placeholder="Type your message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} id="messageInput" />
                       <div className="input-group-append">
                         <button className="btn btn-primary" type="button" onClick={handleMessageSend}>Send</button>

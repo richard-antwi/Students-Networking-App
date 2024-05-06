@@ -226,37 +226,51 @@ color: rgb(204, 200, 224);
 color: rgb(241, 93, 74);
 }
 
+
 /* messages */
 
 /* Add this in your CSS file */
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Enables scrolling */
+  max-height: 500px; /* Adjust based on your preference */
+}
+
 .message {
-  padding: 10px;
-  margin-bottom: 5px;
-  border-radius: 10px;
-  max-width: 70%;
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
 }
 
 .my-message {
-  background-color: #dcf8c6; /* Light green background for sender */
-  margin-left: auto; /* Align to the right */
-  text-align: right;
-  align-self: flex-end;
+  justify-content: flex-end;
 }
 
 .other-message {
-  background-color: #f0f0f0; /* Light grey for receiver */
-  margin-right: auto; /* Align to the left */
-  text-align: left;
-  align-self: flex-start;
+  justify-content: flex-start;
 }
 
 .avatar-img {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-}
-.chat-messages {
-  max-height: 500px;  /* or any appropriate value */
-  overflow-y: auto;
+  border-radius: 20px; /* Circular avatar */
+  margin-right: 10px; /* Space between avatar and message */
 }
 
+.message-text {
+  max-width: 70%; /* Prevents message from taking full width */
+  padding: 8px;
+  border-radius: 12px; /* Rounded corners for message bubbles */
+  background-color: #f0f0f0; /* Light grey background for messages */
+}
+
+.my-message .message-text {
+  background-color: #007bff; /* Light blue background for own messages */
+  color: white; /* White text for contrast */
+  text-align: right;
+}
+
+.other-message .message-text {
+  text-align: left;
+}

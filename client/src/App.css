@@ -233,14 +233,16 @@ color: rgb(241, 93, 74);
 .chat-messages {
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Enables scrolling */
-  max-height: 500px; /* Adjust based on your preference */
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 370px; /* Adjust based on your preference */
 }
 
 .message {
   display: flex;
   margin-bottom: 10px;
   align-items: center;
+  padding: 0 10px;
 }
 
 .my-message {
@@ -263,6 +265,7 @@ color: rgb(241, 93, 74);
   padding: 8px;
   border-radius: 12px; /* Rounded corners for message bubbles */
   background-color: #f0f0f0; /* Light grey background for messages */
+  word-wrap: break-word;
 }
 
 .my-message .message-text {

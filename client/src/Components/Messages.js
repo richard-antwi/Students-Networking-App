@@ -20,7 +20,8 @@ function Messages() {
     if (messagesContainer) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-}, [messages]);
+  }, [messages]);
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -164,8 +165,8 @@ function Messages() {
                   </div>
                   {/* Chat Body */}
                   <div className="card-body">
-                      <div className="col-md-12">
-                      <div className="row chat-messages">
+                      <div className="col-md-12 chat-messages">
+                      <div className="row ">
                       {/* Loop over messages */}
                       {messages.map((message, index) => (
                         <div key={index} className={`message ${message.sender._id === profileData._id ? 'my-message' : 'other-message'}`}>

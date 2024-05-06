@@ -45,7 +45,7 @@ function App() {
             <Route path="frequentlyaskedquestions" element={<FrequentlyAskedQuestions />} />
             <Route path="policyprivacy" element={<PolicyPrivacy />} />
             <Route path="helpcenter" element={<HelpCenter />} />
-            
+            <Route path="messages/:friendId" element={<Messages />} />
           </Route>
 
           {/* Route without NavBar */}

@@ -251,6 +251,16 @@ useEffect(() => {
   fetchFriends();
 }, []);
 
+const handleMessageFriend = (friendId) => {
+  console.log("Trying to navigate to messages with friend ID:", friendId);
+  if (!friendId) {
+    console.error('Friend ID is undefined, cannot navigate to messages');
+    alert('Cannot navigate to messages as friend ID is undefined.');
+    return;
+  }
+  navigate(`/messages/${friendId}`);
+};
+
 // FriendRequestsComponent starts here
  useEffect(() => {
   fetchFriendRequests();
@@ -269,16 +279,6 @@ const fetchFriendRequests = async () => {
   }
 };
 
-
-const handleMessageFriend = (friendId) => {
-  console.log("Trying to navigate to messages with friend ID:", friendId);
-  if (!friendId) {
-    console.error('Friend ID is undefined, cannot navigate to messages');
-    alert('Cannot navigate to messages as friend ID is undefined.');
-    return;
-  }
-  navigate(`/messages/${friendId}`);
-};
 
 
 
@@ -900,16 +900,16 @@ const handleDecline = async (friendshipId) => {
                     <span>⋮</span>
                   </div>
                   <div className="card-body">
-                    {friends.map((friend, index) => {
-                      console.log(`Friend ${index} ID:`, friend.id); // Log each friend's ID
+                    {friends.map((friend) => {
+                      console.log(friend._id); // Log each friend's ID
                       return (
-                        <div key={friend.id || index} className="d-flex justify-content-between align-items-center my-3">
+                        <div key={friend._id} className="d-flex justify-content-between align-items-center my-3">
                           <img src={friend.profileImagePath || avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '40px', height: '40px'}} />
                           <div className="text-left">
                             <h6 className="mb-1">{friend.firstName} {friend.lastName}</h6>
-                            <p className="mb-0 text-muted">{friend.profile.headline}</p>
+                            {/* <p className="mb-0 text-muted">{friend.profile.headline}</p> */}
                           </div>
-                          <button className="btn btn-primary" onClick={() => handleMessageFriend(friend.id)}>
+                          <button className="btn btn-primary" onClick={() => handleMessageFriend(friend._id)}>
                             Message
                           </button>
                         </div>

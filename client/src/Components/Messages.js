@@ -13,14 +13,18 @@ function Messages() {
   const [newMessage, setNewMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const fileInputRef = useRef(null);
   const [friends, setFriends] = useState([]);
   const navigate = useNavigate();
  
  
-const onEmojiClick = (event, emojiObject) => {
-  console.log(emojiObject);
-  setNewMessage(prevInput => prevInput + emojiObject.emoji);
-  setShowEmojiPicker(false); // Optionally close the picker after an emoji is chosen
+  const onEmojiClick = (emojiObject) => {
+    console.log(emojiObject); // Ensure you are now logging the emoji data
+    if (emojiObject && emojiObject.emoji) {
+        setNewMessage(prevMessage => prevMessage + emojiObject.emoji);
+    }
 };
 
 // Close emoji picker if clicked outside
@@ -97,29 +101,69 @@ useEffect(() => {
     }
   };
 
+  // Function to handle the image change event
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImageFile(file); // Set the image file
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result); // Set image preview
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // General send function that handles both images and text
   const handleMessageSend = useCallback(async () => {
-    if (!newMessage.trim()) return;
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No authentication token found');
       return;
     }
 
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      try {
+        const uploadResponse = await axios.post('http://localhost:3001/api/upload', formData, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        if (uploadResponse.data) {
+          const imageUrl = uploadResponse.data.imageUrl;
+          const content = `<img src="${imageUrl}" alt="Sent Image"/>`;
+          await sendTextMessage(content); // Send the URL in a message
+          setImageFile(null);
+          setImagePreview('');
+        }
+      } catch (error) {
+        console.error("Uploading image failed", error);
+      }
+    } else if (newMessage.trim()) {
+      await sendTextMessage(newMessage);
+    }
+  }, [newMessage, imageFile, friendId]);
+
+  // Function to send text messages
+  const sendTextMessage = async (content) => {
     try {
       const response = await axios.post('http://localhost:3001/api/messages', {
-        content: newMessage,
+        content: content,
         receiver: friendId
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setMessages(currentMessages => [...currentMessages, response.data]);
       setNewMessage('');
-      document.getElementById('messageInput').focus();
     } catch (error) {
       console.error("Sending message failed", error);
     }
-  }, [newMessage, friendId]);
-
+  };
   const navigateToFriend = (id) => {
     navigate(`/messages/${id}`);
   };
@@ -127,6 +171,9 @@ useEffect(() => {
   const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
   const imageUrl = `http://localhost:3001/${imagePath}`;
 
+    
+  
+  
     return (
         <>
         <div>
@@ -213,6 +260,7 @@ useEffect(() => {
                                 </div>
                               </>
                             )}
+                          
                           {/* </div> */}
                         </div>
                       ))}
@@ -220,6 +268,11 @@ useEffect(() => {
                     </div>
             
                     {/* Input Field and Send Button */}
+                    {imagePreview && (
+                        <div style={{ margin: '10px 0' }}>
+                          <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px' }} />
+                        </div>
+                      )}
                    <div className="input-group mt-3">
                     <input type="text" className="form-control" placeholder="Type your message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} id="messageInput" />
                       <div className="input-group-append">
@@ -238,40 +291,26 @@ useEffect(() => {
                         )}
                       {/* Camera Icon */}
                       <div className="input-group-append">
-                        <button className="btn btn-secondary" type="button" id="cameraBtn">
+                      <button className="btn btn-secondary" type="button" id="cameraBtn" onClick={() => fileInputRef.current.click()}>
                           <i className="fas fa-camera" />
                         </button>
                       </div>
+                      {/* Image Upload and Preview */}
+                      <input
+                        type="file"
+                        style={{ display: 'none' }}
+                        ref={fileInputRef}
+                        accept="image/*"
+                        onChange={handleImageChange}
+                      />
+
                       {/* File Clipper Icon */}
                       <div className="input-group-append">
                         <button className="btn btn-secondary" type="button" id="fileClipperBtn">
                           <i className="fas fa-paperclip" />
                         </button>
                       </div>
-                    </div>
-                    {/* Add this modal HTML at the end of your body tag */}
-                    <div className="modal fade" id="cameraModal" tabIndex={-1} role="dialog" aria-labelledby="cameraModalLabel" aria-hidden="true">
-                      <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h5 className="modal-title" id="cameraModalLabel">Select a Photo</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                          </div>
-                          <div className="modal-body">
-                            {/* Your camera/photo selection content goes here */}
-                            {/* For simplicity, let's just show a message */}
-                            <p>Select a photo using your camera or from the gallery.</p>
-                          </div>
-                          <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                            {/* You can add a button for the user to submit the selected photo */}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  
+                    </div>                  
                 </div>
               </div>
             </div>

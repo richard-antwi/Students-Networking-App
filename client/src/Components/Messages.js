@@ -1,9 +1,8 @@
 import '../App.css';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import 'bootstrap';
+import EmojiPicker from 'emoji-picker-react';
 import avatar from '../Images/avatar.webp';
-// import coverPhoto from '../Images/coverPhoto.jpg';
-
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -12,9 +11,32 @@ function Messages() {
   const [profileData, setProfileData] = useState({ profileImagePath: '', firstName: '', lastName: '', userName: '', headline: '' });
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef(null);
   const [friends, setFriends] = useState([]);
   const navigate = useNavigate();
  
+ 
+const onEmojiClick = (event, emojiObject) => {
+  console.log(emojiObject);
+  setNewMessage(prevInput => prevInput + emojiObject.emoji);
+  setShowEmojiPicker(false); // Optionally close the picker after an emoji is chosen
+};
+
+// Close emoji picker if clicked outside
+useEffect(() => {
+  function handleClickOutside(event) {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+          setShowEmojiPicker(false);
+      }
+  }
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
+
   useEffect(() => {
     const messagesContainer = document.querySelector('.chat-messages');
     if (messagesContainer) {
@@ -205,10 +227,15 @@ function Messages() {
                       </div>
                       {/* Emoji Icon with Emoji Picker */}
                       <div className="input-group-append">
-                        <button className="btn btn-secondary emoji-picker-btn" type="button">
+                        <button className="btn btn-secondary emoji-picker-btn" type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
                           <i className="far fa-smile" />
                         </button>
                       </div>
+                                  {showEmojiPicker && (
+                            <div ref={emojiPickerRef} style={{ position: 'absolute', bottom: '50px', right: '50px' }}>
+                                <EmojiPicker onEmojiClick={onEmojiClick} />
+                            </div>
+                        )}
                       {/* Camera Icon */}
                       <div className="input-group-append">
                         <button className="btn btn-secondary" type="button" id="cameraBtn">

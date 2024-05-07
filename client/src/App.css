@@ -235,7 +235,7 @@ color: rgb(241, 93, 74);
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 370px; /* Adjust based on your preference */
+  max-height: 350px; /* Adjust based on your preference */
 }
 
 .message {
@@ -276,4 +276,12 @@ color: rgb(241, 93, 74);
 
 .other-message .message-text {
   text-align: left;
+}
+
+/* Adjust the CSS based on your application's structure and styling needs */
+.emoji-picker-react {
+  position: absolute;
+  bottom: 50px; /* Adjust this value based on your layout */
+  right: 50px; /* Adjust this value to position the picker */
+  z-index: 1000; /* Ensures the picker floats above other content */
 }

@@ -1,10 +1,10 @@
-import '../App.css';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import axios from 'axios';
 import 'bootstrap';
 import EmojiPicker from 'emoji-picker-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import '../App.css';
 import avatar from '../Images/avatar.webp';
-import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
 
 function Messages() {
   const { friendId } = useParams();
@@ -113,20 +113,41 @@ useEffect(() => {
     }
   };
 // Function to send text messages
-const sendTextMessage = useCallback(async (content) => {
+const sendTextMessage = useCallback(async (content, isImage = false) => {
+  const senderId = localStorage.getItem('userId');
+  const optimisticMessage = {
+    content,
+    sender: { _id: senderId }, // Assuming you have access to the user's ID here
+    receiver: friendId,
+    imageUrl: isImage ? content : null,
+    timestamp: new Date(),
+    isOptimistic: true 
+  };
+
+  // Optimistically add the message to the chat
+  setMessages(currentMessages => [...currentMessages, optimisticMessage]);
+
   try {
-    const response = await axios.post('http://localhost:3001/api/messages', {
+    const payload = {
       content: content,
-      receiver: friendId
-    }, {
+      receiver: friendId,
+      isImage: isImage
+    };
+    const response = await axios.post('http://localhost:3001/api/messages', payload, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
-    setMessages(currentMessages => [...currentMessages, response.data]);
-    setNewMessage('');
+    // Replace the optimistic message with the actual response from the server
+    setMessages(currentMessages => currentMessages.map(msg =>
+      msg.timestamp === optimisticMessage.timestamp ? response.data : msg
+    ));
   } catch (error) {
     console.error("Sending message failed", error);
+    // Optionally remove the optimistic message if the send fails
+    setMessages(currentMessages => currentMessages.filter(msg => msg.timestamp !== optimisticMessage.timestamp));
   }
-}, [friendId]);
+}, [friendId, setMessages]);
+
+
   // General send function that handles both images and text
   const handleMessageSend = useCallback(async () => {
     const token = localStorage.getItem('token');
@@ -152,9 +173,8 @@ const sendTextMessage = useCallback(async (content) => {
 
         if (uploadResponse.data) {
           const imageUrl = uploadResponse.data.imageUrl;
-          const content = `${imageUrl}`;
-          console.log(content)
-          await sendTextMessage(content); // Send the URL in a message
+          console.log(imageUrl)
+          await sendTextMessage(imageUrl, true); // Send the URL in a message
           setImageFile(null);
           setImagePreview('');
         }
@@ -245,11 +265,12 @@ const sendTextMessage = useCallback(async (content) => {
                             {/* Display sender's avatar and name if the message is from the sender */}
                             {message.sender._id === profileData._id && (
                               <>
-                                <div className="message-text">
-                                  {message.imageUrl && (
+                               {message.imageUrl && (
                                       <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
                                   )}
-                                  <p className="content">{message.content}</p>
+                                <div className="message-text">
+                                 
+                                  <p className="content" >{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
                                 <img src={message.sender.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
@@ -260,12 +281,13 @@ const sendTextMessage = useCallback(async (content) => {
                               <>
                                 <img src={message.receiver.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
                                 <div className="message-text">
-                                {message.imageUrl && (
-                                      <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
-                                  )}
+                               
                                   <p >{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
+                                {message.imageUrl && (
+                                      <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
+                                  )}
                               </>
                             )}
                           

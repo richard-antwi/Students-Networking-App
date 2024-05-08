@@ -13,13 +13,17 @@ const messageSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    
+    default: ''  // Default to empty if no text content is provided
   },
-  imageUrl: String,
+  imageUrl: {
+    type: String,  // Store image URL here
+    default: ''
+  },
   timestamp: {
     type: Date,
     default: Date.now
   }
 });
+
 
 module.exports = mongoose.model('Message', messageSchema);

@@ -33,8 +33,7 @@ const corsOptions = {
     credentials: true,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
-app.use(cors(corsOptions));
-// Serve static files from the 'uploads' directory
+app.use(cors(corsOptions)); // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
@@ -61,7 +60,6 @@ app.get('/', (req, res) => {
       res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
-
     //Login API
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -112,16 +110,11 @@ app.post('/user/profile/update', authenticateToken, async (req, res) => {
 
 // Define a function to check file types
 const checkFileType = (file, cb) => {
-  // Allowed filetypes
-  const filetypes = /jpeg|jpg|png/;
-  // Check the extension
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check the mimetype
-  const mimetype = filetypes.test(file.mimetype);
-
+  const filetypes = /jpeg|jpg|png/; // Allowed filetypes
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase()); // Check the extension
+  const mimetype = filetypes.test(file.mimetype);// Check the mimetype
   if (extname && mimetype) {
-      // If file type is allowed, accept it
-      return cb(null, true);
+      return cb(null, true); // If file type is allowed, accept it
   } else {
       // Otherwise, reject it
       cb('Error: Images only!');
@@ -129,7 +122,6 @@ const checkFileType = (file, cb) => {
 };
 
 // Configure multer for file storage
-// Set storage engine
 const storage = multer.diskStorage({
   destination: './uploads/',
   filename: function(req, file, cb) {
@@ -258,7 +250,7 @@ app.post('/upload/cover', authenticateToken, uploadCover, async (req, res) => {
 app.get('/user/profile', authenticateToken, async (req, res) => {
   try {
     const userProfile = await User.findOne({ _id: req.user.id });
-    console.log(userProfile);
+    // console.log(userProfile);
     if (!userProfile) {
       return res.status(404).send('Profile not found.');
     }
@@ -519,16 +511,17 @@ app.get('/api/messages', authenticateToken, async (req, res) => {
 
 // Send a new message
 app.post('/api/messages', authenticateToken, async (req, res) => {
-  const { content, receiver } = req.body; // Message content and receiver ID from the request body
+  const { content, receiver, isImage = false } = req.body; // Message content and receiver ID from the request body
   const sender = req.user.id; // Sender ID from token
 
-  if (!content.trim()) {
+  if (!content || typeof content !== 'string' || !content.trim()) {
     return res.status(400).json({ message: 'Message content cannot be empty' });
   }
   const newMessage = new Message({
     sender,
     receiver,
-    content
+    content,
+    isImage: isImage
   });
 
   try {
@@ -567,21 +560,28 @@ app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
 app.post('/upload/message-image', authenticateToken, (req, res) => {
   uploadMessageImage(req, res, function(err) {
       if (err) {
-          console.error("Upload Error:", err);
           return res.status(500).json({ message: "Multer error: " + err.message });
       }
       if (!req.file) {
-          console.error("No file uploaded, body is:", req.body);
           return res.status(400).json({ message: 'No file uploaded!' });
       }
-      console.log("File uploaded, URL:", req.file.path);
       const imageUrl = `/uploads/message_images/${req.file.filename}`;
-      res.json({
-          message: 'Image uploaded successfully!',
-          imageUrl: imageUrl
+      // Create a new message with the image URL
+      const newMessage = new Message({
+          sender: req.user.id,
+          receiver: req.body.receiver,
+          imageUrl: imageUrl,  // Set image URL here
+          content: req.body.content || ''  // Optional content
       });
+      newMessage.save()
+      .then(message => res.json({
+          message: 'Image uploaded and message sent successfully!',
+          data: message
+      }))
+      .catch(error => res.status(500).json({ message: 'Failed to send message', error: error.toString() }));
   });
 });
+
 
 
 

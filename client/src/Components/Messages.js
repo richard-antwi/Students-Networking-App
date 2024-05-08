@@ -19,7 +19,6 @@ function Messages() {
   const [friends, setFriends] = useState([]);
   const navigate = useNavigate();
  
- 
   const onEmojiClick = (emojiObject) => {
     console.log(emojiObject); // Ensure you are now logging the emoji data
     if (emojiObject && emojiObject.emoji) {
@@ -113,7 +112,21 @@ useEffect(() => {
       reader.readAsDataURL(file);
     }
   };
-
+// Function to send text messages
+const sendTextMessage = useCallback(async (content) => {
+  try {
+    const response = await axios.post('http://localhost:3001/api/messages', {
+      content: content,
+      receiver: friendId
+    }, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+    setMessages(currentMessages => [...currentMessages, response.data]);
+    setNewMessage('');
+  } catch (error) {
+    console.error("Sending message failed", error);
+  }
+}, [friendId]);
   // General send function that handles both images and text
   const handleMessageSend = useCallback(async () => {
     const token = localStorage.getItem('token');
@@ -124,19 +137,23 @@ useEffect(() => {
 
     if (imageFile) {
       const formData = new FormData();
-      formData.append('image', imageFile);
-
+      formData.append('image', imageFile); 
+      formData.append('receiver', friendId);
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+    }
       try {
-        const uploadResponse = await axios.post('http://localhost:3001/api/upload', formData, {
+        const uploadResponse = await axios.post('http://localhost:3001/upload/message-image', formData, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'multipart/form-data',
           },
         });
 
         if (uploadResponse.data) {
           const imageUrl = uploadResponse.data.imageUrl;
-          const content = `<img src="${imageUrl}" alt="Sent Image"/>`;
+          const content = `${imageUrl}`;
+          console.log(content)
           await sendTextMessage(content); // Send the URL in a message
           setImageFile(null);
           setImagePreview('');
@@ -147,23 +164,9 @@ useEffect(() => {
     } else if (newMessage.trim()) {
       await sendTextMessage(newMessage);
     }
-  }, [newMessage, imageFile, friendId]);
+  }, [newMessage, imageFile, friendId, sendTextMessage]);
 
-  // Function to send text messages
-  const sendTextMessage = async (content) => {
-    try {
-      const response = await axios.post('http://localhost:3001/api/messages', {
-        content: content,
-        receiver: friendId
-      }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setMessages(currentMessages => [...currentMessages, response.data]);
-      setNewMessage('');
-    } catch (error) {
-      console.error("Sending message failed", error);
-    }
-  };
+  
   const navigateToFriend = (id) => {
     navigate(`/messages/${id}`);
   };
@@ -171,7 +174,6 @@ useEffect(() => {
   const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
   const imageUrl = `http://localhost:3001/${imagePath}`;
 
-    
   
   
     return (
@@ -244,6 +246,9 @@ useEffect(() => {
                             {message.sender._id === profileData._id && (
                               <>
                                 <div className="message-text">
+                                  {message.imageUrl && (
+                                      <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
+                                  )}
                                   <p className="content">{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
@@ -255,6 +260,9 @@ useEffect(() => {
                               <>
                                 <img src={message.receiver.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
                                 <div className="message-text">
+                                {message.imageUrl && (
+                                      <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
+                                  )}
                                   <p >{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
@@ -300,6 +308,7 @@ useEffect(() => {
                         type="file"
                         style={{ display: 'none' }}
                         ref={fileInputRef}
+                        name="image"
                         accept="image/*"
                         onChange={handleImageChange}
                       />

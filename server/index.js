@@ -7,16 +7,12 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const path = require('path');
-// const UserModel = require('./models/UserModel'); // Adjusted for a likely correct path
-// const UserProfile = require('./models/UserProfile');
-
 const User = require('./models/User');
 const Friendship = require('./models/Friendship');
 const Message = require('./models/Message'); 
 
 // Initialize the Express app
 const app = express();
-
 // Apply Helmet for security headers
 app.use(
   helmet({
@@ -66,7 +62,6 @@ app.get('/', (req, res) => {
   }
 });
 
-
     //Login API
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -98,27 +93,6 @@ app.post('/login', async (req, res) => {
     }
 };
 
-//User Profile API (Update) and create new profile if non exist
-// app.post('/user/profile/update', authenticateToken, async (req, res) => {
-//   const userId = req.user.id;
-//   const profileUpdate = req.body;
-
-//   try {
-//       const updatedProfile = await User.findOneAndUpdate(
-//           { _id: userId },
-//           { $set: { "profile": profileUpdate } }, // This path must match the nested structure
-//           { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
-//       );
-
-//       if (updatedProfile) {
-//           return res.json(updatedProfile);
-//       } else {
-//           return res.status(404).json({ message: "User not found and profile not created" });
-//       }
-//   } catch (error) {
-//       res.status(500).json({ message: "Failed to update or create profile", error: error.message });
-//   }
-// });
 app.post('/user/profile/update', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const profileUpdates = req.body;
@@ -182,8 +156,6 @@ const coverStorage = multer.diskStorage({
   }
 });
 
-
-
 app.post('/upload', authenticateToken, (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
@@ -235,6 +207,23 @@ const uploadCover = multer({
   }
 }).single('coverImage');
 
+const messageImageStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, './uploads/message_images/'); // Ensure this directory exists
+  },
+  filename: function (req, file, cb) {
+      // Ensure filenames are unique to avoid overwriting existing files
+      cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const uploadMessageImage = multer({
+  storage: messageImageStorage,
+  limits: { fileSize: 5000000 }, // 5MB limit
+  fileFilter: function (req, file, cb) {
+      checkFileType(file, cb);
+  }
+}).single('image'); // Ensure 'image' matches the field name used in the client-side FormData
 
 
 // Endpoint for uploading cover images
@@ -349,7 +338,6 @@ async function getSuggestions(userId) {
      return randomUsers.map(user => ({ user, score: 'random' }));
   }
 }
-
 
 // Endpoint to get friend suggestions
 app.get('/api/suggestions', authenticateToken, async (req, res) => {
@@ -505,8 +493,6 @@ app.post('/api/friendships/:id/decline', authenticateToken, async (req, res) => 
   }
 });
 
-
-
 // Get messages between two users
 
 app.get('/api/messages', authenticateToken, async (req, res) => {
@@ -539,7 +525,6 @@ app.post('/api/messages', authenticateToken, async (req, res) => {
   if (!content.trim()) {
     return res.status(400).json({ message: 'Message content cannot be empty' });
   }
-
   const newMessage = new Message({
     sender,
     receiver,
@@ -577,6 +562,25 @@ app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
       console.error('Failed to fetch messages:', error);
       res.status(500).json({ message: 'Failed to fetch messages', error: error.toString() });
   }
+});
+
+app.post('/upload/message-image', authenticateToken, (req, res) => {
+  uploadMessageImage(req, res, function(err) {
+      if (err) {
+          console.error("Upload Error:", err);
+          return res.status(500).json({ message: "Multer error: " + err.message });
+      }
+      if (!req.file) {
+          console.error("No file uploaded, body is:", req.body);
+          return res.status(400).json({ message: 'No file uploaded!' });
+      }
+      console.log("File uploaded, URL:", req.file.path);
+      const imageUrl = `/uploads/message_images/${req.file.filename}`;
+      res.json({
+          message: 'Image uploaded successfully!',
+          imageUrl: imageUrl
+      });
+  });
 });
 
 

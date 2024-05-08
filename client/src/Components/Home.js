@@ -72,7 +72,7 @@ const imageUrl = `http://localhost:3001/${imagePath}`;
 
               const data = await response.json();
               setSuggestions(data.suggestions || []); 
-              console.log('Suggestions:', data);
+              // console.log('Suggestions:', data);
 
               
               // console.log(setSuggestions(data.suggestions))

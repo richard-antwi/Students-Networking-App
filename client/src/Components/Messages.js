@@ -9,16 +9,22 @@ import Resumable from 'resumablejs';
 
 function Messages() {
   const { friendId } = useParams();
+  const navigate = useNavigate();
   const [profileData, setProfileData] = useState({ profileImagePath: '', firstName: '', lastName: '', userName: '', headline: '' });
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const emojiPickerRef = useRef(null);
+  // const [file, setFile] = useState(null);
+  const [filePreview, setFilePreview] = useState('');
+  const fileInputRef = useRef(null);
+  const fileUploadRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
-  const fileInputRef = useRef(null);
+  const emojiPickerRef = useRef(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [friends, setFriends] = useState([]);
-  const navigate = useNavigate();
+  const [videoPreview, setVideoPreview] = useState('');
+
+  
  
   const onEmojiClick = (emojiObject) => {
     console.log(emojiObject); // Ensure you are now logging the emoji data
@@ -201,56 +207,102 @@ const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) =
       setNewMessage('');
     }
   }, [newMessage, imageFile, friendId, sendTextMessage]);
-  
-  function setupResumable() {
-    var resumable = new Resumable({
-      target: 'http://localhost:3001/upload',
-      query: { upload_token: 'your_token_here' }, // You might want to dynamically get this token
-      fileInput: fileInputRef.current
-    });
-
-    resumable.on('fileAdded', function(file, event) {
-      console.log('File added:', file);
-      resumable.upload();
-    });
-
-    resumable.on('fileSuccess', function(file, message) {
-      console.log('File upload success:', file, message);
-    });
-
-    resumable.on('fileError', function(file, message) {
-      console.log('File upload error:', file, message);
-    });
-
-    resumable.on('fileProgress', function(file) {
-      console.log('File progress:', file, resumable.progress());
-    });
-  }
 
   useEffect(() => {
-    if (fileInputRef.current) {
+    const fetchData = async () => {
+      const token = localStorage.getItem('token');
+      if (token && friendId) {
+        try {
+          const [userRes, messagesRes] = await Promise.all([
+            axios.get(`http://localhost:3001/user/profile`, { headers: { Authorization: `Bearer ${token}` } }),
+            axios.get(`http://localhost:3001/api/messages/user/${friendId}`, { headers: { Authorization: `Bearer ${token}` } })
+          ]);
+          setProfileData(userRes.data);
+          setMessages(messagesRes.data);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
+    fetchData();
+  }, [friendId]);
+  
+  useEffect(() => {
+    if (fileUploadRef.current) {
       setupResumable();
     }
   }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      // Set the file for upload (this can be a state or whatever you choose to manage uploads)
-      setImageFile(file); // You might want to rename this state to something more general like `uploadFile`
-      // Optionally, you can preview the file if it's an image
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreview(reader.result); // Set image preview if it's an image
-        };
-        reader.readAsDataURL(file);
-      } else {
-        // Handle non-image files differently if needed
-        setImagePreview(null);
-      }
+    if (!file) return;
+
+    // setFile(file); // Set file state if needed for further operations
+    const fileType = file.type.split('/')[0];
+    
+    switch (fileType) {
+        case 'image':
+            previewFile(file, 'image');
+            break;
+        case 'video':
+            previewFile(file, 'video');
+            break;
+        case 'application':
+            setFilePreview(`Document ready to send: ${file.name}`);
+            break;
+        default:
+            setFilePreview(`File ready to send: ${file.name}`);
+            break;
     }
-  };
+};
+
+const previewFile = (file, type) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+        if (type === 'image') {
+            setImagePreview(reader.result);
+        } else if (type === 'video') {
+            setVideoPreview(reader.result); // You need to implement setVideoPreview
+        }
+    };
+    if (type === 'image' || type === 'video') {
+        reader.readAsDataURL(file);
+    }
+}
+
+// Example implementation for displaying upload progress
+function setupResumable() {
+  const token = localStorage.getItem('token');
+    var resumable = new Resumable({
+        target: 'http://localhost:3001/upload',
+        query: { upload_token: 'your_token_here' },
+        headers: {
+          Authorization: `Bearer ${token}`, // Send token as an Authorization header
+      },
+        fileInput: fileUploadRef.current,
+        testChunks: false,
+    });
+
+    resumable.on('fileAdded', function(file, event) {
+        console.log('File added:', file);
+        resumable.upload();
+    });
+
+    resumable.on('fileSuccess', function(file, message) {
+        console.log('File upload success:', file, message);
+    });
+
+    resumable.on('fileError', function(file, message) {
+        console.log('File upload error:', file, message);
+    });
+
+    resumable.on('fileProgress', function(file) {
+        console.log('File progress:', file, resumable.progress());
+        // Update a progress bar or similar here
+    });
+}
+
+
   
   
   const navigateToFriend = (id) => {
@@ -336,6 +388,14 @@ const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) =
                                 {message.imageUrl && (
                                       <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
                                   )}
+                                  {filePreview && (
+                                    <div style={{ margin: '10px 0' }}>
+                                        <p>File ready to send: {filePreview}</p>
+                                    </div>
+                                )}
+                                 {videoPreview && (
+                                    <video src={videoPreview} controls style={{ width: '100%', maxHeight: '300px' }}></video>
+                                )}
                                   <p className="content" >{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
@@ -350,6 +410,14 @@ const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) =
                                 {message.imageUrl && (
                                       <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
                                   )}
+                                {filePreview && (
+                                    <div style={{ margin: '10px 0' }}>
+                                        <p>File ready to send: {filePreview}</p>
+                                    </div>
+                                )}
+                                 {videoPreview && (
+                                    <video src={videoPreview} controls style={{ width: '100%', maxHeight: '300px' }}></video>
+                                )}
                                   <p >{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
@@ -403,14 +471,14 @@ const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) =
 
                       {/* File Clipper Icon */}
                       <div className="input-group-append">
-                        <button className="btn btn-secondary" type="button" id="fileClipperBtn" onClick={() => fileInputRef.current.click()}>
+                        <button className="btn btn-secondary" type="button" id="fileClipperBtn" onClick={() => fileUploadRef.current.click()}>
                           <i className="fas fa-paperclip" />
                         </button>
                       </div>
                       <input
                         type="file"
                         style={{ display: 'none' }}
-                        ref={fileInputRef}
+                        ref={fileUploadRef}
                         name="fileInput"
                         accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         onChange={handleFileChange}

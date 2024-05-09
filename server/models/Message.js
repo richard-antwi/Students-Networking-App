@@ -19,6 +19,11 @@ const messageSchema = new mongoose.Schema({
     type: String,  // Store image URL here
     default: ''
   },
+  file: {
+    fileId: mongoose.Schema.Types.ObjectId, // Reference to GridFS file ID
+    filename: String,
+    contentType: String
+},
   timestamp: {
     type: Date,
     default: Date.now

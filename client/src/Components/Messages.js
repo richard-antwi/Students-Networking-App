@@ -6,6 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import '../App.css';
 import avatar from '../Images/avatar.webp';
 import Resumable from 'resumablejs';
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+// import io from 'socket.io-client';
 
 function Messages() {
   const { friendId } = useParams();
@@ -13,7 +16,6 @@ function Messages() {
   const [profileData, setProfileData] = useState({ profileImagePath: '', firstName: '', lastName: '', userName: '', headline: '' });
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  // const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState('');
   const fileInputRef = useRef(null);
   const fileUploadRef = useRef(null);
@@ -23,8 +25,31 @@ function Messages() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [friends, setFriends] = useState([]);
   const [videoPreview, setVideoPreview] = useState('');
+  const [pdfFile, setPdfFile] = useState();
 
   
+//   useEffect(() => {
+//     const socket = io('http://localhost:3001', {
+//     reconnection: true,
+//     reconnectionDelay: 1000,
+//     reconnectionAttempts: 10
+// });
+
+  
+//     socket.on('connect', () => {
+//       console.log('Connected to socket server');
+//     });
+  
+//     socket.on('message', message => {
+//       setMessages(prevMessages => [...prevMessages, message]);
+//     });
+  
+//     socket.on('disconnect', () => {
+//       console.log('Disconnected from socket server');
+//     });
+  
+//     return () => socket.disconnect();
+//   }, []);
  
   const onEmojiClick = (emojiObject) => {
     console.log(emojiObject); // Ensure you are now logging the emoji data
@@ -256,31 +281,33 @@ const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) =
     }
 };
 
+
 const previewFile = (file, type) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-        if (type === 'image') {
-            setImagePreview(reader.result);
-        } else if (type === 'video') {
-            setVideoPreview(reader.result); // You need to implement setVideoPreview
-        }
-    };
-    if (type === 'image' || type === 'video') {
-        reader.readAsDataURL(file);
-    }
-}
+  const reader = new FileReader();
+  reader.onloadend = () => {
+      if (type === 'image') {
+          setImagePreview(reader.result);
+      } else if (type === 'video') {
+          setVideoPreview(reader.result);
+      } else if (type === 'application' && file.type.includes('pdf')) {
+          setPdfFile(reader.result); // Set the PDF file for viewing
+      }
+  };
+  reader.readAsDataURL(file);
+};
 
 // Example implementation for displaying upload progress
 function setupResumable() {
   const token = localStorage.getItem('token');
     var resumable = new Resumable({
-        target: 'http://localhost:3001/upload',
+        target: 'http://localhost:3001/chunk-upload',
         query: { upload_token: 'your_token_here' },
-        headers: {
-          Authorization: `Bearer ${token}`, // Send token as an Authorization header
-      },
+        headers: {Authorization: `Bearer ${token}`,}, // Send token as an Authorization header
         fileInput: fileUploadRef.current,
+        chunkSize: 1*1024*1024, // 1MB chunks
+        simultaneousUploads: 4,
         testChunks: false,
+        throttleProgressCallbacks: 1,
     });
 
     resumable.on('fileAdded', function(file, event) {
@@ -303,13 +330,13 @@ function setupResumable() {
 }
 
 
-  
+
   
   const navigateToFriend = (id) => {
     navigate(`/messages/${id}`);
   };
 
-  const imagePath = profileData.profileImagePath.replace(/\\/g, '/');
+ const imagePath = profileData.profileImagePath?.replace(/\\/g, '/');
   const imageUrl = `http://localhost:3001/${imagePath}`;
 
   
@@ -384,7 +411,7 @@ function setupResumable() {
                             {message.sender._id === profileData._id && (
                               <>
                                
-                                <div className="message-text">
+                       <div className="message-text">
                                 {message.imageUrl && (
                                       <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
                                   )}
@@ -396,17 +423,24 @@ function setupResumable() {
                                  {videoPreview && (
                                     <video src={videoPreview} controls style={{ width: '100%', maxHeight: '300px' }}></video>
                                 )}
-                                  <p className="content" >{message.content}</p>
-                                  <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
+                                {pdfFile && (
+                                <div>
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.10.377/build/pdf.worker.min.js">
+                                        <Viewer fileUrl={pdfFile} />
+                                    </Worker>
                                 </div>
-                                <img src={message.sender.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
-                              </>
                             )}
+                      <p className="content" >{message.content}</p>
+                        <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
+                    </div>
+                    <img src={message.sender.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
+                    </>
+                    )}
                             {/* Display receiver's avatar and name if the message is from the receiver */}
-                            {message.sender._id !== profileData._id && (
-                              <>
-                                <img src={message.receiver.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
-                                <div className="message-text">
+                    {message.sender._id !== profileData._id && (
+                      <>
+                        <img src={message.receiver.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
+                          <div className="message-text">
                                 {message.imageUrl && (
                                       <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
                                   )}
@@ -415,12 +449,19 @@ function setupResumable() {
                                         <p>File ready to send: {filePreview}</p>
                                     </div>
                                 )}
+                                {pdfFile && (
+                              <div>
+                                  <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.10.377/build/pdf.worker.min.js">
+                                      <Viewer fileUrl={pdfFile} />
+                                  </Worker>
+                              </div>
+                          )}
                                  {videoPreview && (
                                     <video src={videoPreview} controls style={{ width: '100%', maxHeight: '300px' }}></video>
                                 )}
-                                  <p >{message.content}</p>
-                                  <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
-                                </div>
+                          <p >{message.content}</p>
+                          <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
+                          </div>
 
                               </>
                             )}

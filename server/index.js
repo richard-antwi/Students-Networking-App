@@ -8,10 +8,13 @@ const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
 const User = require('./models/User');
 const Friendship = require('./models/Friendship');
 const Message = require('./models/Message'); 
+const Grid = require('gridfs-stream');
+const { GridFsStorage } = require('multer-gridfs-storage');
 
 // Initialize the Express app
 const app = express();
@@ -46,7 +49,8 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Use JSON and CORS with specified options
-app.use(express.json());
+app.use(express.json({ limit: '2600mb' }));
+app.use(express.urlencoded({ limit: '2600mb', extended: true }));
 const corsOptions = {
     origin: 'http://localhost:3000',
     credentials: true,
@@ -59,7 +63,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.error(err));
+const conn = mongoose.connection;
+let gfs;
 
+conn.once('open', () => {
+  // Initialize GridFS
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads');
+});
 // Define routes
 app.get('/', (req, res) => {
     res.send('Server is running!');
@@ -140,19 +151,27 @@ const checkFileType = (file, cb) => {
   }
 };
 
-// Configure multer for file storage
-const storage = multer.diskStorage({
-  destination: './uploads/',
-  filename: function(req, file, cb) {
-    // Naming format for uploaded files: Date-Time_originalname
-    cb(null, Date.now() + '_' + file.originalname);
+const gridFsStorage = new GridFsStorage({
+  url: process.env.MONGODB_URI,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      const filename = `file_${Date.now()}_${file.originalname}`;
+      const fileInfo = {
+        filename: filename,
+        bucketName: 'uploads' // This should match the name of the collection your GridFS uses
+      };
+      resolve(fileInfo);
+    });
   }
 });
 
+const uploadGridFs = multer({ storage: gridFsStorage });
+
+
 // Initialize upload variable
 const upload = multer({ 
-  storage: storage,
-  limits: { fileSize: 5000000 }, // 5 MB limit for files
+  storage: gridFsStorage,
+  limits: { fileSize: 1024 * 1024 * 2500 }, // 2.5GB  limit for files
   fileFilter: function(req, file, cb) {
     checkFileType(file, cb);
   }
@@ -167,34 +186,74 @@ const coverStorage = multer.diskStorage({
   }
 });
 
-app.post('/upload', authenticateToken, (req, res) => {
-  upload(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({ message: err });
-    }
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file selected!' });
-    }
-    const filePath = req.file.path;
-    try {
-      const updatedProfile = await User.findOneAndUpdate(
-        { _id: req.user.id },
-        { 'profile.profileImagePath': filePath },
-        { new: true, upsert: true }
-      );
-      if (!updatedProfile) {
-        return res.status(404).json({ message: "Profile not found and couldn't be created" });
+app.post('/upload', authenticateToken, uploadGridFs.single('file'), (req, res) => {
+  if (req.file) {
+    res.json({ message: "File uploaded successfully", file: req.file });
+  } else {
+    res.status(400).send('No file uploaded');
+  }
+});
+
+
+// POST endpoint to handle chunk uploads and reassembly
+app.post('/chunk-upload', authenticateToken, (req, res) => {
+  const { chunk, totalChunks, identifier } = req.body;
+  const targetDir = path.join(__dirname, 'uploads', identifier);
+  const targetPath = path.join(targetDir, `${req.body.chunkNumber}`);
+
+  if (!fs.existsSync(targetDir)){
+      fs.mkdirSync(targetDir);
+  }
+
+  // Move the chunk to the target path
+  chunk.mv(targetPath, err => {
+      if (err) {
+          return res.status(500).send({ message: "Failed to save chunk" });
       }
-      res.json({
-        message: 'File uploaded and profile updated!',
-        filePath: filePath,
-        data: updatedProfile
-      });
-    } catch ( error) {
-      res.status(500).json({ message: 'Database update failed', error });
-    }
+
+      // Check if all chunks are uploaded
+      const chunks = fs.readdirSync(targetDir);
+      if (chunks.length === totalChunks) {
+          // Reassemble chunks
+          const filePath = path.join(targetDir, identifier);
+          const fileStream = fs.createWriteStream(filePath);
+
+          chunks.sort().forEach(chunk => {
+              const chunkPath = path.join(targetDir, chunk);
+              fileStream.write(fs.readFileSync(chunkPath));
+              fs.unlinkSync(chunkPath); // delete chunk after appending it
+          });
+
+          fileStream.end();
+          res.send({ message: "File reassembled successfully", filePath });
+      } else {
+          res.send({ message: "Chunk uploaded successfully" });
+      }
   });
 });
+
+app.get('/file/:filename', (req, res) => {
+  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    if (!file || file.length === 0) {
+      return res.status(404).json({
+        err: 'No file exists'
+      });
+    }
+
+    const readstream = gfs.createReadStream(file.filename);
+    readstream.pipe(res);
+  });
+});
+app.delete('/file/:filename', (req, res) => {
+  gfs.remove({ filename: req.params.filename, root: 'uploads' }, (err, gridStore) => {
+    if (err) {
+      return res.status(404).json({ err: err });
+    }
+
+    res.redirect('/');
+  });
+});
+
 
 const storageCover = multer.diskStorage({
   destination: function(req, file, cb) {

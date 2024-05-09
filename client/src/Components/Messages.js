@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../App.css';
 import avatar from '../Images/avatar.webp';
+import Resumable from 'resumablejs';
 
 function Messages() {
   const { friendId } = useParams();
@@ -70,16 +71,7 @@ useEffect(() => {
     }
   };
 
-  const fetchMessages = async (friendId, token) => {
-    try {
-      const response = await axios.get(`http://localhost:3001/api/messages/user/${friendId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setMessages(response.data);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-  };
+  
 
   const fetchUserData = async (token) => {
     try {
@@ -112,8 +104,18 @@ useEffect(() => {
       reader.readAsDataURL(file);
     }
   };
+  const fetchMessages = async (friendId, token) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/api/messages/user/${friendId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMessages(response.data);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
 // Function to send text messages
-const sendTextMessage = useCallback(async (content, isImage = false) => {
+const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) => {
   const senderId = localStorage.getItem('userId');
   const optimisticMessage = {
     content,
@@ -130,8 +132,9 @@ const sendTextMessage = useCallback(async (content, isImage = false) => {
   try {
     const payload = {
       content: content,
+      imageUrl: isImage ? imageUrl : null,
       receiver: friendId,
-      isImage: isImage
+      isImage
     };
     const response = await axios.post('http://localhost:3001/api/messages', payload, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -149,43 +152,106 @@ const sendTextMessage = useCallback(async (content, isImage = false) => {
 
 
   // General send function that handles both images and text
+  const handleImageUpload = async (file, receiverId) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('receiver', receiverId);
+  
+    try {
+      const response = await axios.post('http://localhost:3001/upload/message-image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        onUploadProgress: progressEvent => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          console.log(percentCompleted); // You can use this percentage to update a progress bar
+        }
+      });
+      return response.data; // contains the URL and potentially other response data
+    } catch (error) {
+      console.error("Uploading image failed", error);
+      return null;
+    }
+  };
+  
+  // Modify your send function
   const handleMessageSend = useCallback(async () => {
+    if (!imageFile && !newMessage.trim()) {
+      return; // Prevent sending empty messages
+    }
+  
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No authentication token found');
       return;
     }
-
+    
+    let imageUrl = null;
     if (imageFile) {
-      const formData = new FormData();
-      formData.append('image', imageFile); 
-      formData.append('receiver', friendId);
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
+      const uploadData = await handleImageUpload(imageFile, friendId);
+      imageUrl = uploadData ? uploadData.imageUrl : null;
     }
-      try {
-        const uploadResponse = await axios.post('http://localhost:3001/upload/message-image', formData, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        if (uploadResponse.data) {
-          const imageUrl = uploadResponse.data.imageUrl;
-          console.log(imageUrl)
-          await sendTextMessage(imageUrl, true); // Send the URL in a message
-          setImageFile(null);
-          setImagePreview('');
-        }
-      } catch (error) {
-        console.error("Uploading image failed", error);
-      }
-    } else if (newMessage.trim()) {
-      await sendTextMessage(newMessage);
+  
+    // If there's text or an image URL, send the message
+    if (newMessage.trim() || imageUrl) {
+      await sendTextMessage(newMessage, imageUrl, !!imageUrl);
+      setImageFile(null);
+      setImagePreview('');
+      setNewMessage('');
     }
   }, [newMessage, imageFile, friendId, sendTextMessage]);
+  
+  function setupResumable() {
+    var resumable = new Resumable({
+      target: 'http://localhost:3001/upload',
+      query: { upload_token: 'your_token_here' }, // You might want to dynamically get this token
+      fileInput: fileInputRef.current
+    });
 
+    resumable.on('fileAdded', function(file, event) {
+      console.log('File added:', file);
+      resumable.upload();
+    });
+
+    resumable.on('fileSuccess', function(file, message) {
+      console.log('File upload success:', file, message);
+    });
+
+    resumable.on('fileError', function(file, message) {
+      console.log('File upload error:', file, message);
+    });
+
+    resumable.on('fileProgress', function(file) {
+      console.log('File progress:', file, resumable.progress());
+    });
+  }
+
+  useEffect(() => {
+    if (fileInputRef.current) {
+      setupResumable();
+    }
+  }, []);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Set the file for upload (this can be a state or whatever you choose to manage uploads)
+      setImageFile(file); // You might want to rename this state to something more general like `uploadFile`
+      // Optionally, you can preview the file if it's an image
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result); // Set image preview if it's an image
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // Handle non-image files differently if needed
+        setImagePreview(null);
+      }
+    }
+  };
+  
   
   const navigateToFriend = (id) => {
     navigate(`/messages/${id}`);
@@ -265,11 +331,11 @@ const sendTextMessage = useCallback(async (content, isImage = false) => {
                             {/* Display sender's avatar and name if the message is from the sender */}
                             {message.sender._id === profileData._id && (
                               <>
-                               {message.imageUrl && (
+                               
+                                <div className="message-text">
+                                {message.imageUrl && (
                                       <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
                                   )}
-                                <div className="message-text">
-                                 
                                   <p className="content" >{message.content}</p>
                                   <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                                 </div>
@@ -281,13 +347,13 @@ const sendTextMessage = useCallback(async (content, isImage = false) => {
                               <>
                                 <img src={message.receiver.profileImagePath || avatar} alt="Avatar" className="avatar-img" />
                                 <div className="message-text">
-                               
-                                  <p >{message.content}</p>
-                                  <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
-                                </div>
                                 {message.imageUrl && (
                                       <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
                                   )}
+                                  <p >{message.content}</p>
+                                  <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
+                                </div>
+
                               </>
                             )}
                           
@@ -337,10 +403,18 @@ const sendTextMessage = useCallback(async (content, isImage = false) => {
 
                       {/* File Clipper Icon */}
                       <div className="input-group-append">
-                        <button className="btn btn-secondary" type="button" id="fileClipperBtn">
+                        <button className="btn btn-secondary" type="button" id="fileClipperBtn" onClick={() => fileInputRef.current.click()}>
                           <i className="fas fa-paperclip" />
                         </button>
                       </div>
+                      <input
+                        type="file"
+                        style={{ display: 'none' }}
+                        ref={fileInputRef}
+                        name="fileInput"
+                        accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        onChange={handleFileChange}
+                      />
                     </div>                  
                 </div>
               </div>

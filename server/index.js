@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -13,12 +15,29 @@ const Message = require('./models/Message');
 
 // Initialize the Express app
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 // Apply Helmet for security headers
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" }
   })
 );
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // Handle incoming messages from clients
+  socket.on('message', (data) => {
+      console.log('Received message:', data);
+      // Broadcast the message to all connected clients
+      io.emit('message', data);
+  });
+
+  // Handle disconnect events
+  socket.on('disconnect', () => {
+      console.log('User disconnected');
+  });
+});
 // Set up rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -509,31 +528,6 @@ app.get('/api/messages', authenticateToken, async (req, res) => {
 });
 
 
-// Send a new message
-app.post('/api/messages', authenticateToken, async (req, res) => {
-  const { content, receiver, isImage = false } = req.body; // Message content and receiver ID from the request body
-  const sender = req.user.id; // Sender ID from token
-
-  if (!content || typeof content !== 'string' || !content.trim()) {
-    return res.status(400).json({ message: 'Message content cannot be empty' });
-  }
-  const newMessage = new Message({
-    sender,
-    receiver,
-    content,
-    isImage: isImage
-  });
-
-  try {
-    await newMessage.save();
-    res.status(201).json(newMessage);
-  } catch (error) {
-    console.error('Error sending message:', error);
-    res.status(500).json({ message: 'Failed to send message', error: error.toString() });
-  }
-});
-
-
 // Get messages for a user
 app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
   const { userId } = req.params;  // Correctly extracting userId from params
@@ -559,28 +553,42 @@ app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
 
 app.post('/upload/message-image', authenticateToken, (req, res) => {
   uploadMessageImage(req, res, function(err) {
-      if (err) {
-          return res.status(500).json({ message: "Multer error: " + err.message });
-      }
-      if (!req.file) {
-          return res.status(400).json({ message: 'No file uploaded!' });
-      }
-      const imageUrl = `/uploads/message_images/${req.file.filename}`;
-      // Create a new message with the image URL
-      const newMessage = new Message({
-          sender: req.user.id,
-          receiver: req.body.receiver,
-          imageUrl: imageUrl,  // Set image URL here
-          content: req.body.content || ''  // Optional content
-      });
-      newMessage.save()
-      .then(message => res.json({
-          message: 'Image uploaded and message sent successfully!',
-          data: message
-      }))
-      .catch(error => res.status(500).json({ message: 'Failed to send message', error: error.toString() }));
+    if (err) {
+      return res.status(500).json({ message: "Multer error: " + err.message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded!' });
+    }
+    const imageUrl = `/uploads/message_images/${req.file.filename}`;
+    res.json({ imageUrl });  // Just return URL
   });
 });
+
+app.post('/api/messages', authenticateToken, async (req, res) => {
+  const { content, receiver, imageUrl, isImage = false } = req.body;
+  const sender = req.user.id;
+
+  if (!content && !imageUrl) {
+    return res.status(400).json({ message: 'Message content cannot be empty' });
+  }
+
+  const newMessage = new Message({
+    sender,
+    receiver,
+    content,
+    imageUrl,
+    isImage
+  });
+
+  try {
+    await newMessage.save();
+    res.status(201).json(newMessage);
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ message: 'Failed to send message', error: error.toString() });
+  }
+});
+
 
 
 

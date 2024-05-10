@@ -235,15 +235,20 @@ app.post('/chunk-upload', authenticateToken, (req, res) => {
 app.get('/file/:filename', (req, res) => {
   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
     if (!file || file.length === 0) {
-      return res.status(404).json({
-        err: 'No file exists'
-      });
+      return res.status(404).json({ err: 'No file found' });
     }
-
+    // Check if the file is compressed and set the appropriate headers
+    if (file.metadata && file.metadata.compressed) {
+      res.set('Content-Encoding', 'gzip');
+    }
     const readstream = gfs.createReadStream(file.filename);
+    readstream.on('error', function(err) {
+      res.status(500).json({ err: err.message });
+    });
     readstream.pipe(res);
   });
 });
+
 app.delete('/file/:filename', (req, res) => {
   gfs.remove({ filename: req.params.filename, root: 'uploads' }, (err, gridStore) => {
     if (err) {
@@ -647,10 +652,6 @@ app.post('/api/messages', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Failed to send message', error: error.toString() });
   }
 });
-
-
-
-
 
 
 // Error handling middleware

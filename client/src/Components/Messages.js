@@ -147,17 +147,17 @@ useEffect(() => {
   };
 // Function to send text messages
 const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) => {
-  const senderId = localStorage.getItem('userId');
+  const optimisticId = Date.now(); // Use current timestamp as a unique ID
   const optimisticMessage = {
+    id: optimisticId, // Use the unique ID
     content,
-    sender: { _id: senderId }, // Assuming you have access to the user's ID here
+    sender: { _id: senderId },
     receiver: friendId,
     imageUrl: isImage ? content : null,
     timestamp: new Date(),
     isOptimistic: true 
   };
 
-  // Optimistically add the message to the chat
   setMessages(currentMessages => [...currentMessages, optimisticMessage]);
 
   try {
@@ -170,16 +170,16 @@ const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) =
     const response = await axios.post('http://localhost:3001/api/messages', payload, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
-    // Replace the optimistic message with the actual response from the server
+    // Replace the optimistic message with the actual response
     setMessages(currentMessages => currentMessages.map(msg =>
-      msg.timestamp === optimisticMessage.timestamp ? response.data : msg
+      msg.id === optimisticId ? response.data : msg
     ));
   } catch (error) {
     console.error("Sending message failed", error);
-    // Optionally remove the optimistic message if the send fails
-    setMessages(currentMessages => currentMessages.filter(msg => msg.timestamp !== optimisticMessage.timestamp));
+    setMessages(currentMessages => currentMessages.filter(msg => msg.id !== optimisticId));
   }
 }, [friendId, setMessages]);
+
 
 
   // General send function that handles both images and text
@@ -273,10 +273,10 @@ const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) =
             previewFile(file, 'video');
             break;
         case 'application':
-            setFilePreview(`Document ready to send: ${file.name}`);
+            setFilePreview(`${file.name}`);
             break;
         default:
-            setFilePreview(`File ready to send: ${file.name}`);
+            setFilePreview(` ${file.name}`);
             break;
     }
 };
@@ -285,13 +285,13 @@ const sendTextMessage = useCallback(async (content, imageUrl, isImage = false) =
 const previewFile = (file, type) => {
   const reader = new FileReader();
   reader.onloadend = () => {
-      if (type === 'image') {
-          setImagePreview(reader.result);
-      } else if (type === 'video') {
-          setVideoPreview(reader.result);
-      } else if (type === 'application' && file.type.includes('pdf')) {
-          setPdfFile(reader.result); // Set the PDF file for viewing
-      }
+    if (type === 'image') {
+      setImagePreview(reader.result);
+    } else if (type === 'video') {
+      setVideoPreview(reader.result);
+    } else if (type === 'application' && file.type.includes('pdf')) {
+      setPdfFile(reader.result); // Assuming you handle PDF separately
+    }
   };
   reader.readAsDataURL(file);
 };

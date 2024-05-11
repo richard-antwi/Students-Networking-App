@@ -126,7 +126,6 @@
     const handleFileUpload = useCallback(async () => {
       const formData = new FormData();
       formData.append('file', file); // Make sure 'file' is updated in state on file select
-
       try {
         const token = localStorage.getItem('token');
         const response = await axios.post('http://localhost:3001/upload/general', formData, {
@@ -135,14 +134,15 @@
             'Content-Type': 'multipart/form-data'
           }
         });
-        
         setUploadStatus('File uploaded successfully!');
         console.log('File data:', response.data);
-        setFile(null); // Clear the file from state after upload
-            setFilePreview(''); // Clear the preview
+        setFile(null); 
+        setFilePreview('');
+        return { fileUrl: response.data.fileUrl };
       } catch (error) {
         setUploadStatus('Failed to upload file!');
         console.error('Error uploading file:', error);
+        return { fileUrl: null }; 
       }
     }, [file]);
 
@@ -243,8 +243,8 @@
   
       // Handle file upload
       if (file) {
-          const uploadData = await handleFileUpload(); // Updated to call handleFileUpload
-          fileUrl = uploadData ? uploadData.fileUrl : null; // Assuming your handleFileUpload returns an object with fileUrl
+        const uploadData = await handleFileUpload();
+        fileUrl = uploadData.fileUrl; // Make sure handleFileUpload returns this
       }
   
       // Sending message with image or file URL

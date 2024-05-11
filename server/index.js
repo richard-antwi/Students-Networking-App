@@ -636,27 +636,17 @@ app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
 });
 
 app.post('/upload/message-image', authenticateToken, (req, res) => {
-  uploadMessageImage(req, res, function (err) {
-      if (err instanceof multer.MulterError) {
-          // A Multer error occurred when uploading.
-          console.error("Multer error during file upload:", err);
-          return res.status(500).json({ message: "Multer error: " + err.message });
-      } else if (err) {
-          // An unknown error occurred when uploading.
-          console.error("Unknown error during file upload:", err);
-          return res.status(500).json({ message: "Upload Error: " + err.message });
-      }
-
-      if (!req.file) {
-          return res.status(400).json({ message: 'No file uploaded!' });
-      }
-
-      // File is uploaded, now you can do something with it
-      const imageUrl = `/uploads/message_images/${req.func.file.filename}`;
-      res.json({ imageUrl, message: 'File uploaded successfully' });  // Return the URL of the uploaded file
+  uploadMessageImage(req, res, function(err) {
+    if (err) {
+      return res.status(500).json({ message: "Multer error: " + err.message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded!' });
+    }
+    const imageUrl = `/uploads/message_images/${req.file.filename}`;
+    res.json({ imageUrl });  // Just return URL
   });
 });
-
 
 app.post('/api/messages', authenticateToken, async (req, res) => {
   const { content, receiver, imageUrl, isImage = false } = req.body;

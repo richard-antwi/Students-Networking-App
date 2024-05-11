@@ -263,7 +263,7 @@
       const token = localStorage.getItem('token');
       var resumable = new Resumable({
         target: 'http://localhost:3001/chunk-upload',
-        query: { upload_token: 'your_token_here' },
+        query: { upload_token: token },
         headers: { Authorization: `Bearer ${token}` },
         fileInput: fileUploadRef.current,
         chunkSize: 1 * 1024 * 1024,

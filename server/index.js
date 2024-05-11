@@ -151,29 +151,26 @@ const checkFileType = (file, cb) => {
   }
 };
 
-const gridFsStorage = new GridFsStorage({
+const gridFsStorageGeneral = new GridFsStorage({
   url: process.env.MONGODB_URI,
   file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      const filename = `file_${Date.now()}_${file.originalname}`;
-      const fileInfo = {
-        filename: filename,
-        bucketName: 'uploads' // This should match the name of the collection your GridFS uses
-      };
-      resolve(fileInfo);
-    });
+    return {
+      filename: `file_${Date.now()}_${file.originalname}`,
+      bucketName: 'message_files' // Storing in 'message_files' collection
+    };
   }
 });
 
-const uploadGridFs = multer({ storage: gridFsStorage });
+const uploadGeneralFiles = multer({ storage: gridFsStorageGeneral }).single('file');
+
 
 
 // Initialize upload variable
 const upload = multer({ 
-  storage: gridFsStorage,
-  limits: { fileSize: 1024 * 1024 * 2500 }, // 2.5GB  limit for files
+  storage: gridFsStorageGeneral, 
+  limits: { fileSize: 1024 * 1024 * 2500 }, // 2.5GB limit for files
   fileFilter: function(req, file, cb) {
-    checkFileType(file, cb);
+      checkFileType(file, cb);
   }
 }).single('profileImage');
 // Storage for cover images
@@ -186,13 +183,36 @@ const coverStorage = multer.diskStorage({
   }
 });
 
-app.post('/upload', authenticateToken, uploadGridFs.single('file'), (req, res) => {
+app.post('/upload', authenticateToken, uploadGeneralFiles, (req, res) => {
   if (req.file) {
     res.json({ message: "File uploaded successfully", file: req.file });
   } else {
     res.status(400).send('No file uploaded');
   }
 });
+
+app.post('/upload/general', authenticateToken, (req, res) => {
+  uploadGeneralFiles(req, res, function (err) {
+      if (err) {
+          return res.status(500).json({ message: "Upload Error: " + err.message });
+      }
+      if (!req.file) {
+          return res.status(400).json({ message: 'No file uploaded!' });
+      }
+
+      // Assuming you are saving the file information in the Message document
+      const fileData = {
+          fileId: req.file.id, // This depends on whether you're using GridFS
+          filename: req.file.filename,
+          contentType: req.file.mimetype,
+          url: `/uploads/message_files/${req.file.filename}` // Adjust based on your actual URL structure
+      };
+
+      // Save this fileData to your Message schema when creating a new message
+      res.json({ file: req.file });
+  });
+});
+
 
 
 // POST endpoint to handle chunk uploads and reassembly
@@ -616,17 +636,27 @@ app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
 });
 
 app.post('/upload/message-image', authenticateToken, (req, res) => {
-  uploadMessageImage(req, res, function(err) {
-    if (err) {
-      return res.status(500).json({ message: "Multer error: " + err.message });
-    }
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded!' });
-    }
-    const imageUrl = `/uploads/message_images/${req.file.filename}`;
-    res.json({ imageUrl });  // Just return URL
+  uploadMessageImage(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+          // A Multer error occurred when uploading.
+          console.error("Multer error during file upload:", err);
+          return res.status(500).json({ message: "Multer error: " + err.message });
+      } else if (err) {
+          // An unknown error occurred when uploading.
+          console.error("Unknown error during file upload:", err);
+          return res.status(500).json({ message: "Upload Error: " + err.message });
+      }
+
+      if (!req.file) {
+          return res.status(400).json({ message: 'No file uploaded!' });
+      }
+
+      // File is uploaded, now you can do something with it
+      const imageUrl = `/uploads/message_images/${req.func.file.filename}`;
+      res.json({ imageUrl, message: 'File uploaded successfully' });  // Return the URL of the uploaded file
   });
 });
+
 
 app.post('/api/messages', authenticateToken, async (req, res) => {
   const { content, receiver, imageUrl, isImage = false } = req.body;

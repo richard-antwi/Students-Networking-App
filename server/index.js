@@ -87,11 +87,17 @@ const uploadGeneralFiles = multer({
 }).single('file');
 
 function checkFileType(file, cb) {
-  const filetypes = /jpeg|jpg|png|gif|pdf|doc|docx|xls|xlsx|ppt|pptx|zip|rar|apk/;
+  const filetypes = /\.(jpeg|jpg|png|gif|pdf|doc|docx|xls|xlsx|ppt|pptx|zip|rar|apk)$/i;
+  const mimetypes = /image\/(jpeg|png|gif)|application\/pdf|application\/msword|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document|application\/vnd\.ms-excel|application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet|application\/vnd\.ms-powerpoint|application\/vnd\.openxmlformats-officedocument\.presentationml\.presentation|application\/x-rar-compressed|application\/zip|application\/vnd\.android\.package-archive/i;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = filetypes.test(file.mimetype);
-  extname && mimetype ? cb(null, true) : cb(new Error('Unsupported file type!'));
+  const mimetype = mimetypes.test(file.mimetype);
+  if (mimetype && extworld.art) {
+      cb(null, true);
+  } else {
+      cb(new Error('Unsupported file type!'));
+  }
 }
+
 
 // Define Home routes
 app.get('/', (req, res) => {res.send('Server is running!');});
@@ -425,6 +431,9 @@ app.post('/api/messages', authenticateToken, async (req, res) => {
   }
 });
 
+
+// File Uploads
+
 // Initialize upload variable
 const upload = multer({ 
   storage: gridFsStorageGeneral, 
@@ -548,10 +557,9 @@ const uploadCover = multer({
 
 const messageImageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, './uploads/message_images/'); // Ensure this directory exists
+      cb(null, './uploads/message_images/');
   },
   filename: function (req, file, cb) {
-      // Ensure filenames are unique to avoid overwriting existing files
       cb(null, Date.now() + '-' + file.originalname);
   }
 });
@@ -562,21 +570,19 @@ const uploadMessageImage = multer({
   fileFilter: function (req, file, cb) {
       checkFileType(file, cb);
   }
-}).single('image'); // Ensure 'image' matches the field name used in the client-side FormData
-
+}).single('image'); 
 
 // Endpoint for uploading cover images
 app.post('/upload/cover', authenticateToken, uploadCover, async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
-
   const userId = req.user.id;
-  const filePath = req.file.path;  // Assuming this holds the new cover image path from your multer middleware
+  const filePath = req.file.path;
   try {
       const updatedUser = await User.findByIdAndUpdate(userId, {
           $set: {
-              "profile.coverImagePath": filePath  // Correct field path
+              "profile.coverImagePath": filePath
           }
       }, { new: true, runValidators: true });
 

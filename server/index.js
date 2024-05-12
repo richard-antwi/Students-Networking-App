@@ -35,15 +35,35 @@ app.use(express.urlencoded({ limit: '2600mb', extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB Database and GridFS Setup
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.error(err));
+mongoose.connect(process.env.MONGODB_URI,);
 const conn = mongoose.connection;
 let gfs;
+
 conn.once('open', () => {
-    gfs = require('gridfs-stream')(conn.db, mongoose.mongo);
-    gfs.collection('uploads');
+  gfs = new mongoose.mongo.GridFSBucket(conn.db, {
+    bucketName: 'uploads'
+  });
 });
+
+const storage = new GridFsStorage({
+  url: process.env.MONGODB_URI,
+  options: { useNewUrlParser: true, useUnifiedTopology: true },
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      const filename = `file_${Date.now()}_${file.originalname}`;
+      const fileInfo = {
+        filename: filename,
+        bucketName: 'uploads'
+      };
+      resolve(fileInfo);
+    });
+  }
+});
+
+const upload = multer({ storage: storage });
+
+
+
 
 // WebSocket Communication
 io.on('connection', (socket) => {
@@ -75,11 +95,30 @@ const authenticateToken = async (req, res, next) => {
 //File Upload Configuration
 const gridFsStorageGeneral = new GridFsStorage({
   url: process.env.MONGODB_URI,
-  file: (req, file) => ({
-      filename: `file_${Date.now()}_${file.originalname}`,
-      bucketName: 'message_files'
-  })
+  // options: { useNewUrlParser: true, useUnifiedTopology: true },
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      const filename = `file_${Date.now()}_${file.originalname}`;
+      const fileInfo = {
+        filename: filename,
+        bucketName: 'uploads'  // Ensure this bucketName is correctly referenced later
+      };
+      resolve(fileInfo);
+    });
+  }
+
 });
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|xls|xlsx|ppt|pptx|zip|rar|apk/;
+  const isValidType = allowedTypes.test(path.extname(file.originalname).toLowerCase()) && allowedTypes.test(file.mimetype);
+
+  if (isValidType) {
+    cb(null, true);
+  } else {
+    cb(new Error('Unsupported file type!'), false);
+  }
+};
+
 const uploadGeneralFiles = multer({
   storage: gridFsStorageGeneral,
   limits: { fileSize: 1024 * 1024 * 2500 },
@@ -91,7 +130,7 @@ function checkFileType(file, cb) {
   const mimetypes = /image\/(jpeg|png|gif)|application\/pdf|application\/msword|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document|application\/vnd\.ms-excel|application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet|application\/vnd\.ms-powerpoint|application\/vnd\.openxmlformats-officedocument\.presentationml\.presentation|application\/x-rar-compressed|application\/zip|application\/vnd\.android\.package-archive/i;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = mimetypes.test(file.mimetype);
-  if (mimetype && extworld.art) {
+  if (extname && mimetype) {
       cb(null, true);
   } else {
       cb(new Error('Unsupported file type!'));
@@ -435,13 +474,13 @@ app.post('/api/messages', authenticateToken, async (req, res) => {
 // File Uploads
 
 // Initialize upload variable
-const upload = multer({ 
-  storage: gridFsStorageGeneral, 
-  limits: { fileSize: 1024 * 1024 * 2500 }, // 2.5GB limit for files
-  fileFilter: function(req, file, cb) {
-      checkFileType(file, cb);
-  }
-}).single('profileImage');
+// const upload = multer({ 
+//   storage: gridFsStorageGeneral, 
+//   limits: { fileSize: 1024 * 1024 * 2500 }, // 2.5GB limit for files
+//   fileFilter: function(req, file, cb) {
+//       checkFileType(file, cb);
+//   }
+// }).single('profileImage');
 
 const coverStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -451,13 +490,23 @@ const coverStorage = multer.diskStorage({
   }
 });
 
-app.post('/upload', authenticateToken, uploadGeneralFiles, (req, res) => {
-  if (req.file) {
-    res.json({ message: "File uploaded successfully", file: req.file });
-  } else {
-    res.status(400).send('No file uploaded');
-  }
+app.post('/upload', (req, res) => {
+  upload.single('file')(req, res, function(err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json({ error: err.message });
+    } else if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    // Check if file is available
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    res.json({ file: req.file });
+  });
 });
+
 
   app.post('/upload/general', authenticateToken, (req, res) => {
     uploadGeneralFiles(req, res, function (err) {
@@ -543,7 +592,7 @@ const storageCover = multer.diskStorage({
   }
 });
 
-const uploadCover = multer({ 
+const uploadCoverImage = multer({ 
   storage: storageCover,
   fileFilter: function (req, file, cb) {
       if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
@@ -573,7 +622,7 @@ const uploadMessageImage = multer({
 }).single('image'); 
 
 // Endpoint for uploading cover images
-app.post('/upload/cover', authenticateToken, uploadCover, async (req, res) => {
+app.post('/upload/cover', authenticateToken, uploadCoverImage, async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }

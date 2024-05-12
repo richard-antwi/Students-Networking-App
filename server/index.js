@@ -53,12 +53,13 @@ const storage = new GridFsStorage({
       const filename = `file_${Date.now()}_${file.originalname}`;
       const fileInfo = {
         filename: filename,
-        bucketName: 'uploads'
+        bucketName: 'uploads' // This should match the name of your GridFS bucket
       };
       resolve(fileInfo);
     });
   }
 });
+
 
 const upload = multer({ storage: storage });
 
@@ -490,41 +491,44 @@ const coverStorage = multer.diskStorage({
   }
 });
 
-app.post('/upload', (req, res) => {
-  upload.single('file')(req, res, function(err) {
+app.post('/upload', authenticateToken, (req, res) => {
+  const uploadSingle = upload.single('file');
+  uploadSingle(req, res, function (err) {
+    console.log(req.file); // Log file data to see what is received
     if (err instanceof multer.MulterError) {
       return res.status(500).json({ error: err.message });
     } else if (err) {
       return res.status(500).json({ error: err.message });
     }
-
-    // Check if file is available
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-
-    res.json({ file: req.file });
+    res.json({ message: 'Upload successful', file: req.file });
   });
 });
 
 
-  app.post('/upload/general', authenticateToken, (req, res) => {
-    uploadGeneralFiles(req, res, function (err) {
-        if (err) {
-            return res.status(500).json({ message: "Upload Error: " + err.message });
-        }
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded!' });
-        }
-        const fileData = {
-            fileId: req.file.id, 
-            filename: req.file.filename,
-            contentType: req.file.mimetype,
-            url: `/uploads/message_files/${req.file.filename}` 
-        };
-        res.json({ file: req.file });
-    });
+
+
+app.post('/upload/general', authenticateToken, (req, res) => {
+  const uploadSingle = upload.single('file'); // Make sure the 'file' matches your frontend form data key
+  uploadSingle(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+      return res.status(500).json({ message: "Multer Error: " + err.message });
+    } else if (err) {
+      // An unknown error occurred when uploading.
+      return res.status(500).json({ message: "Upload Error: " + err.message });
+    }
+
+    // Everything went fine.
+    if (!req.file) {
+      return res.status(400).send({ message: 'No file uploaded' });
+    }
+    res.status(201).send({ message: 'File uploaded successfully', file: req.file });
   });
+});
+
 
 // POST endpoint to handle chunk uploads and reassembly
 app.post('/chunk-upload', authenticateToken, (req, res) => {

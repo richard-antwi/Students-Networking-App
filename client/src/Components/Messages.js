@@ -125,13 +125,12 @@
     };
     const handleFileUpload = useCallback(async () => {
       const formData = new FormData();
-      formData.append('file', file); // Make sure 'file' is updated in state on file select
+      formData.append('file', file); 
       try {
         const token = localStorage.getItem('token');
         const response = await axios.post('http://localhost:3001/upload/general', formData, {
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
           }
         });
         setUploadStatus('File uploaded successfully!');

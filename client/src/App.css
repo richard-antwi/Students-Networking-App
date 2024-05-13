@@ -233,9 +233,9 @@ color: rgb(241, 93, 74);
 .chat-messages {
   display: flex;
   flex-direction: column;
+  padding: 10px;
   overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 350px; /* Adjust based on your preference */
+  height: calc(100vh - 200px); /* Adjust based on your preference */
 }
 
 .message {

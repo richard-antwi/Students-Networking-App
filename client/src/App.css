@@ -235,14 +235,14 @@ color: rgb(241, 93, 74);
   flex-direction: column;
   padding: 10px;
   overflow-y: auto;
+  overflow-x: hidden;
   height: calc(100vh - 200px); /* Adjust based on your preference */
 }
 
 .message {
   display: flex;
+  align-items: flex-end;
   margin-bottom: 10px;
-  align-items: center;
-  padding: 0 10px;
 }
 
 .my-message {
@@ -256,32 +256,34 @@ color: rgb(241, 93, 74);
 .avatar-img {
   width: 40px;
   height: 40px;
-  border-radius: 20px; /* Circular avatar */
-  margin-right: 10px; /* Space between avatar and message */
+  border-radius: 20px; 
+  margin-right: 10px;
 }
 
 .message-text {
-  max-width: 70%; /* Prevents message from taking full width */
-  padding: 8px;
-  border-radius: 12px; /* Rounded corners for message bubbles */
-  background-color: #f0f0f0; /* Light grey background for messages */
+  max-width: 60%; 
+  padding: 8px 12px;
+  border-radius: 12px;
+  position: relative;
   word-wrap: break-word;
 }
 
 .my-message .message-text {
-  background-color: #007bff; /* Light blue background for own messages */
-  color: white; /* White text for contrast */
-  text-align: right;
+  background-color: #daf8cb; 
+  /* background-color: #007bff;  */
+  color: white; 
+ 
 }
 
-.other-message .message-text {
+.other-message .message-history {
+  background-color: #e1e1e1;
   text-align: left;
 }
 
-/* Adjust the CSS based on your application's structure and styling needs */
+
 .emoji-picker-react {
   position: absolute;
-  bottom: 50px; /* Adjust this value based on your layout */
-  right: 50px; /* Adjust this value to position the picker */
-  z-index: 1000; /* Ensures the picker floats above other content */
+  bottom: 50px; 
+  right: 50px;
+  z-index: 1000;
 }

@@ -79,13 +79,7 @@ body {
 
             /* ----------------Messages------ */
 /* Common styles for all messages */
-.message {
-padding: 10px;
-border-radius: 10px;
-max-width: 80%; /* Adjust as needed */
-margin-bottom: 10px;
-width: 100%;
-}
+
 
 .avatar-img {
 width: 30px;
@@ -93,35 +87,7 @@ height: 30px;
 border-radius: 50%; /* Make avatars circular */
 }
 
-/* Styles for sender's (your) messages */
-.my-message {
-background-color: #007BFF;
-color: #fff;
-align-self: flex-end;
-max-width: 300px; /* Set your maximum width as needed */
-width: 100%; /* Take full width initially */
-}
-.my-message p :focus {
-width: auto; /* Allow width to expand based on content length */
-}
-/* Styles for receiver's messages */
-.other-message {
-background-color: #E9ECEF;
-color: #000;
-align-self: flex-start;
-max-width: 300px; /* Set your maximum width as needed */
-width: 100%; /* Take full width initially */
-}
-.other-message p :focus {
-width: auto; /* Allow width to expand based on content length */
-}
 
-
-/* Additional styling for flex container of messages */
-.message-container {
-display: flex;
-flex-direction: column; /* Messages are stacked vertically */
-}
 
 /* Avatar style */
 .avatar {
@@ -229,20 +195,21 @@ color: rgb(241, 93, 74);
 
 /* messages */
 
-/* Add this in your CSS file */
+/* General Styles for Chat Container */
 .chat-messages {
   display: flex;
   flex-direction: column;
   padding: 10px;
   overflow-y: auto;
-  overflow-x: hidden;
-  height: calc(100vh - 200px); /* Adjust based on your preference */
+  max-height: calc(100vh - 160px);  
+  background-color: #e5ddd5;  
 }
 
+/* Styling for Individual Messages */
 .message {
   display: flex;
-  align-items: flex-end;
   margin-bottom: 10px;
+  padding: 5px;
 }
 
 .my-message {
@@ -253,37 +220,70 @@ color: rgb(241, 93, 74);
   justify-content: flex-start;
 }
 
-.avatar-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 20px; 
-  margin-right: 10px;
-}
-
 .message-text {
-  max-width: 60%; 
-  padding: 8px 12px;
-  border-radius: 12px;
+  max-width: 60%;
+  padding: 6px 12px;
+  border-radius: 7.5px;
+  font-size: 14px;
+  line-height: 20px;
   position: relative;
   word-wrap: break-word;
 }
 
 .my-message .message-text {
-  background-color: #daf8cb; 
-  /* background-color: #007bff;  */
-  color: white; 
- 
+  background-color: #dcf8c6;  
+  color: black;  
+  margin-right: 10px;
 }
 
-.other-message .message-history {
-  background-color: #e1e1e1;
-  text-align: left;
+.other-message .message-text {
+  background-color: #ffffff;
+  color: black; 
+  margin-left: 10px;
 }
 
+/* Image and Video Styling */
+img, video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
 
+/* Input and Button Styles */
+/* .input-group {
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+} */
+/* 
+.input-group input {
+  flex-grow: 1;
+  margin-right: 10px;
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.input-group button {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: #075e54;  
+  color: white;
+} */
+
+/* Emoji Picker Styles */
 .emoji-picker-react {
   position: absolute;
-  bottom: 50px; 
+  bottom: 50px;
   right: 50px;
   z-index: 1000;
 }
+
+/* Helper classes for visibility */
+/* .hidden {
+  display: none;
+} */

@@ -18,6 +18,7 @@ import Profiles from './Components/Profiles';
 import Projects from './Components/Projects';
 import Register from './Components/Register';
 import NavBar from './Components/NavBar';
+import Chat from './Components/Chat';
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
             <Route path="policyprivacy" element={<PolicyPrivacy />} />
             <Route path="helpcenter" element={<HelpCenter />} />
             <Route path="messages/:friendId" element={<Messages />} />
+            <Route path="chat" element={<Chat />} />
           </Route>
 
           {/* Route without NavBar */}

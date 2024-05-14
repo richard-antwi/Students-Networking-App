@@ -108,9 +108,11 @@
     const handleImageChange = (event) => {
       const file = event.target.files[0];
       if (file) {
-        setImageFile(file);
         const reader = new FileReader();
-        reader.onloadend = () => setImagePreview(reader.result);
+        reader.onloadend = () => {
+          setImagePreview(reader.result);
+          setImageFile(file);
+        };
         reader.readAsDataURL(file);
       }
     };
@@ -348,15 +350,20 @@
                     <i className="fas fa-ellipsis-v" />
                   </div>
                   <div className="card-body">
-                    <div className="col-md-12 chat-messages">
-                      <div className="row ">
+                    <div className="  chat-messages">
                         {messages.map((message, index) => (
                           <div key={index} className={`message ${message.sender._id === profileData._id ? 'my-message' : 'other-message'}`}>
                             {message.sender._id === profileData._id && (
-                              <div className="message-text">
+                              <div className="message-text" style={{ 
+                                backgroundColor: message.sender._id === profileData._id ? '#dcf8c6' : '#f0f0f0',
+                                borderRadius: '15px',
+                                padding: '10px 20px',
+                                maxWidth: '60%',
+                                alignSelf: message.sender._id === profileData._id ? 'flex-end' : 'flex-start'
+                              }}>
                                 {message.imageUrl && (
-                                  <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
-                                )}
+                                <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ maxWidth: '100%', borderRadius: '10px' }} />
+                              )}
                                 <p className="content">{message.content}</p>
                                 <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
                               </div>
@@ -364,7 +371,7 @@
                             {message.sender._id !== profileData._id && (
                               <div className="message-text">
                                 {message.imageUrl && (
-                                  <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ width: '100px', height: '100px' }} />
+                                  <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent"  />
                                 )}
                                 
                                 <p>{message.content}</p>
@@ -373,7 +380,7 @@
                             )}
                           </div>
                         ))}
-                      </div>
+                      
                     </div>
                     <div style={{ marginTop: '10px' }}>
                       {uploadStatus && (
@@ -385,7 +392,7 @@
                     {/* Input Field and Send Button */}
                     {imagePreview && (
                       <div style={{ margin: '10px 0' }}>
-                        <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px' }} />
+                        <img src={imagePreview} alt="Preview" />
                       </div>
                     )}
                     {filePreview && (
@@ -394,7 +401,7 @@
                                   </div>
                                 )}
                                 {videoPreview && (
-                                  <video src={videoPreview} controls style={{ width: '100%', maxHeight: '300px' }}></video>
+                                  <video src={videoPreview} controls ></video>
                                 )}
                                 {pdfFile && (
                                   <div>

@@ -350,7 +350,7 @@
                     <i className="fas fa-ellipsis-v" />
                   </div>
                   <div className="card-body">
-                    <div className="  chat-messages">
+                    <div className="chat-messages">
                         {messages.map((message, index) => (
                           <div key={index} className={`message ${message.sender._id === profileData._id ? 'my-message' : 'other-message'}`}>
                             {message.sender._id === profileData._id && (
@@ -362,7 +362,7 @@
                                 alignSelf: message.sender._id === profileData._id ? 'flex-end' : 'flex-start'
                               }}>
                                 {message.imageUrl && (
-                                <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent" style={{ maxWidth: '100%', borderRadius: '10px' }} />
+                                <img src={`http://localhost:3001${message.imageUrl}`} className="messageImage" alt="Sent" style={{ maxWidth: '100%', borderRadius: '10px' }} />
                               )}
                                 <p className="content">{message.content}</p>
                                 <small>{new Date(message.timestamp).toLocaleTimeString()}</small>
@@ -371,7 +371,7 @@
                             {message.sender._id !== profileData._id && (
                               <div className="message-text">
                                 {message.imageUrl && (
-                                  <img src={`http://localhost:3001${message.imageUrl}`} alt="Sent"  />
+                                  <img src={`http://localhost:3001${message.imageUrl}`} className="messageImage" alt="Sent"  />
                                 )}
                                 
                                 <p>{message.content}</p>
@@ -392,7 +392,7 @@
                     {/* Input Field and Send Button */}
                     {imagePreview && (
                       <div style={{ margin: '10px 0' }}>
-                        <img src={imagePreview} alt="Preview" />
+                        <img src={imagePreview} alt="Preview" className="messageImage" />
                       </div>
                     )}
                     {filePreview && (
@@ -401,7 +401,7 @@
                                   </div>
                                 )}
                                 {videoPreview && (
-                                  <video src={videoPreview} controls ></video>
+                                  <video src={videoPreview} controls className="messageVideo" ></video>
                                 )}
                                 {pdfFile && (
                                   <div>
@@ -412,7 +412,7 @@
                                 )}
                                 
                     <div className="input-group mt-3">
-                      <input type="text" className="form-control" placeholder="Type your message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
+                      <textarea className="form-control" placeholder="Type your message..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
                       <div className="input-group-append">
                         <button className="btn btn-primary" type="button" onClick={handleMessageSend}>Send</button>
                       </div>

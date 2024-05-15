@@ -13,21 +13,17 @@ import Layout from './Components/Layout';
 import Messages from './Components/Messages';
 import MyProfile from './Components/MyProfile';
 import PolicyPrivacy from './Components/PolicyPrivacy';
-// import { ProfileProvider } from './Components/ProfileContext';
 import Profiles from './Components/Profiles';
 import Projects from './Components/Projects';
 import Register from './Components/Register';
 import NavBar from './Components/NavBar';
-import Chat from './Components/Chat';
 
 
 function App() {
   
   return (
     <>
-    {/* <ProfileProvider> */}
-           
-       
+              
     <BrowserRouter>
       <div className="App">
         <Routes>
@@ -47,7 +43,7 @@ function App() {
             <Route path="policyprivacy" element={<PolicyPrivacy />} />
             <Route path="helpcenter" element={<HelpCenter />} />
             <Route path="messages/:friendId" element={<Messages />} />
-            <Route path="chat" element={<Chat />} />
+            
           </Route>
 
           {/* Route without NavBar */}
@@ -59,7 +55,6 @@ function App() {
     
       </div>
     </BrowserRouter>
-    {/* </ProfileProvider> */}
     </>
   );
 }

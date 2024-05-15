@@ -563,9 +563,14 @@ const messageImageStorage = multer.diskStorage({
 
 const uploadMessageImage = multer({
   storage: messageImageStorage,
-  limits: { fileSize: 5000000 }, // 5MB limit
+  limits: { fileSize: 10000000 }, // 10MB limit
   fileFilter: function (req, file, cb) {
-      checkFileType(file, cb);
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+      cb(null, true);
+  } else {
+      cb(null, false);
+      return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+  }
   }
 }).single('image'); 
 

@@ -199,10 +199,10 @@ color: rgb(241, 93, 74);
 .chat-messages {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 8px;
   overflow-y: auto;
-  max-height: calc(100vh - 160px);  
-  background-color: #e5ddd5;  
+  max-height: calc(80vh - 160px);  
+  /* background-color: #e5ddd5;   */
 }
 
 /* Styling for Individual Messages */
@@ -231,19 +231,19 @@ color: rgb(241, 93, 74);
 }
 
 .my-message .message-text {
-  background-color: #dcf8c6;  
+  background-color: #3311f5;  
   color: black;  
   margin-right: 10px;
 }
 
 .other-message .message-text {
-  background-color: #ffffff;
+  background-color: #f7f5f3;
   color: black; 
   margin-left: 10px;
 }
 
 /* Image and Video Styling */
-img, video {
+.messageImage, .messageVideo {
   max-width: 100%;
   height: auto;
   border-radius: 8px;

@@ -70,7 +70,7 @@ body {
 
 
 .small-avatar {
-    width: 35px; /* Adjust the width as needed */
+    width: 35px; 
     height: 35px; /* Adjust the height as needed */
     border-radius: 50%; /* Make it a circle */
     margin-right: 5px; /* Add some space to the right of the avatar */

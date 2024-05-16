@@ -31,20 +31,17 @@
     useEffect(() => {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-  
-      // Check for both token and userId
       if (!token || !userId) {
           console.warn('Authentication token or User ID not found, redirecting to login');
-          navigate('/register');  // Redirect to login if either is missing
+          navigate('/register');
       } else {
-          // If both token and userId are available, fetch user-related data
           fetchFriends(token);
           fetchUserData(token);
           if (friendId) {
               fetchMessages(friendId, token);
           }
       }
-  }, [friendId, navigate]); // Include navigate in the dependency array if it's from a hook
+  }, [friendId, navigate]); 
   
 
     useEffect(() => {
@@ -80,12 +77,16 @@
 
     const fetchFriends = async (token) => {
       try {
-        const response = await axios.get('http://localhost:3001/api/friends', { headers: { Authorization: `Bearer ${token}` } });
+        const response = await axios.get('http://localhost:3001/api/friends', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        console.log('Friends:', response.data);  
         setFriends(response.data);
       } catch (error) {
         console.error('Error fetching friends:', error);
       }
     };
+    
 
     const fetchUserData = async (token) => {
       try {
@@ -307,7 +308,7 @@
     const imageUrl = `http://localhost:3001/${imagePath}`;
     console.log("Local Storage UserID:", localStorage.getItem('userId'));
     console.log("Profile Data ID:", profileData._id);
-    
+    // console.log(friend.profile.profileImagePath),
     return (
       <>
         <div>
@@ -328,7 +329,7 @@
                   <div className="card-body">
                     {friends.map(friend => (
                       <div key={friend._id} onClick={() => navigateToFriend(friend._id)} className="media mb-2">
-                        <img src={friend.profile.profileImagePath || avatar} className="mr-3 avatar-img" alt="User Avatar" />
+                        <img src={friend.profile.profileImagePath ? `http://localhost:3001/${friend.profile.profileImagePath.replace(/\\/g, '/')}` : avatar} className="mr-3 avatar-img" alt="User Avatar" />
                         <div className="media-body">
                           <h6 className="mt-0">{friend.firstName} {friend.lastName}</h6>
                           <p>{friend.content}</p>

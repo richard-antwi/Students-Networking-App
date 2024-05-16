@@ -121,19 +121,29 @@ app.get('/', (req, res) => {res.send('Server is running!');});
     }
   });
     //Login API
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-    if (await user.checkPassword(password)) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      return res.json({ message: "Login successful", token });
-    } else {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
+    app.post('/login', async (req, res) => {
+      const { email, password } = req.body;
+      try {
+          const user = await User.findOne({ email });
+          if (!user) {
+              return res.status(401).json({ error: "Invalid credentials" });
+          }
+          if (await user.checkPassword(password)) {
+              const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+              return res.json({
+                  message: "Login successful",
+                  token,
+                  userId: user._id // Include userId in the response
+              });
+          } else {
+              return res.status(401).json({ error: "Invalid credentials" });
+          }
+      } catch (err) {
+          console.error('Error during login:', err);
+          res.status(500).json({ error: 'Server error', message: err.message });
+      }
   });
+  
   
 
 //user profile
@@ -405,6 +415,8 @@ app.get('/api/messages/user/:userId', authenticateToken, async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch messages', error: error.toString() });
   }
 });
+
+
 
 app.post('/upload/message-image', authenticateToken, (req, res) => {
   uploadMessageImage(req, res, function(err) {

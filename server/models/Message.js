@@ -13,14 +13,14 @@ const messageSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    default: ''  // Default to empty if no text content is provided
+    default: ''  
   },
   imageUrl: {
-    type: String,  // Store image URL here
+    type: String,  
     default: ''
   },
   file: {
-    fileId: mongoose.Schema.Types.ObjectId, // Reference to GridFS file ID
+    fileId: mongoose.Schema.Types.ObjectId, 
     filename: String,
     contentType: String
   },

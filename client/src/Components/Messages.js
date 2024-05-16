@@ -30,14 +30,22 @@
 
     useEffect(() => {
       const token = localStorage.getItem('token');
-      if (token) {
-        fetchFriends(token);
-        fetchUserData(token);
-        if (friendId) {
-          fetchMessages(friendId, token);
-        }
+      const userId = localStorage.getItem('userId');
+  
+      // Check for both token and userId
+      if (!token || !userId) {
+          console.warn('Authentication token or User ID not found, redirecting to login');
+          navigate('/register');  // Redirect to login if either is missing
+      } else {
+          // If both token and userId are available, fetch user-related data
+          fetchFriends(token);
+          fetchUserData(token);
+          if (friendId) {
+              fetchMessages(friendId, token);
+          }
       }
-    }, [friendId]);
+  }, [friendId, navigate]); // Include navigate in the dependency array if it's from a hook
+  
 
     useEffect(() => {
       const messagesContainer = document.querySelector('.chat-messages');
@@ -297,7 +305,9 @@
 
     const imagePath = profileData.profileImagePath?.replace(/\\/g, '/');
     const imageUrl = `http://localhost:3001/${imagePath}`;
-
+    console.log("Local Storage UserID:", localStorage.getItem('userId'));
+    console.log("Profile Data ID:", profileData._id);
+    
     return (
       <>
         <div>

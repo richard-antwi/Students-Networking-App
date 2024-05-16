@@ -202,7 +202,7 @@ color: rgb(241, 93, 74);
   padding: 8px;
   overflow-y: auto;
   max-height: calc(80vh - 160px);  
-  /* background-color: #e5ddd5;   */
+  
 }
 
 /* Styling for Individual Messages */
@@ -250,30 +250,7 @@ color: rgb(241, 93, 74);
   display: block;
 }
 
-/* Input and Button Styles */
-/* .input-group {
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-} */
-/* 
-.input-group input {
-  flex-grow: 1;
-  margin-right: 10px;
-  padding: 10px 15px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-}
 
-.input-group button {
-  padding: 6px 12px;
-  border-radius: 20px;
-  background-color: #075e54;  
-  color: white;
-} */
 
 /* Emoji Picker Styles */
 .emoji-picker-react {

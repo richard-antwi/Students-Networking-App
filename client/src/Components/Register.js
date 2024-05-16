@@ -65,6 +65,7 @@ function Register() {
       const response = await axios.post('http://localhost:3001/login', loginData);
       console.log(response.data);
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.userId);
       navigate('/');
     } catch (err) {
       console.log(err);

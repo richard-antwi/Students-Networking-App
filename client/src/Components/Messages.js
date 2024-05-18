@@ -300,21 +300,9 @@
       });
     }
 
-    const selectFriend = (friendId) => {
-      const selectedFriend = friends.find(friend => friend._id === friendId);
-      if (selectedFriend) {
-          setProfileData({
-              _id: selectedFriend._id,
-              firstName: selectedFriend.firstName,
-              lastName: selectedFriend.lastName,
-              profileImagePath: selectedFriend.profile.profileImagePath,
-              userName: selectedFriend.userName, // If you also want to display the username
-              // Add more fields if necessary
-          });
-      }
-      navigate(`/messages/${friendId}`); // Navigate if needed
-  };
-  
+    const navigateToFriend = (id) => {
+      navigate(`/messages/${id}`);
+    };
 
     const imagePath = profileData.profileImagePath?.replace(/\\/g, '/');
     const imageUrl = `http://localhost:3001/${imagePath}`;
@@ -339,20 +327,19 @@
                     </div>
                   </div>
                   <div className="card-body">
-                  {friends.map(friend => (
-    <div key={friend._id} onClick={() => selectFriend(friend._id)} className="media mb-2">
-        <img src={friend.profile.profileImagePath ? `http://localhost:3001/${friend.profile.profileImagePath.replace(/\\/g, '/')}` : avatar} className="mr-3 avatar-img" alt="User Avatar" />
-        <div className="media-body">
-            <h6 className="mt-0">{friend.firstName} {friend.lastName}</h6>
-            <p>{friend.content}</p>
-        </div>
-        <div className="d-flex flex-column align-items-end">
-            <small className="text-muted">{new Date(friend.timestamp).toLocaleTimeString()}</small>
-            <span className="badge badge-primary">3</span>
-        </div>
-    </div>
-))}
-
+                    {friends.map(friend => (
+                      <div key={friend._id} onClick={() => navigateToFriend(friend._id)} className="media mb-2">
+                        <img src={friend.profile.profileImagePath ? `http://localhost:3001/${friend.profile.profileImagePath.replace(/\\/g, '/')}` : avatar} className="mr-3 avatar-img" alt="User Avatar" />
+                        <div className="media-body">
+                          <h6 className="mt-0">{friend.firstName} {friend.lastName}</h6>
+                          <p>{friend.content}</p>
+                        </div>
+                        <div className="d-flex flex-column align-items-end">
+                          <small className="text-muted">{new Date(friend.timestamp).toLocaleTimeString()}</small>
+                          <span className="badge badge-primary">3</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -360,13 +347,17 @@
               <div className="col-md-8">
                 <div className="card">
                   <div className="card-header d-flex justify-content-between align-items-center bg-light p-3">
-                  <div className="d-flex align-items-center">
-                    <img src={profileData.profileImagePath ? `http://localhost:3001/${profileData.profileImagePath.replace(/\\/g, '/')}` : avatar} alt="User Avatar" className="avatar-img mr-2" style={{ width: '40px', height: '40px' }} />
-                    <div>
+                    <div className="d-flex align-items-center">
+                      {profileData.profileImagePath ? (
+                        <img src={imageUrl} alt="User Avatar" className="avatar-img mr-2" style={{ width: '40px', height: '40px' }} />
+                      ) : (
+                          <img src={avatar} alt="User Avatar" className="avatar-img mr-2" style={{ width: '40px', height: '40px' }} />
+                        )}
+                      <div>
                         <h6 className="mb-0">{profileData.firstName} {profileData.lastName}</h6>
-                        <small className="text-success">Online</small> {/* Adjust this based on the real status if available */}
+                        <small className="text-success">Online</small>
+                      </div>
                     </div>
-                </div>
                     <i className="fas fa-ellipsis-v" />
                   </div>
                   <div className="card-body">

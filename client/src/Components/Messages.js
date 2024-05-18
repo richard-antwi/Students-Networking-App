@@ -304,8 +304,8 @@
       navigate(`/messages/${id}`);
     };
 
-    const imagePath = profileData.profileImagePath?.replace(/\\/g, '/');
-    const imageUrl = `http://localhost:3001/${imagePath}`;
+    // const imagePath = profileData.profileImagePath?.replace(/\\/g, '/');
+    // const imageUrl = `http://localhost:3001/${imagePath}`;
     console.log("Local Storage UserID:", localStorage.getItem('userId'));
     console.log("Profile Data ID:", profileData._id);
     // console.log(friend.profile.profileImagePath),
@@ -347,17 +347,15 @@
               <div className="col-md-8">
                 <div className="card">
                   <div className="card-header d-flex justify-content-between align-items-center bg-light p-3">
-                    <div className="d-flex align-items-center">
-                      {profileData.profileImagePath ? (
-                        <img src={imageUrl} alt="User Avatar" className="avatar-img mr-2" style={{ width: '40px', height: '40px' }} />
-                      ) : (
-                          <img src={avatar} alt="User Avatar" className="avatar-img mr-2" style={{ width: '40px', height: '40px' }} />
-                        )}
-                      <div>
-                        <h6 className="mb-0">{profileData.firstName} {profileData.lastName}</h6>
-                        <small className="text-success">Online</small>
-                      </div>
-                    </div>
+                  <div className="d-flex align-items-center">
+  <img src={profileData.profileImagePath ? `http://localhost:3001/${profileData.profileImagePath.replace(/\\/g, '/')}` : avatar} className="mr-3 avatar-img" alt="User Avatar" />
+  <div>
+    <h6 className="mb-0">{profileData.firstName} {profileData.lastName}</h6>
+    <small className="text-success">Online</small> {/* Adjust this based on the real status if available */}
+  </div>
+</div>
+
+
                     <i className="fas fa-ellipsis-v" />
                   </div>
                   <div className="card-body">

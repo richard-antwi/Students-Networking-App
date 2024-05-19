@@ -351,7 +351,7 @@
   <img src={profileData.profileImagePath ? `http://localhost:3001/${profileData.profileImagePath.replace(/\\/g, '/')}` : avatar} className="mr-3 avatar-img" alt="User Avatar" />
   <div>
     <h6 className="mb-0">{profileData.firstName} {profileData.lastName}</h6>
-    <small className="text-success">Online</small> {/* Adjust this based on the real status if available */}
+    <small className="text-success">Online</small> 
   </div>
 </div>
 

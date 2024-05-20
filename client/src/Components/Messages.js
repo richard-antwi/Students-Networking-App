@@ -304,11 +304,11 @@
       navigate(`/messages/${id}`);
     };
 
-    // const imagePath = profileData.profileImagePath?.replace(/\\/g, '/');
-    // const imageUrl = `http://localhost:3001/${imagePath}`;
+    const imagePath = profileData.profileImagePath?.replace(/\\/g, '/');
+    const imageUrl = `http://localhost:3001/${imagePath}`;
     console.log("Local Storage UserID:", localStorage.getItem('userId'));
     console.log("Profile Data ID:", profileData._id);
-    // console.log(friend.profile.profileImagePath),
+    console.log(friend.profile.profileImagePath),
     return (
       <>
         <div>
@@ -348,12 +348,12 @@
                 <div className="card">
                   <div className="card-header d-flex justify-content-between align-items-center bg-light p-3">
                   <div className="d-flex align-items-center">
-  <img src={profileData.profileImagePath ? `http://localhost:3001/${profileData.profileImagePath.replace(/\\/g, '/')}` : avatar} className="mr-3 avatar-img" alt="User Avatar" />
-  <div>
-    <h6 className="mb-0">{profileData.firstName} {profileData.lastName}</h6>
-    <small className="text-success">Online</small> 
-  </div>
-</div>
+                <img src={profileData.profileImagePath ? `http://localhost:3001/${profileData.profileImagePath.replace(/\\/g, '/')}` : avatar} className="mr-3 avatar-img" alt="User Avatar" />
+                <div>
+                  <h6 className="mb-0">{profileData.firstName} {profileData.lastName}</h6>
+                  <small className="text-success">Online</small> 
+                </div>
+              </div>
 
 
                     <i className="fas fa-ellipsis-v" />

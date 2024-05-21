@@ -244,14 +244,11 @@
   
       let imageUrl = null;
       let fileUrl = null;
-  
       // Handle image upload
       if (imageFile) {
           const uploadData = await handleImageUpload(imageFile, friendId);
           imageUrl = uploadData ? uploadData.imageUrl : null;
       }
-  
-      // Handle file upload
       if (file) {
         const uploadData = await handleFileUpload();
         fileUrl = uploadData.fileUrl; // Make sure handleFileUpload returns this
@@ -262,7 +259,7 @@
           await sendTextMessage(newMessage, imageUrl || fileUrl, !!imageUrl || !!fileUrl);
           setImageFile(null);
           setImagePreview('');
-          setFile(null); // Resetting the file state after upload
+          setFile(null); 
           setFilePreview('');
           setNewMessage('');
       }

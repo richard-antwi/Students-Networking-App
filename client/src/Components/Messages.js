@@ -244,16 +244,14 @@
   
       let imageUrl = null;
       let fileUrl = null;
-      // Handle image upload
       if (imageFile) {
           const uploadData = await handleImageUpload(imageFile, friendId);
           imageUrl = uploadData ? uploadData.imageUrl : null;
       }
       if (file) {
         const uploadData = await handleFileUpload();
-        fileUrl = uploadData.fileUrl; // Make sure handleFileUpload returns this
+        fileUrl = uploadData.fileUrl; 
       }
-  
       // Sending message with image or file URL
       if (newMessage.trim() || imageUrl || fileUrl) {
           await sendTextMessage(newMessage, imageUrl || fileUrl, !!imageUrl || !!fileUrl);
@@ -264,7 +262,6 @@
           setNewMessage('');
       }
   }, [newMessage, imageFile, file, friendId, handleImageUpload, handleFileUpload, sendTextMessage]);
-  
 
     function setupResumable() {
       const token = localStorage.getItem('token');

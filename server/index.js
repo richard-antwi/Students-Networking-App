@@ -133,7 +133,7 @@ app.get('/', (req, res) => {res.send('Server is running!');});
               return res.json({
                   message: "Login successful",
                   token,
-                  userId: user._id // Include userId in the response
+                  userId: user._id 
               });
           } else {
               return res.status(401).json({ error: "Invalid credentials" });

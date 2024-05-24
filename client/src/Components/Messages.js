@@ -298,11 +298,10 @@
       navigate(`/messages/${id}`);
     };
 
-    // const imagePath = profileData.profileImagePath?.replace(/\\/g, '/');
-    // const imageUrl = `http://localhost:3001/${imagePath}`;
+    
     console.log("Local Storage UserID:", localStorage.getItem('userId'));
     console.log("Profile Data ID:", profileData._id);
-    // console.log(friend.profile.profileImagePath),
+
     return (
       <>
         <div>

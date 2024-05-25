@@ -18,8 +18,8 @@ function Register() {
   const [rememberPassword, setRememberPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [registerError, setRegisterError] = useState('');
-  const [isRegistering, setIsRegistering] = useState(false); // Loading state for registration
-  const [isLoggingIn, setIsLoggingIn] = useState(false); // Loading state for login
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false); 
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('register');
 

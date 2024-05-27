@@ -175,7 +175,7 @@ const imageUrl = `http://localhost:3001/${imagePath}`;
 
             {/* Center Section */}
             <div className="col-md-6">
-              {/* Feed Section */}
+              
               {/* Post Section (Sample Post) */}
               <div className="card" style={{borderTop: '5px solid #007bff'}}>
                 <div className="card-body">

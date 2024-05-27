@@ -613,6 +613,17 @@ app.post('/upload/cover', authenticateToken, uploadCoverImage, async (req, res) 
   }
 });
 
+
+// Define a route to get all posts
+app.get('/api/posts', async (req, res) => {
+  try {
+    const posts = await Post.find().populate('user', 'firstName lastName profile.profileImagePath');
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);  // Log error information for debugging

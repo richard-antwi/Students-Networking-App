@@ -207,7 +207,7 @@ const imageUrl = `http://localhost:3001/${imagePath}`;
                       <div>
                         <h6 className="mb-0">John Doe</h6>
                       </div>
-                      {/* Timer icon below the name */}
+              
                       <div className="text-muted">
                       <FontAwesomeIcon icon={faClock} />
                         {/* <i className="fa-solid fa-clock" />  */}
@@ -221,7 +221,6 @@ const imageUrl = `http://localhost:3001/${imagePath}`;
                   </div>
                   {/* User interests and location */}
                   <div className="d-flex align-items-center mb-2">
-                    {/* User interest icon and text */}
                     <div className="mr-2">
                     <FontAwesomeIcon icon={faGraduationCap} className="text-danger"/>
                       {/* <i className="fas fa-graduation-cap text-danger" /> */}

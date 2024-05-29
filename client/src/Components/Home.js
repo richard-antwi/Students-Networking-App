@@ -214,7 +214,7 @@ const imageUrl = `http://localhost:3001/${imagePath}`;
                         3 min ago
                       </div>
                     </div>
-                    {/* Vertical three dots on the right */}
+
                     <div className="ml-auto">
                       <span>⋮</span>
                     </div>

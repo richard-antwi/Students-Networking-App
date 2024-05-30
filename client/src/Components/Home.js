@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
-// import { ProfileContext } from './ProfileContext';
 import avatar from '../Images/avatar.webp';
 import axios from 'axios';
 
 function Home() {
-  // const { imageUrl } = useContext(ProfileContext);
+  
   const [viewMore, setViewMore] = useState(false);
   const [isTextExpanded, setTextExpanded] = useState(false);
   // const [error, setError] = useState(null);

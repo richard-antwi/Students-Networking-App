@@ -108,6 +108,14 @@ const imageUrl = `http://localhost:3001/${imagePath}`;
   const toggleViewMore = () => {
     setViewMore(!viewMore);
   };
+
+  const Post = ({ avatar, name, postedAt, role, location, title, employmentType, rate, content, tags, likes, comments, views }) => {
+    const toggleText = () => {
+      const longText = document.getElementById('longText');
+      longText.classList.toggle('truncated-text');
+    };
+  
+  
   return (
     <>
   

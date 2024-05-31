@@ -23,20 +23,16 @@ const postSchema = new Schema({
     type: Number,
     default: 0
   },
-  comments: {
-    type: Number,
-    default: 0
-  },
-  views: {
-    type: Number,
-    default: 0
-  }
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Comment'
+  }]
 });
 
-// Create the Post model
 const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;
+
 
 
 // const mongoose = require('mongoose');

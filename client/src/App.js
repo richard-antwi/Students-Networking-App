@@ -17,6 +17,7 @@ import Profiles from './Components/Profiles';
 import Projects from './Components/Projects';
 import Register from './Components/Register';
 import NavBar from './Components/NavBar';
+import TopProfiles from './Components/TopProfiles';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
             <Route path="frequentlyaskedquestions" element={<FrequentlyAskedQuestions />} />
             <Route path="policyprivacy" element={<PolicyPrivacy />} />
             <Route path="helpcenter" element={<HelpCenter />} />
+            <Route path="topprofiles" element={<TopProfiles />} />
             <Route path="messages/:friendId" element={<Messages />} />
             
           </Route>

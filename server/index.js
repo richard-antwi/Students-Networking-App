@@ -19,6 +19,7 @@ const io = socketIo(server);
 const User = require('./models/User');
 const Friendship = require('./models/Friendship');
 const Message = require('./models/Message'); 
+const Post = require('./models/Post'); 
 
 
 // Security and Performance Middleware
@@ -615,6 +616,19 @@ app.post('/upload/cover', authenticateToken, uploadCoverImage, async (req, res) 
 
 
 // Define a route to get all posts
+// File upload settings
+const postStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/post');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '_' + file.originalname);
+  }
+});
+
+const postUpload = multer({ postStorage });
+
+// Route to get all posts
 app.get('/api/posts', async (req, res) => {
   try {
     const posts = await Post.find().populate('user', 'firstName lastName profile.profileImagePath');
@@ -623,6 +637,38 @@ app.get('/api/posts', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Route to create a post
+app.post('/api/posts', authenticateToken, async (req, res) => {
+  const { content, tags } = req.body;
+  const user = req.user.id;
+
+  const newPost = new Post({
+    user,
+    content,
+    tags
+  });
+
+  try {
+    await newPost.save();
+    res.status(201).json(newPost);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to create post', error: err.message });
+  }
+});
+
+// File upload endpoint
+app.post('/post/upload', authenticateToken, postUpload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+  res.status(201).json({
+    message: 'File uploaded successfully',
+    filename: req.file.filename,
+    filepath: req.file.path
+  });
+});
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

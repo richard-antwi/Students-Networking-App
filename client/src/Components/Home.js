@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock, faHeart, faComment, faEye } from '@fortawesome/free-solid-svg-icons';
 import avatar from '../Images/avatar.webp';
 import axios from 'axios';
 
-function Home() {
   
+function Home({ avatar, name, postedAt, role, location, title, employmentType, rate, content, tags, likes, comments, views }) {
+
   const [viewMore, setViewMore] = useState(false);
   const [isTextExpanded, setTextExpanded] = useState(false);
   // const [error, setError] = useState(null);
 
 const toggleText = () => {
+  const longText = document.getElementById('longText');
+    longText.classList.toggle('truncated-text');
     setTextExpanded(!isTextExpanded);
 };
+
 
   const [suggestions, setSuggestions] = useState([]);
   // const [setLoading] = useState(false);
@@ -108,13 +112,6 @@ const imageUrl = `http://localhost:3001/${imagePath}`;
   const toggleViewMore = () => {
     setViewMore(!viewMore);
   };
-
-  const Post = ({ avatar, name, postedAt, role, location, title, employmentType, rate, content, tags, likes, comments, views }) => {
-    const toggleText = () => {
-      const longText = document.getElementById('longText');
-      longText.classList.toggle('truncated-text');
-    };
-  
   
   return (
     <>
@@ -205,27 +202,86 @@ const imageUrl = `http://localhost:3001/${imagePath}`;
               </div>
               <div className="card mt-3">
                 <div className="card-body">
-                  <div className="d-flex align-items-center justify-content-between">
-                    {/* Avatar on the left */}
-                    <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{width: '50px', height: '50px'}} />
-                    {/* User details */}
-                    <div className="flex-grow-1 d-flex flex-column">
-                      {/* Name */}
-                      <div>
-                        <h6 className="mb-0">John Doe</h6>
-                      </div>
-              
-                      <div className="text-muted">
-                      <FontAwesomeIcon icon={faClock} />
-                        {/* <i className="fa-solid fa-clock" />  */}
-                        3 min ago
-                      </div>
-                    </div>
-
-                    <div className="ml-auto">
-                      <span>⋮</span>
-                    </div>
-                  </div>
+                <div className="card mt-3">
+      <div className="card-body">
+        <div className="d-flex align-items-center justify-content-between">
+          <img src={avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '50px', height: '50px' }} />
+          <div className="flex-grow-1 d-flex flex-column">
+            <div>
+              <h6 className="mb-0">{name}</h6>
+            </div>
+            <div className="text-muted">
+              <FontAwesomeIcon icon={faClock} /> {postedAt}
+            </div>
+          </div>
+          <div className="ml-auto">
+            <span>⋮</span>
+          </div>
+        </div>
+        <div className="d-flex align-items-center mb-2">
+          <div className="mr-2">
+            <FontAwesomeIcon icon={faGraduationCap} className="text-danger" />
+          </div>
+          <div>
+            <p className="mb-0">{role}</p>
+          </div>
+          <div className="ml-4 mr-2">
+            <FontAwesomeIcon icon={faMapMarkerAlt} className="text-success" />
+          </div>
+          <div>
+            <p className="mb-0">{location}</p>
+          </div>
+          <div className="ml-auto">
+            <div className="mr-3">
+              <FontAwesomeIcon icon={faBookmark} className="text-white" style={{ border: '#13a550 solid 10px', background: '#13a550', borderRadius: '3px' }} />
+              <FontAwesomeIcon icon={faEnvelope} className="text-white" style={{ border: '#3e7df3 solid 10px', background: '#3e7df3', borderRadius: '3px' }} />
+            </div>
+          </div>
+        </div>
+        <br />
+        <div>
+          <h5>{title}</h5>
+        </div>
+        <div className="ml-auto">
+          <span className="badge bg-success rounded-pill text-white p-2">{employmentType}</span>
+          <span className="ml-2">${rate}/hr</span>
+        </div>
+        <br />
+        <div>
+          <p className="mb-0 truncated-text" id="longText">
+            {content}
+          </p>
+          <Link to="/" className="text-primary" id="readMoreLink" role="button" onClick={toggleText}>
+            Read More
+          </Link>
+        </div>
+        <div className="mb-3" style={{ marginTop: '8px' }}>
+          {tags.map((tag, index) => (
+            <span key={index} className="badge badge-secondary rounded-pill p-2" style={{ borderRadius: '12px' }}>{tag}</span>
+          ))}
+        </div>
+        <hr />
+        <div className="d-flex align-items-center justify-content-between">
+          <div className="d-flex align-items-center">
+            <FontAwesomeIcon icon={faHeart} className="text-danger mr-2" />
+            <span className="mr-3">Like</span>
+            <div className="rounded-circle bg-secondary text-white px-2">{likes}</div>
+          </div>
+          <a data-toggle="collapse" href="#commentCollapse" role="button" aria-expanded="false" aria-controls="commentCollapse">
+            <div className="d-flex align-items-center">
+              <FontAwesomeIcon icon={faComment} className="text-primary mr-2" />
+              <span className="mr-3">Comment</span>
+              <div className="rounded-circle bg-secondary text-white px-2">{comments}</div>
+            </div>
+          </a>
+          <div className="d-flex align-items-center">
+            <FontAwesomeIcon icon={faEye} className="text-success mr-2" />
+            <span>View</span>
+            <div className="rounded-circle bg-secondary text-white px-2">{views}</div>
+          </div>
+        </div>
+      </div>
+    </div>
                   {/* User interests and location */}
                   <div className="d-flex align-items-center mb-2">
                     <div className="mr-2">

@@ -19,7 +19,8 @@ const io = socketIo(server);
 const User = require('./models/User');
 const Friendship = require('./models/Friendship');
 const Message = require('./models/Message'); 
-const Post = require('./models/Post'); 
+const Post = require('./models/Post');
+const Comment = require('./models/Comment'); 
 
 
 // Security and Performance Middleware
@@ -619,19 +620,24 @@ app.post('/upload/cover', authenticateToken, uploadCoverImage, async (req, res) 
 // File upload settings
 const postStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads/post');
+    const uploadPath = path.join(__dirname, 'uploads', 'post');
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '_' + file.originalname);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
 
-const postUpload = multer({ postStorage });
-
+const postUpload = multer({ storage: postStorage, fileFilter: fileFilter });
 // Route to get all posts
 app.get('/api/posts', async (req, res) => {
   try {
     const posts = await Post.find()
+      .sort({ postedAt: -1 })
       .populate('user', 'firstName lastName profileImagePath headline')
       .populate({
         path: 'comments',
@@ -639,20 +645,24 @@ app.get('/api/posts', async (req, res) => {
       });
     res.json(posts);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error('Error fetching posts:', err);
+    res.status(500).json({ message: 'Internal server error', error: err.message });
   }
 });
 
 
+
 // Route to create a post
-app.post('/api/posts', authenticateToken, async (req, res) => {
-  const { content, tags } = req.body;
+app.post('/api/posts', authenticateToken, postUpload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
+  const { text, tags } = req.body;
   const user = req.user.id;
 
   const newPost = new Post({
     user,
-    content,
-    tags
+    content: text,
+    tags,
+    imagePath: req.files.image ? `/uploads/post/${req.files.image[0].filename}` : null,
+    videoPath: req.files.video ? `/uploads/post/${req.files.video[0].filename}` : null
   });
 
   try {
@@ -664,16 +674,16 @@ app.post('/api/posts', authenticateToken, async (req, res) => {
 });
 
 // File upload endpoint
-app.post('/post/upload', authenticateToken, postUpload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
-  }
-  res.status(201).json({
-    message: 'File uploaded successfully',
-    filename: req.file.filename,
-    filepath: req.file.path
-  });
-});
+// app.post('/post/upload', authenticateToken, postUpload.single('file'), (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).json({ message: 'No file uploaded' });
+//   }
+//   res.status(201).json({
+//     message: 'File uploaded successfully',
+//     filename: req.file.filename,
+//     filepath: req.file.path
+//   });
+// });
 
 
 // Error handling middleware

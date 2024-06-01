@@ -631,12 +631,18 @@ const postUpload = multer({ postStorage });
 // Route to get all posts
 app.get('/api/posts', async (req, res) => {
   try {
-    const posts = await Post.find().populate('user', 'firstName lastName profile.profileImagePath');
+    const posts = await Post.find()
+      .populate('user', 'firstName lastName profileImagePath headline')
+      .populate({
+        path: 'comments',
+        populate: { path: 'user', select: 'firstName lastName profileImagePath' }
+      });
     res.json(posts);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Route to create a post
 app.post('/api/posts', authenticateToken, async (req, res) => {

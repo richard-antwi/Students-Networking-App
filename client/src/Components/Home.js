@@ -285,12 +285,26 @@ function Home() {
                       <br />
                       <div>
                         <p className={`mb-0 ${post.isTextExpanded ? '' : 'truncated-text'}`} id="longText">
+                        {post.imagePath && (
+                        <div className="mt-3">
+                          <img src={`http://localhost:3001${post.imagePath}`} alt="Post Media" className="img-fluid" />
+                        </div>
+                      )}
+                      {post.videoPath && (
+                        <div className="mt-3">
+                          <video width="100%" height="auto" controls>
+                            <source src={`http://localhost:3001${post.videoPath}`} type="video/mp4" />
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                      )}
                           {post.content}
                         </p>
                         <Link to="/" className="text-primary" id="readMoreLink" role="button" onClick={() => toggleText(index)}>
                           {post.isTextExpanded ? 'Read Less' : 'Read More'}
                         </Link>
                       </div>
+                     
                       <div className="mb-3" style={{ marginTop: '8px' }}>
                         {post.tags.map((tag, i) => (
                           <span key={i} className="badge badge-secondary rounded-pill p-2" style={{ borderRadius: '12px' }}>{tag}</span>

@@ -19,8 +19,10 @@ const postSchema = new Schema({
     type: String,
     required: true
   }],
-  filePath: { 
+  imagePath: { 
     type: String },
+  videoPath: { 
+      type: String },
   likes: {
     type: Number,
     default: 0

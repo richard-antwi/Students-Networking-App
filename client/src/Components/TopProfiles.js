@@ -14,7 +14,7 @@ const TopProfiles = () => (
             <ProfileCard avatar={avatar} name="Alice Johnson" role="Project Manager" />
           </div>
         </div>
-        {/* Add more carousel items if needed */}
+        
       </div>
       <a className="carousel-control-prev" href="#cardSlider" role="button" data-slide="prev">
         <span className="carousel-control-prev-icon" aria-hidden="true" />

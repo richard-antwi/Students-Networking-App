@@ -93,7 +93,7 @@ function Home() {
       });
       setShowModal(false);
       setPostContent({ text: '', image: null, video: null });
-      fetchPosts(); // Refresh the posts
+      fetchPosts(); 
     } catch (error) {
       console.error('Error creating post:', error);
     }

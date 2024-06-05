@@ -141,7 +141,7 @@
                               <button className="btn btn-danger btn-sm mb-2 ml-1">
                                 <i className="fas fa-envelope" />
                               </button>
-                              {/* Hire Button */}
+                              
                               <button className="btn btn-primary btn-sm mb-2 ml-1">Hire</button>
                             </div>
                             <hr />
@@ -163,8 +163,6 @@
                   </a>
                 </div>
               </div>
-
-
 
 
 

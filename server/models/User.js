@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
     profile: {
         additionalName: String,
         namePronunciation: String,
-        headline: String,  // Not required initially
+        headline: String,  
         currentPosition: {
             title: String,
             company: String,
@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema({
             endDate: Date,
             currentlyWorkingHere: Boolean,
         },
-        industry: String,  // Not required initially
+        industry: String,
         showSchool: Boolean,
         education: {
             school: String,

@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
             currentlyStudyingHere: Boolean,
         },
         location: {
-            countryRegion: String,  // Not required initially
+            countryRegion: String,  
             city: String,
         },
         contactInfo: {

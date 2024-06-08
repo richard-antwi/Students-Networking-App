@@ -434,7 +434,7 @@ function Home() {
                     <i className="fas fa-plus" />
                   </div>
                 </div>
-                {/* Repeat for other most viewed people */}
+
               </div>
             </div>
           </div>

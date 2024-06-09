@@ -58,7 +58,7 @@ function UserProfile({ user }) {
     return (
         <div>
             <h1>{user.firstName} {user.lastName}</h1>
-            {/* Show add friend button if not already friends or request sent */}
+            
             <FriendRequestButton recipientId={user._id} />
         </div>
     );

@@ -1,4 +1,4 @@
-// Friend Request Button Component
+
 // This component will send a friend request to a user.
 import React from 'react';
 import axios from 'axios';

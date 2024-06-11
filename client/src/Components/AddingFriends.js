@@ -20,7 +20,7 @@ function FriendRequestButton({ recipientId }) {
 }
 
 
-// Accept and Decline Buttons Component
+
 // This component will be used to accept or decline friend requests.
 export default FriendRequestButton;
 import React from 'react';

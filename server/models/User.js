@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema({
         coverImagePath: {
             type: String,
             default: ''
-          }
+          },
           followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
           following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     }

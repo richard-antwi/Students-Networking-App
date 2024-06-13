@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import FollowButton from './FollowButton';
 import avatar from '../Images/avatar.webp';
 const TopProfiles = () => (
   <div className="container mt-5">
@@ -28,7 +29,7 @@ const TopProfiles = () => (
   </div>
 );
 
-const ProfileCard = ({ avatar, name, role }) => (
+const ProfileCard = ({ avatar, name, role, userId, followId, isFollowing, onFollowChange }) => (
   <div className="card mr-3" style={{ width: '18rem' }}>
     <div className="card-body text-center">
       <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{ width: '80px', height: '80px' }} />

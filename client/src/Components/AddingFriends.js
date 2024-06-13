@@ -51,7 +51,6 @@ function FriendResponseButton({ friendshipId, action }) {
 
 export default FriendResponseButton;
 
-// Usage in Profiles or Suggestions List
 // Assuming you have a list of users or friend requests, you can include these buttons accordingly.
 
 function UserProfile({ user }) {

@@ -16,6 +16,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+const userRoutes = require('./routes/userRoutes'); // Import your routes
+
 const User = require('./models/User');
 const Friendship = require('./models/Friendship');
 const Message = require('./models/Message'); 
@@ -38,6 +40,33 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Connect to MongoDB Database and GridFS Setup
 mongoose.connect(process.env.MONGODB_URI);
 
+
+// WebSocket Communication
+io.on('connection', (socket) => {
+  console.log('A user connected');
+  socket.on('message', (data) => {
+      console.log('Received message:', data);
+      io.emit('message', data);
+  });
+  socket.on('disconnect', () => {
+      console.log('User disconnected');
+  });
+});
+
+// Authentication and Authorization Middleware
+const authenticateToken = async (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token == null) return res.sendStatus(401);
+  try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("Decoded JWT:", decoded);
+      req.user = decoded;
+      next(); 
+  } catch (err) {
+      return res.sendStatus(403);
+  }
+};
 
 
 const storage = multer.diskStorage({
@@ -68,32 +97,8 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-// WebSocket Communication
-io.on('connection', (socket) => {
-  console.log('A user connected');
-  socket.on('message', (data) => {
-      console.log('Received message:', data);
-      io.emit('message', data);
-  });
-  socket.on('disconnect', () => {
-      console.log('User disconnected');
-  });
-});
 
-// Authentication and Authorization Middleware
-const authenticateToken = async (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (token == null) return res.sendStatus(401);
-  try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Decoded JWT:", decoded);
-      req.user = decoded;
-      next(); 
-  } catch (err) {
-      return res.sendStatus(403);
-  }
-};
+
 
 
 
@@ -107,6 +112,9 @@ const uploadGeneralFiles = multer({
 
 // Define Home routes
 app.get('/', (req, res) => {res.send('Server is running!');});
+
+// Use user routes
+app.use('/api/user', userRoutes);
 
   //Register API
     app.post('/register', async (req, res) => {
@@ -674,7 +682,7 @@ app.post('/api/posts', authenticateToken, postUpload.fields([{ name: 'image', ma
 });
 
 // Follow a user
-router.post('/follow', authenticateToken, async (req, res) => {
+app.post('/follow', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { followId } = req.body;
 
@@ -702,7 +710,7 @@ router.post('/follow', authenticateToken, async (req, res) => {
 });
 
 // Unfollow a user
-router.post('/unfollow', authenticateToken, async (req, res) => {
+app.post('/unfollow', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { unfollowId } = req.body;
 
@@ -725,23 +733,13 @@ router.post('/unfollow', authenticateToken, async (req, res) => {
   }
 });
 
-// Get the list of followers
-router.get('/followers/:userId', authenticateToken, async (req, res) => {
+// Get all users for the top profiles
+app.get('/top-profiles', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId).populate('followers', 'firstName lastName profileImagePath');
-    res.json(user.followers);
+    const users = await User.find().select('firstName lastName profile.profileImagePath profile.headline');
+    res.json(users);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to get followers', error: error.message });
-  }
-});
-
-// Get the list of users the current user is following
-router.get('/following/:userId', authenticateToken, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userId).populate('following', 'firstName lastName profileImagePath');
-    res.json(user.following);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to get following users', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch users', error: error.message });
   }
 });
 

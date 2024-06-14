@@ -7,7 +7,7 @@ const FollowButton = ({ userId, followId, isFollowing, onFollowChange }) => {
   const handleFollow = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`http://localhost:5000/api/user/${isFollowing ? 'unfollow' : 'follow'}`, {
+      await axios.post(`http://localhost:3001/api/user/${isFollowing ? 'unfollow' : 'follow'}`, {
         followId,
       }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }

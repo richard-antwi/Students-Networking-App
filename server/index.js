@@ -681,67 +681,9 @@ app.post('/api/posts', authenticateToken, postUpload.fields([{ name: 'image', ma
   }
 });
 
-// Follow a user
-app.post('/follow', authenticateToken, async (req, res) => {
-  const userId = req.user.id;
-  const { followId } = req.body;
 
-  try {
-    const user = await User.findById(userId);
-    const followUser = await User.findById(followId);
 
-    if (!user || !followUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
 
-    if (!user.following.includes(followId)) {
-      user.following.push(followId);
-      followUser.followers.push(userId);
-
-      await user.save();
-      await followUser.save();
-      res.status(200).json({ message: 'User followed successfully' });
-    } else {
-      res.status(400).json({ message: 'User is already followed' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to follow user', error: error.message });
-  }
-});
-
-// Unfollow a user
-app.post('/unfollow', authenticateToken, async (req, res) => {
-  const userId = req.user.id;
-  const { unfollowId } = req.body;
-
-  try {
-    const user = await User.findById(userId);
-    const unfollowUser = await User.findById(unfollowId);
-
-    if (!user || !unfollowUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.following = user.following.filter(followingId => followingId.toString() !== unfollowId);
-    unfollowUser.followers = unfollowUser.followers.filter(followerId => followerId.toString() !== userId);
-
-    await user.save();
-    await unfollowUser.save();
-    res.status(200).json({ message: 'User unfollowed successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to unfollow user', error: error.message });
-  }
-});
-
-// Get all users for the top profiles
-app.get('/top-profiles', authenticateToken, async (req, res) => {
-  try {
-    const users = await User.find().select('firstName lastName profile.profileImagePath profile.headline');
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch users', error: error.message });
-  }
-});
 
 // File upload endpoint
 // app.post('/post/upload', authenticateToken, postUpload.single('file'), (req, res) => {

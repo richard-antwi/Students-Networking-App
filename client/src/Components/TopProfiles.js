@@ -1,3 +1,4 @@
+import '../App.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -34,8 +35,6 @@ const TopProfiles = () => {
     return <div>Loading...</div>; // Show loading state
   }
 
-        
-
   return (
     <div className="container mt-5">
       <h5>Top Profiles</h5>
@@ -43,26 +42,28 @@ const TopProfiles = () => {
         <div className="carousel-inner">
           {profiles.map((profile, index) => (
             <div className={`carousel-item ${index === 0 ? 'active' : ''}`} key={profile._id}>
-              <div className="d-flex">
-                <ProfileCard
-                  avatar={profile.profile.profileImagePath ? `http://localhost:3001/${profile.profile.profileImagePath.replace(/\\/g, '/')}` : avatar}
-                  name={`${profile.firstName} ${profile.lastName}`}
-                  role={profile.profile.headline}
-                  userId={profile._id}
-                  followId={profile._id}
-                  isFollowing={false} // Initially set to false, you can fetch the follow status if needed
-                  onFollowChange={handleFollowChange}
-                />
+              <div className="d-flex justify-content-around">
+                {profiles.slice(index, index + 3).map(profile => (
+                  <ProfileCard
+                    key={profile._id}
+                    avatar={profile.profile.profileImagePath ? `http://localhost:3001/${profile.profile.profileImagePath.replace(/\\/g, '/')}` : avatar}
+                    name={`${profile.firstName} ${profile.lastName}`}
+                    role={profile.profile.headline}
+                    userId={profile._id}
+                    followId={profile._id}
+                    isFollowing={false} 
+                    onFollowChange={handleFollowChange}
+                  />
+                ))}
               </div>
             </div>
           ))}
-        
         </div>
-        <a className="carousel-control-prev" href="#cardSlider" role="button" data-slide="prev">
+        <a className="carousel-control-prev custom-carousel-control" href="#cardSlider" role="button" data-slide="prev">
           <span className="carousel-control-prev-icon" aria-hidden="true" />
           <span className="sr-only">Previous</span>
         </a>
-        <a className="carousel-control-next" href="#cardSlider" role="button" data-slide="next">
+        <a className="carousel-control-next custom-carousel-control" href="#cardSlider" role="button" data-slide="next">
           <span className="carousel-control-next-icon" aria-hidden="true" />
           <span className="sr-only">Next</span>
         </a>
@@ -71,9 +72,8 @@ const TopProfiles = () => {
   );
 };
 
-
 const ProfileCard = ({ avatar, name, role, userId, followId, isFollowing, onFollowChange }) => (
-  <div className="card mr-3" style={{ width: '18rem' }}>
+  <div className="card mr-3" >
     <div className="card-body text-center">
       <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{ width: '80px', height: '80px' }} />
       <h5 className="card-title mb-2">{name}</h5>

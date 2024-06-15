@@ -264,3 +264,42 @@ color: rgb(241, 93, 74);
 /* .hidden {
   display: none;
 } */
+
+
+.custom-carousel-control {
+  width: 5%;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: auto;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: black;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.carousel-control-prev {
+  left: -5%; /* Move the button outside the carousel */
+}
+
+.carousel-control-next {
+  right: -5%; /* Move the button outside the carousel */
+}
+
+.carousel-inner {
+  display: flex;
+}
+
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-item .card {
+  margin: 0 10px;
+}

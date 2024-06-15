@@ -196,7 +196,7 @@ function Projects() {
                         consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, libero vel consectetur luctus, odio nisi aliquam risus, vel volutpat orci felis at dolor...
                       </p>
                       {/* "Read More" link */}
-                      <Link href="#" className="text-primary" id="readMoreLink" role="button" onclick="toggleText()">
+                      <Link href="#" className="text-primary" id="readMoreLink" role="button" onClick="toggleText()">
                         Read More
                       </Link>
                     </div>

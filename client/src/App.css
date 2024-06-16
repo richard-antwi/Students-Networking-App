@@ -283,11 +283,11 @@ color: rgb(241, 93, 74);
 }
 
 .carousel-control-prev {
-  left: -5%; /* Move the button outside the carousel */
+  left: -5%;
 }
 
 .carousel-control-next {
-  right: -5%; /* Move the button outside the carousel */
+  right: -5%; 
 }
 
 .carousel-inner {

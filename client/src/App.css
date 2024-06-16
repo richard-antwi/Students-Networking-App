@@ -266,13 +266,19 @@ color: rgb(241, 93, 74);
 } */
 
 
+
+
+
 .custom-carousel-control {
   width: 5%;
+  z-index: 2; /* Ensures the control buttons are above other elements */
+  pointer-events: auto;
 }
 
 .carousel-control-prev,
 .carousel-control-next {
   width: auto;
+  pointer-events: auto; /* Ensures the control buttons can still be clicked */
 }
 
 .carousel-control-prev-icon,
@@ -298,8 +304,11 @@ color: rgb(241, 93, 74);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1; /* Ensures the cards are below the control buttons */
 }
 
 .carousel-item .card {
   margin: 0 10px;
+  z-index: 1; /* Ensures the cards are below the control buttons */
+  pointer-events: auto; /* Ensures the control buttons can still be clicked */
 }

@@ -39,6 +39,14 @@ const TopProfiles = () => {
     <div className="container mt-5">
       <h5>Top Profiles</h5>
       <div id="cardSlider" className="carousel slide" data-ride="carousel">
+        <a className="carousel-control-prev custom-carousel-control" href="#cardSlider" role="button" data-slide="prev">
+          <span className="carousel-control-prev-icon" aria-hidden="true" />
+          <span className="sr-only">Previous</span>
+        </a>
+        <a className="carousel-control-next custom-carousel-control" href="#cardSlider" role="button" data-slide="next">
+          <span className="carousel-control-next-icon" aria-hidden="true" />
+          <span className="sr-only">Next</span>
+        </a>
         <div className="carousel-inner">
           {profiles.map((profile, index) => (
             <div className={`carousel-item ${index === 0 ? 'active' : ''}`} key={profile._id}>
@@ -59,14 +67,6 @@ const TopProfiles = () => {
             </div>
           ))}
         </div>
-        <a className="carousel-control-prev custom-carousel-control" href="#cardSlider" role="button" data-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true" />
-          <span className="sr-only">Previous</span>
-        </a>
-        <a className="carousel-control-next custom-carousel-control" href="#cardSlider" role="button" data-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true" />
-          <span className="sr-only">Next</span>
-        </a>
       </div>
     </div>
   );
@@ -92,6 +92,7 @@ const ProfileCard = ({ avatar, name, role, userId, followId, isFollowing, onFoll
 );
 
 export default TopProfiles;
+
 
 
 

@@ -51,7 +51,7 @@ const TopProfiles = () => {
                     role={profile.profile.headline}
                     userId={profile._id}
                     followId={profile._id}
-                    isFollowing={false} 
+                    isFollowing={false}
                     onFollowChange={handleFollowChange}
                   />
                 ))}
@@ -73,7 +73,7 @@ const TopProfiles = () => {
 };
 
 const ProfileCard = ({ avatar, name, role, userId, followId, isFollowing, onFollowChange }) => (
-  <div className="card mr-3" >
+  <div className="card mr-3">
     <div className="card-body text-center">
       <img src={avatar} className="card-img-top rounded-circle mb-3" alt="User Avatar" style={{ width: '80px', height: '80px' }} />
       <h5 className="card-title mb-2">{name}</h5>
@@ -92,6 +92,8 @@ const ProfileCard = ({ avatar, name, role, userId, followId, isFollowing, onFoll
 );
 
 export default TopProfiles;
+
+
 
 
 

@@ -269,46 +269,34 @@ color: rgb(241, 93, 74);
 
 
 
-.custom-carousel-control {
-  width: 5%;
-  z-index: 2; /* Ensures the control buttons are above other elements */
-  pointer-events: auto;
-}
-
 .carousel-control-prev,
 .carousel-control-next {
-  width: auto;
-  pointer-events: auto; /* Ensures the control buttons can still be clicked */
+  z-index: 1;
+  width: 5%;
+  opacity: 1;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
-  padding: 10px;
+}
+
+.custom-carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
 }
 
 .carousel-control-prev {
-  left: -5%;
+  left: -5%; /* Adjust this as necessary */
 }
 
 .carousel-control-next {
-  right: -5%; 
+  right: -5%; /* Adjust this as necessary */
 }
 
-.carousel-inner {
-  display: flex;
-}
-
-.carousel-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1; /* Ensures the cards are below the control buttons */
-}
-
-.carousel-item .card {
-  margin: 0 10px;
-  z-index: 1; /* Ensures the cards are below the control buttons */
-  pointer-events: auto; /* Ensures the control buttons can still be clicked */
+.card {
+  z-index: 2; /* Ensure cards are above carousel controls */
 }

@@ -113,7 +113,7 @@ function MyProfile() {
     }
   
     try {
-      const response = await axios.post('http://localhost:3001/user/profile/update', formData, {
+      const response = await axios.post('http://localhost:3001/api/user/profile/update', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('Profile updated:', response.data);
@@ -147,7 +147,7 @@ function MyProfile() {
 
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:3001/upload', formData, {
+        const response = await axios.post('http://localhost:3001/api/uploads/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`
@@ -171,7 +171,7 @@ function MyProfile() {
 
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.post('http://localhost:3001/upload/cover', formData, {
+        const response = await axios.post('http://localhost:3001/api/uploads/cover', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`
@@ -199,7 +199,7 @@ function MyProfile() {
   useEffect(() => {
     const fetchUserData = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/user/profile', {
+            const response = await axios.get('http://localhost:3001/api/user/profile', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             if (response.data && response.data.profile) {
@@ -269,7 +269,7 @@ const handleMessageFriend = (friendId) => {
 const fetchFriendRequests = async () => {
   const token = localStorage.getItem('token');
   try {
-    const response = await axios.get('http://localhost:3001/api/friend-requests', {
+    const response = await axios.get('http://localhost:3001/api/friends/requests', {
       headers: { Authorization: `Bearer ${token}` }
     });
     setFriendRequests(response.data);
@@ -295,7 +295,8 @@ const handleAccept = async (friendshipId) => {
     return;
   }
   try {
-    const response = await axios.post(`http://localhost:3001/api/friendships/${friendshipId}/accept`, {}, {
+    // const response = await axios.post(`http://localhost:3001/api/friendships/${friendshipId}/accept`, {}, {
+      const response = await axios.post(`http://localhost:3001/api/friends/:id/accept`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
     console.log(response.data);
@@ -319,7 +320,8 @@ const handleDecline = async (friendshipId) => {
     return;
   }
   try {
-    const response = await axios.post(`http://localhost:3001/api/friendships/${friendshipId}/decline`, {}, {
+    // const response = await axios.post(`http://localhost:3001/api/friendships/${friendshipId}/decline`, {}, {
+      const response = await axios.post(`http://localhost:3001/api/friends/:id/decline`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
     console.log(response.data);

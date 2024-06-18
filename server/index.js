@@ -17,6 +17,7 @@ const friendRoutes = require('./routes/friendRoutes');
 const postRoutes = require('./routes/postRoutes');
 const authRoutes = require('./routes/authRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 // Middleware
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" }}));
@@ -36,6 +37,7 @@ app.use('/api/friends', friendRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/uploads', uploadRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)

@@ -36,7 +36,7 @@ function Register() {
     };
 
     try {
-      const result = await axios.post('http://localhost:3001/register', userData, { timeout: 5000 });
+      const result = await axios.post('http://localhost:3001/api/auth/register', userData, { timeout: 5000 });
       console.log(result);
       alert("Registration successful! You can now log in.");
       setActiveTab('login');
@@ -62,7 +62,7 @@ function Register() {
     };
 
     try {
-      const response = await axios.post('http://localhost:3001/login', loginData);
+      const response = await axios.post('http://localhost:3001/api/auth/login', loginData);
       console.log(response.data);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);

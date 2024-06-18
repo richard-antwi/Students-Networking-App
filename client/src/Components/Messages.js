@@ -90,7 +90,7 @@
 
     const fetchUserData = async (token) => {
       try {
-        const response = await axios.get('http://localhost:3001/user/profile', { headers: { Authorization: `Bearer ${token}` } });
+        const response = await axios.get('http://localhost:3001/api/user/profile', { headers: { Authorization: `Bearer ${token}` } });
         if (response.data) {
           setProfileData({
             _id: response.data._id,

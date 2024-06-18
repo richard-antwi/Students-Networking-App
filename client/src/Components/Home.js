@@ -22,10 +22,12 @@ function Home() {
   const [showModal, setShowModal] = useState(false);
   const [postContent, setPostContent] = useState({ text: '', image: null, video: null });
 
+  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/user/profile', {
+        const response = await axios.get('http://localhost:3001/api/user/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         if (response.data) {
@@ -119,7 +121,7 @@ function Home() {
       setError('');
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3001/api/suggestions', {
+        const response = await fetch('http://localhost:3001/api/friends/suggestions', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -143,7 +145,7 @@ function Home() {
 
   const addFriend = (friendId) => {
     const token = localStorage.getItem('token');
-    axios.post('http://localhost:3001/api/friendships', {
+    axios.post('http://localhost:3001/api/friends', {
       recipientId: friendId
     }, {
       headers: { Authorization: `Bearer ${token}` }

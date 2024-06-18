@@ -18,7 +18,7 @@ function NavBar() {
   useEffect(() => {
     const fetchUserData = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/user/profile', {
+            const response = await axios.get('http://localhost:3001/api/user/profile', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             if (response.data) {

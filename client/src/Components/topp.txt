@@ -411,3 +411,69 @@
                 </div>
               </div>
             </div>
+
+
+
+            API Endpoints
+Authentication:
+
+Register: POST /api/auth/register
+Login: POST /api/auth/login
+User Profile:
+
+Update Profile: POST /api/user/profile/update
+Get Profile: GET /api/user/profile
+Follow User: POST /api/user/follow
+Unfollow User: POST /api/user/unfollow
+Top Profiles: GET /api/user/top-profiles
+Friends Management:
+
+Get Friend Suggestions: GET /api/friends/suggestions
+Add Friend: POST /api/friends
+Get Friend Requests: GET /api/friends/requests
+Get Friends List: GET /api/friends
+Accept Friend Request: POST /api/friends/:id/accept
+Decline Friend Request: POST /api/friends/:id/decline
+Posts:
+
+Get All Posts: GET /api/posts
+Create Post: POST /api/posts
+
+File Uploads:
+Upload General File: POST /api/uploads/upload
+Upload Cover Image: POST /api/uploads/cover
+
+
+
+Authentication Routes
+Register: POST http://localhost:3001/api/auth/register
+Login: POST http://localhost:3001/api/auth/login
+
+User Profile Routes
+Update Profile: POST http://localhost:3001/api/user/profile/update
+Get Profile: GET http://localhost:3001/api/user/profile
+Follow User: POST http://localhost:3001/api/user/follow
+Unfollow User: POST http://localhost:3001/api/user/unfollow
+Top Profiles: GET http://localhost:3001/api/user/top-profiles
+
+Friend Management Routes
+Get Friend Suggestions: GET http://localhost:3001/api/friends/suggestions
+Add Friend: POST http://localhost:3001/api/friends
+Get Friend Requests: GET http://localhost:3001/api/friends/requests
+Get Friends List: GET http://localhost:3001/api/friends
+Accept Friend Request: POST http://localhost:3001/api/friends/:id/accept
+Decline Friend Request: POST http://localhost:3001/api/friends/:id/decline
+
+Post Routes
+Get All Posts: GET http://localhost:3001/api/posts
+Create Post: POST http://localhost:3001/api/posts
+
+File Upload Routes
+Upload General File: POST http://localhost:3001/api/uploads/upload
+Upload Cover Image: POST http://localhost:3001/api/uploads/cover
+
+Message Routes
+Get Messages Between Two Users: GET http://localhost:3001/api/messages?chatWith=<userId>
+Get Messages for a User: GET http://localhost:3001/api/messages/user/:userId
+Upload Message Image: POST http://localhost:3001/api/messages/upload/message-image
+Send Message: POST http://localhost:3001/api/messages

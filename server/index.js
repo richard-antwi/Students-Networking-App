@@ -36,6 +36,7 @@ app.use(cors({
 app.use(express.json({ limit: '2600mb' }));
 app.use(express.urlencoded({ limit: '2600mb', extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/user', userRoutes);
 
 // Connect to MongoDB Database and GridFS Setup
 mongoose.connect(process.env.MONGODB_URI);

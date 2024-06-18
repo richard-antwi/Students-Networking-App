@@ -9,6 +9,10 @@ router.post('/follow', authenticateToken, async (req, res) => {
   const { followId } = req.body;
 
   try {
+    if (!followId) {
+      return res.status(400).json({ message: 'Follow ID is required' });
+    }
+
     const user = await User.findById(userId);
     const followUser = await User.findById(followId);
 
@@ -27,6 +31,7 @@ router.post('/follow', authenticateToken, async (req, res) => {
       res.status(400).json({ message: 'User is already followed' });
     }
   } catch (error) {
+    console.error('Failed to follow user:', error);
     res.status(500).json({ message: 'Failed to follow user', error: error.message });
   }
 });
@@ -37,6 +42,10 @@ router.post('/unfollow', authenticateToken, async (req, res) => {
   const { unfollowId } = req.body;
 
   try {
+    if (!unfollowId) {
+      return res.status(400).json({ message: 'Unfollow ID is required' });
+    }
+
     const user = await User.findById(userId);
     const unfollowUser = await User.findById(unfollowId);
 
@@ -51,6 +60,7 @@ router.post('/unfollow', authenticateToken, async (req, res) => {
     await unfollowUser.save();
     res.status(200).json({ message: 'User unfollowed successfully' });
   } catch (error) {
+    console.error('Failed to unfollow user:', error);
     res.status(500).json({ message: 'Failed to unfollow user', error: error.message });
   }
 });
@@ -61,6 +71,7 @@ router.get('/top-profiles', authenticateToken, async (req, res) => {
     const users = await User.find().select('firstName lastName profile.profileImagePath profile.headline');
     res.json(users);
   } catch (error) {
+    console.error('Failed to fetch users:', error);
     res.status(500).json({ message: 'Failed to fetch users', error: error.message });
   }
 });

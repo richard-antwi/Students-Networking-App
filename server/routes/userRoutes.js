@@ -17,11 +17,9 @@ router.post('/follow', authenticateToken, async (req, res) => {
     }
 
     if (!user.following.includes(followId)) {
-      user.following.push(followId);
-      followUser.followers.push(userId);
+      await User.updateOne({ _id: userId }, { $push: { following: followId } });
+      await User.updateOne({ _id: followId }, { $push: { followers: userId } });
 
-      await user.save();
-      await followUser.save();
       res.status(200).json({ message: 'User followed successfully' });
     } else {
       res.status(400).json({ message: 'User is already followed' });
@@ -45,11 +43,9 @@ router.post('/unfollow', authenticateToken, async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    user.following = user.following.filter(followingId => followingId.toString() !== unfollowId);
-    unfollowUser.followers = unfollowUser.followers.filter(followerId => followerId.toString() !== userId);
+    await User.updateOne({ _id: userId }, { $pull: { following: unfollowId } });
+    await User.updateOne({ _id: unfollowId }, { $pull: { followers: userId } });
 
-    await user.save();
-    await unfollowUser.save();
     res.status(200).json({ message: 'User unfollowed successfully' });
   } catch (error) {
     console.error('Failed to unfollow user:', error);
@@ -75,29 +71,39 @@ router.post('/profile/update', authenticateToken, async (req, res) => {
 });
 
 // Get user profile
+// routes/userRoutes.js
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
-    const userProfile = await User.findOne({ _id: req.user.id });
-    console.log(userProfile);
+    const userProfile = await User.findOne({ _id: req.user.id }).lean();
     if (!userProfile) {
       return res.status(404).send('Profile not found.');
     }
-    res.json(userProfile);
+    const followersCount = userProfile.followers.length;
+    const followingCount = userProfile.following.length;
+
+    res.json({ 
+      ...userProfile,
+      followersCount,
+      followingCount 
+    });
   } catch (error) {
     res.status(500).send('Server error');
   }
 });
 
+
 // Get all users for the top profiles
+// routes/userRoutes.js
 router.get('/top-profiles', authenticateToken, async (req, res) => {
   try {
-    const users = await User.find().select('firstName lastName profile.profileImagePath profile.headline');
+    const userId = req.user.id;  // Get the current user's ID from the token
+    const users = await User.find({ _id: { $ne: userId } }).select('firstName lastName profile.profileImagePath profile.headline');
     res.json(users);
   } catch (error) {
-    console.error('Failed to fetch users:', error);
     res.status(500).json({ message: 'Failed to fetch users', error: error.message });
   }
 });
+
 
 module.exports = router;
 

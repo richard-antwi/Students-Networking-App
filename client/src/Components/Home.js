@@ -6,6 +6,7 @@ import avatar from '../Images/avatar.webp';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import TopProfiles from './TopProfiles';
+import withAuth from '../withAuth';
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -16,11 +17,14 @@ function Home() {
     firstName: '',
     lastName: '',
     userName: '',
-    headline: ''
+    headline: '',
+    followersCount: 0,
+    followingCount: 0,
   });
   const [viewMore, setViewMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [postContent, setPostContent] = useState({ text: '', image: null, video: null });
+  const [following, setFollowing] = useState([]);
 
   
 
@@ -36,7 +40,9 @@ function Home() {
             lastName: response.data.lastName,
             userName: response.data.userName,
             headline: response.data.profile.headline,
-            profileImagePath: response.data.profile.profileImagePath
+            profileImagePath: response.data.profile.profileImagePath,
+            followersCount: response.data.followersCount,
+            followingCount: response.data.followingCount
           });
         }
       } catch (error) {
@@ -152,10 +158,26 @@ function Home() {
     })
     .then(response => {
       alert('Friend request sent successfully!');
+      setFollowing([...following, friendId]);
     })
     .catch(error => {
       console.error('Failed to add friend:', error.response.data.message);
       alert(`Failed to add friend: ${error.response.data.message}`);
+    });
+  };
+
+  const removeFriend = (friendId) => {
+    const token = localStorage.getItem('token');
+    axios.delete(`http://localhost:3001/api/friends/${friendId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(response => {
+      alert('Unfollowed successfully!');
+      setFollowing(following.filter(id => id !== friendId)); // Update following state
+    })
+    .catch(error => {
+      console.error('Failed to remove friend:', error.response.data.message);
+      alert(`Failed to remove friend: ${error.response.data.message}`);
     });
   };
 
@@ -182,11 +204,11 @@ function Home() {
                 <div className="row">
                   <div className="col">
                     <p className="mb-0">Following</p>
-                    <p className="font-weight-bold">100</p>
+                    <p className="font-weight-bold">{profileData.followingCount}</p>
                   </div>
                   <div className="col">
                     <p className="mb-0">Followers</p>
-                    <p className="font-weight-bold">500</p>
+                    <p className="font-weight-bold">{profileData.followersCount}</p>
                   </div>
                 </div>
                 <hr />
@@ -480,4 +502,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default withAuth(Home);

@@ -18,6 +18,7 @@ import Projects from './Components/Projects';
 import Register from './Components/Register';
 import NavBar from './Components/NavBar';
 import TopProfiles from './Components/TopProfiles';
+import Logout from './Components/Logout';
 
 
 function App() {
@@ -45,7 +46,7 @@ function App() {
             <Route path="helpcenter" element={<HelpCenter />} />
             <Route path="topprofiles" element={<TopProfiles />} />
             <Route path="messages/:friendId" element={<Messages />} />
-            
+            <Route path="logout" element={<Logout />} />
           </Route>
 
           {/* Route without NavBar */}

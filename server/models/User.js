@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
     profile: {
         additionalName: String,
         namePronunciation: String,
-        headline: String,  
+        headline: String,
         currentPosition: {
             title: String,
             company: String,
@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
             currentlyStudyingHere: Boolean,
         },
         location: {
-            countryRegion: String,  
+            countryRegion: String,
             city: String,
         },
         contactInfo: {
@@ -45,15 +45,11 @@ const UserSchema = new mongoose.Schema({
             address: String,
         },
         profileImagePath: { type: String, default: '' },
-        coverImagePath: {
-            type: String,
-            default: ''
-          },
-          followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-          following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    }
+        coverImagePath: { type: String, default: '' },
+    },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }]
 }, { timestamps: true });
-
 
 // Hash the password before saving
 UserSchema.pre('save', async function(next) {

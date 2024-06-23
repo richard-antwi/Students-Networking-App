@@ -3,17 +3,52 @@ const router = express.Router();
 const User = require('../models/User');
 const authenticateToken = require('../middleware/auth');
 
+// Check if the current user is following another user
+router.get('/:userId/isFollowing', authenticateToken, async (req, res) => {
+  const currentUserId = req.user.id;
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(currentUserId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const isFollowing = user.following.includes(userId);
+    res.status(200).json({ isFollowing });
+  } catch (error) {
+    console.error('Failed to check follow status:', error);
+    res.status(500).json({ message: 'Failed to check follow status', error: error.message });
+  }
+});
+
+
 // Follow a user
 router.post('/follow', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { followId } = req.body;
 
+  console.log('Follow request received');
+  console.log('User ID:', userId);
+  console.log('Follow ID:', followId);
+
+  if (!followId) {
+    console.log('Follow ID is missing');
+    return res.status(400).json({ message: 'Follow ID is required' });
+  }
+
   try {
     const user = await User.findById(userId);
     const followUser = await User.findById(followId);
 
-    if (!user || !followUser) {
+    if (!user) {
+      console.log('User not found:', userId);
       return res.status(404).json({ message: 'User not found' });
+    }
+    if (!followUser) {
+      console.log('Follow User not found:', followId);
+      return res.status(404).json({ message: 'Follow user not found' });
     }
 
     if (!user.following.includes(followId)) {
@@ -22,6 +57,7 @@ router.post('/follow', authenticateToken, async (req, res) => {
 
       res.status(200).json({ message: 'User followed successfully' });
     } else {
+      console.log('User is already followed');
       res.status(400).json({ message: 'User is already followed' });
     }
   } catch (error) {
@@ -35,12 +71,26 @@ router.post('/unfollow', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { unfollowId } = req.body;
 
+  console.log('Unfollow request received');
+  console.log('User ID:', userId);
+  console.log('Unfollow ID:', unfollowId);
+
+  if (!unfollowId) {
+    console.log('Unfollow ID is missing');
+    return res.status(400).json({ message: 'Unfollow ID is required' });
+  }
+
   try {
     const user = await User.findById(userId);
     const unfollowUser = await User.findById(unfollowId);
 
-    if (!user || !unfollowUser) {
+    if (!user) {
+      console.log('User not found:', userId);
       return res.status(404).json({ message: 'User not found' });
+    }
+    if (!unfollowUser) {
+      console.log('Unfollow User not found:', unfollowId);
+      return res.status(404).json({ message: 'Unfollow user not found' });
     }
 
     await User.updateOne({ _id: userId }, { $pull: { following: unfollowId } });

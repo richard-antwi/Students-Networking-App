@@ -1,9 +1,25 @@
-// FollowButton.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FollowButton = ({ userId, isFollowing, onFollowChange }) => {
+const FollowButton = ({ userId, currentUserId }) => {
   const [loading, setLoading] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  // Fetch initial follow status
+  useEffect(() => {
+    const fetchFollowStatus = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://localhost:3001/api/user/${userId}/isFollowing`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setIsFollowing(response.data.isFollowing);
+      } catch (error) {
+        console.error('Error fetching follow status:', error);
+      }
+    };
+    fetchFollowStatus();
+  }, [userId]);
 
   const handleFollow = async () => {
     setLoading(true);
@@ -16,16 +32,23 @@ const FollowButton = ({ userId, isFollowing, onFollowChange }) => {
       const response = await axios.post(url, { followId: userId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      onFollowChange();
+      setIsFollowing(!isFollowing);
       console.log('Response:', response.data);
     } catch (error) {
       if (error.response) {
-        console.error('Error response:', error.response.data);
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+        console.error('Error response headers:', error.response.headers);
+
+        if (error.response.status === 400 && error.response.data.message === 'User is already followed') {
+          console.error('The user is already followed');
+        }
       } else if (error.request) {
         console.error('Error request:', error.request);
       } else {
         console.error('Error message:', error.message);
       }
+      console.error('Full error:', error);
     } finally {
       setLoading(false);
     }

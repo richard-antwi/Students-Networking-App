@@ -9,13 +9,23 @@ const FollowButton = ({ userId, isFollowing, onFollowChange }) => {
     setLoading(true);
     try {
       const url = isFollowing ? 'http://localhost:3001/api/user/unfollow' : 'http://localhost:3001/api/user/follow';
+      const token = localStorage.getItem('token');
+      console.log('Sending request to:', url);
+      console.log('With token:', token);
+      console.log('And followId:', userId);
       const response = await axios.post(url, { followId: userId }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       onFollowChange();
       console.log('Response:', response.data);
     } catch (error) {
-      console.error('Error following/unfollowing user:', error);
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
     } finally {
       setLoading(false);
     }

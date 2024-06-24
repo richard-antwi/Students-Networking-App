@@ -120,7 +120,7 @@ router.post('/profile/update', authenticateToken, async (req, res) => {
   }
 });
 
-// Get user profile
+// Get user profiles
 // routes/userRoutes.js
 router.get('/profile', authenticateToken, async (req, res) => {
   try {

@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const authenticateToken = require('../middleware/auth');
 
-// Check if the current user is following another user
+// Check if the current user is following another user on
 router.get('/:userId/isFollowing', authenticateToken, async (req, res) => {
   const currentUserId = req.user.id;
   const { userId } = req.params;

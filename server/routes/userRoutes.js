@@ -120,7 +120,7 @@ router.post('/profile/update', authenticateToken, async (req, res) => {
   }
 });
 
-// Get user profiles
+// Get user profiles to display on desktop
 // routes/userRoutes.js
 router.get('/profile', authenticateToken, async (req, res) => {
   try {

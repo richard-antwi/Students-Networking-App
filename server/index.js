@@ -1,12 +1,12 @@
-require('dotenv').config();
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
@@ -22,11 +22,14 @@ const messageRoutes = require('./routes/messageRoutes');
 // Middleware
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" }}));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
+// Configure CORS
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
   optionsSuccessStatus: 200
 }));
+
 app.use(express.json({ limit: '2600mb' }));
 app.use(express.urlencoded({ limit: '2600mb', extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -48,11 +51,11 @@ mongoose.connect(process.env.MONGODB_URI)
 io.on('connection', (socket) => {
   console.log('A user connected');
   socket.on('message', (data) => {
-      console.log('Received message:', data);
-      io.emit('message', data);
+    console.log('Received message:', data);
+    io.emit('message', data);
   });
   socket.on('disconnect', () => {
-      console.log('User disconnected');
+    console.log('User disconnected');
   });
 });
 
@@ -73,10 +76,9 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server on port 3001
-app.listen(process.env.PORT || 3001, () => {
-    console.log(`Server is running on port ${process.env.PORT || 3001}`);
+server.listen(process.env.PORT || 3001, () => {
+  console.log(`Server is running on port ${process.env.PORT || 3001}`);
 });
-
 
 
 

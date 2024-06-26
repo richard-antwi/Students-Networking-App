@@ -26,9 +26,6 @@ const FollowButton = ({ userId, currentUserId }) => {
     try {
       const url = isFollowing ? 'http://localhost:3001/api/user/unfollow' : 'http://localhost:3001/api/user/follow';
       const token = localStorage.getItem('token');
-      console.log('Sending request to:', url);
-      console.log('With token:', token);
-      console.log('And followId:', userId);
       const response = await axios.post(url, { followId: userId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -39,10 +36,6 @@ const FollowButton = ({ userId, currentUserId }) => {
         console.error('Error response data:', error.response.data);
         console.error('Error response status:', error.response.status);
         console.error('Error response headers:', error.response.headers);
-
-        if (error.response.status === 400 && error.response.data.message === 'User is already followed') {
-          console.error('The user is already followed');
-        }
       } else if (error.request) {
         console.error('Error request:', error.request);
       } else {

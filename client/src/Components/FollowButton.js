@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FollowButton = ({ userId, currentUserId }) => {
+const FollowButton = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -10,6 +10,7 @@ const FollowButton = ({ userId, currentUserId }) => {
     const fetchFollowStatus = async () => {
       try {
         const token = localStorage.getItem('token');
+        if (!token) throw new Error('Token not found');
         const response = await axios.get(`http://localhost:3001/api/user/${userId}/isFollowing`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -26,6 +27,7 @@ const FollowButton = ({ userId, currentUserId }) => {
     try {
       const url = isFollowing ? 'http://localhost:3001/api/user/unfollow' : 'http://localhost:3001/api/user/follow';
       const token = localStorage.getItem('token');
+      if (!token) throw new Error('Token not found');
       const response = await axios.post(url, { followId: userId }, {
         headers: { Authorization: `Bearer ${token}` }
       });

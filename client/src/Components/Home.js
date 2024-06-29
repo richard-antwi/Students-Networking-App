@@ -8,7 +8,7 @@ import axios from 'axios';
 import TopProfiles from './TopProfiles';
 import withAuth from '../withAuth';
 
-function Home() {
+function Home({ userId }) {
   const [posts, setPosts] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [error, setError] = useState('');
@@ -166,20 +166,20 @@ function Home() {
     });
   };
 
-  const removeFriend = (friendId) => {
-    const token = localStorage.getItem('token');
-    axios.delete(`http://localhost:3001/api/friends/${friendId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(response => {
-      alert('Unfollowed successfully!');
-      setFollowing(following.filter(id => id !== friendId)); // Update following state
-    })
-    .catch(error => {
-      console.error('Failed to remove friend:', error.response.data.message);
-      alert(`Failed to remove friend: ${error.response.data.message}`);
-    });
-  };
+  // const removeFriend = (friendId) => {
+  //   const token = localStorage.getItem('token');
+  //   axios.delete(`http://localhost:3001/api/friends/${friendId}`, {
+  //     headers: { Authorization: `Bearer ${token}` }
+  //   })
+  //   .then(response => {
+  //     alert('Unfollowed successfully!');
+  //     setFollowing(following.filter(id => id !== friendId)); // Update following state
+  //   })
+  //   .catch(error => {
+  //     console.error('Failed to remove friend:', error.response.data.message);
+  //     alert(`Failed to remove friend: ${error.response.data.message}`);
+  //   });
+  // };
 
   const toggleViewMore = () => {
     setViewMore(!viewMore);

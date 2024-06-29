@@ -1,7 +1,8 @@
 const express = require('express');
-const router = express.Router();
 const User = require('../models/User');
 const authenticateToken = require('../middleware/auth');
+
+const router = express.Router();
 
 // Check if the current user is following another user
 router.get('/:userId/isFollowing', authenticateToken, async (req, res) => {
@@ -23,18 +24,12 @@ router.get('/:userId/isFollowing', authenticateToken, async (req, res) => {
   }
 });
 
-
 // Follow a user
 router.post('/follow', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { followId } = req.body;
 
-  console.log('Follow request received');
-  console.log('User ID:', userId);
-  console.log('Follow ID:', followId);
-
   if (!followId) {
-    console.log('Follow ID is missing');
     return res.status(400).json({ message: 'Follow ID is required' });
   }
 
@@ -43,11 +38,9 @@ router.post('/follow', authenticateToken, async (req, res) => {
     const followUser = await User.findById(followId);
 
     if (!user) {
-      console.log('User not found:', userId);
       return res.status(404).json({ message: 'User not found' });
     }
     if (!followUser) {
-      console.log('Follow User not found:', followId);
       return res.status(404).json({ message: 'Follow user not found' });
     }
 
@@ -57,7 +50,6 @@ router.post('/follow', authenticateToken, async (req, res) => {
 
       res.status(200).json({ message: 'User followed successfully' });
     } else {
-      console.log('User is already followed');
       res.status(400).json({ message: 'User is already followed' });
     }
   } catch (error) {
@@ -71,12 +63,7 @@ router.post('/unfollow', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { unfollowId } = req.body;
 
-  console.log('Unfollow request received');
-  console.log('User ID:', userId);
-  console.log('Unfollow ID:', unfollowId);
-
   if (!unfollowId) {
-    console.log('Unfollow ID is missing');
     return res.status(400).json({ message: 'Unfollow ID is required' });
   }
 
@@ -85,11 +72,9 @@ router.post('/unfollow', authenticateToken, async (req, res) => {
     const unfollowUser = await User.findById(unfollowId);
 
     if (!user) {
-      console.log('User not found:', userId);
       return res.status(404).json({ message: 'User not found' });
     }
     if (!unfollowUser) {
-      console.log('Unfollow User not found:', unfollowId);
       return res.status(404).json({ message: 'Unfollow user not found' });
     }
 
@@ -120,8 +105,7 @@ router.post('/profile/update', authenticateToken, async (req, res) => {
   }
 });
 
-// Get user profiles to display on desktop
-// routes/userRoutes.js
+// Get user profile to display on desktop
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
     const userProfile = await User.findOne({ _id: req.user.id }).lean();
@@ -141,9 +125,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
   }
 });
 
-
 // Get all users for the top profiles
-// routes/userRoutes.js
 router.get('/top-profiles', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;  // Get the current user's ID from the token
@@ -154,8 +136,9 @@ router.get('/top-profiles', authenticateToken, async (req, res) => {
   }
 });
 
-
 module.exports = router;
+
+
 
 
 

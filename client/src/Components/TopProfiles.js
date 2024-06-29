@@ -6,7 +6,7 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import avatar from '../Images/avatar.webp';
 import FollowButton from './FollowButton';
 
-const TopProfiles = () => {
+const TopProfiles = ({ userId }) => {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
 

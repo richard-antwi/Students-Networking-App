@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
+const User = require('../models/User');
 const authenticateToken = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
@@ -53,6 +54,38 @@ router.post('/', authenticateToken, postUpload.fields([{ name: 'image', maxCount
     imagePath: req.files.image ? `/uploads/post/${req.files.image[0].filename}` : null,
     videoPath: req.files.video ? `/uploads/post/${req.files.video[0].filename}` : null
   });
+
+  // Like a post
+router.put('/like/:id', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post.likes.includes(req.body.userId)) {
+      post.likes.push(req.body.userId);
+      await post.save();
+      res.status(200).json({ message: 'Post liked!' });
+    } else {
+      res.status(400).json({ message: 'You already liked this post.' });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Unlike a post
+router.put('/unlike/:id', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (post.likes.includes(req.body.userId)) {
+      post.likes = post.likes.filter((userId) => userId.toString() !== req.body.userId);
+      await post.save();
+      res.status(200).json({ message: 'Post unliked!' });
+    } else {
+      res.status(400).json({ message: 'You have not liked this post.' });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
   try {
     await newPost.save();

@@ -6,6 +6,7 @@ const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
@@ -33,7 +34,7 @@ app.use(cors({
 app.use(express.json({ limit: '2600mb' }));
 app.use(express.urlencoded({ limit: '2600mb', extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+app.use(bodyParser.json());
 // Routes
 app.use('/api/user', userRoutes);
 app.use('/api/friends', friendRoutes);

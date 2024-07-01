@@ -7,8 +7,10 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import TopProfiles from './TopProfiles';
 import withAuth from '../withAuth';
+import { likePost, unlikePost } from './PostActions';
 
-function Home({ userId }) {
+
+function Home() {
   const [posts, setPosts] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [error, setError] = useState('');
@@ -25,6 +27,7 @@ function Home({ userId }) {
   const [showModal, setShowModal] = useState(false);
   const [postContent, setPostContent] = useState({ text: '', image: null, video: null });
   const [following, setFollowing] = useState([]);
+  const currentUser = JSON.parse(localStorage.getItem('userId'));
 
   
 
@@ -107,6 +110,36 @@ function Home({ userId }) {
     }
   };
 
+  //like
+  const handleLike = async (postId) => {
+    try {
+      await likePost(postId, currentUser.id);
+      const updatedPosts = posts.map(post => {
+        if (post._id === postId) {
+          return { ...post, likes: [...post.likes, currentUser.id] };
+        }
+        return post;
+      });
+      setPosts(updatedPosts);
+    } catch (error) {
+      console.error('Error liking the post:', error);
+    }
+  };
+
+  const handleUnlike = async (postId) => {
+    try {
+      await unlikePost(postId, currentUser.id);
+      const updatedPosts = posts.map(post => {
+        if (post._id === postId) {
+          return { ...post, likes: post.likes.filter(id => id !== currentUser.id) };
+        }
+        return post;
+      });
+      setPosts(updatedPosts);
+    } catch (error) {
+      console.error('Error unliking the post:', error);
+    }
+  };
   const handleImageChange = (e) => {
     setPostContent({ ...postContent, image: e.target.files[0] });
   };
@@ -184,7 +217,9 @@ function Home({ userId }) {
   const toggleViewMore = () => {
     setViewMore(!viewMore);
   };
-
+  if (!currentUser) {
+    return <div>Loading...</div>; // Ensure this loading state is handled properly
+  }
   return (
     <>
       <div className="container-fluid mt-5">
@@ -338,7 +373,12 @@ function Home({ userId }) {
                       <div className="d-flex align-items-center justify-content-between">
                         <div className="d-flex align-items-center">
                           <FontAwesomeIcon icon={faHeart} className="text-danger mr-2" />
-                          <span className="mr-3">Like</span>
+                          <span className="mr-3">{post.likes.length}Like</span>
+                          {post.likes.includes(currentUser.id) ? (
+                            <button onClick={() => handleUnlike(post._id)}>Unlike</button>
+                          ) : (
+                            <button onClick={() => handleLike(post._id)}>Like</button>
+                          )}
                           <div className="rounded-circle bg-secondary text-white px-2">{post.likes}</div>
                         </div>
                         <a data-toggle="collapse" href="#commentCollapse" role="button" aria-expanded="false" aria-controls="commentCollapse">

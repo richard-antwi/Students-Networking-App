@@ -56,34 +56,35 @@ router.post('/', authenticateToken, postUpload.fields([{ name: 'image', maxCount
   });
 
   // Like a post
-router.put('/like/:id', async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post.likes.includes(req.body.userId)) {
-      post.likes.push(req.body.userId);
-      await post.save();
-      res.status(200).json({ message: 'Post liked!' });
-    } else {
-      res.status(400).json({ message: 'You already liked this post.' });
+  router.put('/like/:postId', async (req, res) => {
+    const { postId } = req.params;
+    const { userId } = req.body;
+  
+    try {
+      const post = await Post.findById(postId);
+      if (!post.likes.includes(userId)) {
+        post.likes.push(userId);
+        await post.save();
+      }
+      res.json(post);
+    } catch (error) {
+      res.status(500).json({ error: 'Something went wrong' });
     }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+  });
+  
 
 // Unlike a post
-router.put('/unlike/:id', async (req, res) => {
+router.put('/unlike/:postId', async (req, res) => {
+  const { postId } = req.params;
+  const { userId } = req.body;
+
   try {
-    const post = await Post.findById(req.params.id);
-    if (post.likes.includes(req.body.userId)) {
-      post.likes = post.likes.filter((userId) => userId.toString() !== req.body.userId);
-      await post.save();
-      res.status(200).json({ message: 'Post unliked!' });
-    } else {
-      res.status(400).json({ message: 'You have not liked this post.' });
-    }
-  } catch (err) {
-    res.status(500).json(err);
+    const post = await Post.findById(postId);
+    post.likes = post.likes.filter(id => id.toString() !== userId);
+    await post.save();
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
   }
 });
 

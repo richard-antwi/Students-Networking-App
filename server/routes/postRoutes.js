@@ -54,32 +54,45 @@ router.post('/', authenticateToken, postUpload.fields([{ name: 'image', maxCount
     imagePath: req.files.image ? `/uploads/post/${req.files.image[0].filename}` : null,
     videoPath: req.files.video ? `/uploads/post/${req.files.video[0].filename}` : null
   });
+  try {
+    await newPost.save();
+    res.status(201).json(newPost);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to create post', error: err.message });
+  }
+});
+  
 
   // Like a post
-  router.put('/like/:postId', async (req, res) => {
-    const { postId } = req.params;
-    const { userId } = req.body;
-  
-    try {
-      const post = await Post.findById(postId);
-      if (!post.likes.includes(userId)) {
-        post.likes.push(userId);
-        await post.save();
-      }
-      res.json(post);
-    } catch (error) {
-      res.status(500).json({ error: 'Something went wrong' });
-    }
-  });
-  
-
-// Unlike a post
-router.put('/unlike/:postId', async (req, res) => {
+router.put('/like/:postId', authenticateToken, async (req, res) => {
   const { postId } = req.params;
-  const { userId } = req.body;
+  const userId = req.user.id;
 
   try {
     const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).send({ error: 'Post not found' });
+    }
+    if (!post.likes.includes(userId)) {
+      post.likes.push(userId);
+      await post.save();
+    }
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+// Unlike a post
+router.put('/unlike/:postId', authenticateToken, async (req, res) => {
+  const { postId } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).send({ error: 'Post not found' });
+    }
     post.likes = post.likes.filter(id => id.toString() !== userId);
     await post.save();
     res.json(post);
@@ -88,12 +101,6 @@ router.put('/unlike/:postId', async (req, res) => {
   }
 });
 
-  try {
-    await newPost.save();
-    res.status(201).json(newPost);
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to create post', error: err.message });
-  }
-});
+
 
 module.exports = router;

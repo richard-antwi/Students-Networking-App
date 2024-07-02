@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock, faHeart, faComment, faEye } from '@fortawesome/free-solid-svg-icons';
 import avatar from '../Images/avatar.webp';
 import { Modal, Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 import TopProfiles from './TopProfiles';
 import withAuth from '../withAuth';
-import { likePost, unlikePost } from './PostActions';
+import { likePost, unlikePost } from '../PostActions';
+import axios from 'axios';
 
 
 function Home() {
@@ -27,7 +27,7 @@ function Home() {
   const [showModal, setShowModal] = useState(false);
   const [postContent, setPostContent] = useState({ text: '', image: null, video: null });
   const [following, setFollowing] = useState([]);
-  const currentUser = JSON.parse(localStorage.getItem('userId'));
+  
 
   
 
@@ -113,14 +113,8 @@ function Home() {
   //like
   const handleLike = async (postId) => {
     try {
-      await likePost(postId, currentUser.id);
-      const updatedPosts = posts.map(post => {
-        if (post._id === postId) {
-          return { ...post, likes: [...post.likes, currentUser.id] };
-        }
-        return post;
-      });
-      setPosts(updatedPosts);
+      const updatedPost = await likePost(postId);
+      setPosts(posts.map(post => (post._id === postId ? updatedPost : post)));
     } catch (error) {
       console.error('Error liking the post:', error);
     }
@@ -128,14 +122,8 @@ function Home() {
 
   const handleUnlike = async (postId) => {
     try {
-      await unlikePost(postId, currentUser.id);
-      const updatedPosts = posts.map(post => {
-        if (post._id === postId) {
-          return { ...post, likes: post.likes.filter(id => id !== currentUser.id) };
-        }
-        return post;
-      });
-      setPosts(updatedPosts);
+      const updatedPost = await unlikePost(postId);
+      setPosts(posts.map(post => (post._id === postId ? updatedPost : post)));
     } catch (error) {
       console.error('Error unliking the post:', error);
     }
@@ -217,9 +205,9 @@ function Home() {
   const toggleViewMore = () => {
     setViewMore(!viewMore);
   };
-  if (!currentUser) {
-    return <div>Loading...</div>; // Ensure this loading state is handled properly
-  }
+  // if (!currentUser) {
+  //   return <div>Loading...</div>; // Ensure this loading state is handled properly
+  // }
   return (
     <>
       <div className="container-fluid mt-5">
@@ -373,12 +361,13 @@ function Home() {
                       <div className="d-flex align-items-center justify-content-between">
                         <div className="d-flex align-items-center">
                           <FontAwesomeIcon icon={faHeart} className="text-danger mr-2" />
-                          <span className="mr-3">{post.likes.length}Like</span>
-                          {post.likes.includes(currentUser.id) ? (
+                          <span className="mr-3">{post.likes ? post.likes.length : 0} Like</span>
+                          {post.likes && post.likes.includes(localStorage.getItem('userId')) ? (
                             <button onClick={() => handleUnlike(post._id)}>Unlike</button>
                           ) : (
                             <button onClick={() => handleLike(post._id)}>Like</button>
                           )}
+
                           <div className="rounded-circle bg-secondary text-white px-2">{post.likes}</div>
                         </div>
                         <a data-toggle="collapse" href="#commentCollapse" role="button" aria-expanded="false" aria-controls="commentCollapse">

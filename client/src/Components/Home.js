@@ -120,6 +120,7 @@ function Home() {
     }
   };
 
+  //unlike
   const handleUnlike = async (postId) => {
     try {
       const updatedPost = await unlikePost(postId);
@@ -128,6 +129,7 @@ function Home() {
       console.error('Error unliking the post:', error);
     }
   };
+
   const handleImageChange = (e) => {
     setPostContent({ ...postContent, image: e.target.files[0] });
   };

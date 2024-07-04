@@ -64,10 +64,10 @@ router.post('/', authenticateToken, postUpload.fields([{ name: 'image', maxCount
   
 
   // Like a post
-router.put('/like/:postId', authenticateToken, async (req, res) => {
+router.post('/like/:postId', authenticateToken, async (req, res) => {
   const { postId } = req.params;
   const userId = req.user.id;
-
+console.log(userId);
   try {
     const post = await Post.findById(postId);
     if (!post) {
@@ -84,7 +84,7 @@ router.put('/like/:postId', authenticateToken, async (req, res) => {
 });
 
 // Unlike a post
-router.put('/unlike/:postId', authenticateToken, async (req, res) => {
+router.post('/unlike/:postId', authenticateToken, async (req, res) => {
   const { postId } = req.params;
   const userId = req.user.id;
 

@@ -4,7 +4,7 @@ const token = localStorage.getItem('token');
 
 export const likePost = async (postId) => {
   try {
-    const response = await axios.put(`/api/posts/like/${postId}`, {}, {
+    const response = await axios.put(`http://localhost:3001/api/posts/like/${postId}`, {}, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -18,7 +18,7 @@ export const likePost = async (postId) => {
 
 export const unlikePost = async (postId) => {
   try {
-    const response = await axios.put(`/api/posts/unlike/${postId}`, {}, {
+    const response = await axios.put(`http://localhost:3001/api/posts/unlike/${postId}`, {}, {
       headers: {
         Authorization: `Bearer ${token}`
       }

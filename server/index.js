@@ -8,17 +8,11 @@ const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-
-const userRoutes = require('./routes/userRoutes');
-const friendRoutes = require('./routes/friendRoutes');
-const postRoutes = require('./routes/postRoutes');
-const authRoutes = require('./routes/authRoutes');
-const uploadRoutes = require('./routes/uploadRoutes');
-const messageRoutes = require('./routes/messageRoutes');
 
 // Middleware
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" }}));
@@ -31,11 +25,20 @@ app.use(cors({
   optionsSuccessStatus: 200
 }));
 
-app.use(express.json({ limit: '2600mb' }));
-app.use(express.urlencoded({ limit: '2600mb', extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(bodyParser.json());
-// Routes
+
+// Import Routes
+const userRoutes = require('./routes/userRoutes');
+const friendRoutes = require('./routes/friendRoutes');
+const postRoutes = require('./routes/postRoutes');
+const authRoutes = require('./routes/authRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const messageRoutes = require('./routes/messageRoutes');
+
+// Use Routes
 app.use('/api/user', userRoutes);
 app.use('/api/friends', friendRoutes);
 app.use('/api/posts', postRoutes);
@@ -80,6 +83,7 @@ app.use((err, req, res, next) => {
 server.listen(process.env.PORT || 3001, () => {
   console.log(`Server is running on port ${process.env.PORT || 3001}`);
 });
+
 
 
 

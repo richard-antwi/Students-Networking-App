@@ -19,6 +19,7 @@ import Register from './Components/Register';
 import NavBar from './Components/NavBar';
 import TopProfiles from './Components/TopProfiles';
 import Logout from './Components/Logout';
+import Comment from './Components/Comment';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
             <Route path="topprofiles" element={<TopProfiles />} />
             <Route path="messages/:friendId" element={<Messages />} />
             <Route path="logout" element={<Logout />} />
+            <Route path="comment" element={<Comment />} />
           </Route>
 
           {/* Route without NavBar */}

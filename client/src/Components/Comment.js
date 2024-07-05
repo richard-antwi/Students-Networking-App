@@ -19,6 +19,7 @@ const Comment = ({ comment, postId, fetchPosts }) => {
       console.error('Error liking the comment:', error);
     }
   };
+//handle reply
 
   const handleReply = async () => {
     try {

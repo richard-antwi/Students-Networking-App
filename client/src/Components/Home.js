@@ -343,14 +343,21 @@ function Home() {
                           {/* <FontAwesomeIcon icon={faHeart} className="text-danger mr-2" /> */}
                           
                           {post.likes && post.likes.includes(localStorage.getItem('userId')) ? (
+                            
                             // <button onClick={() => handleUnlike(post._id)}>Unlike</button>
+                            <>
                             <FontAwesomeIcon icon={faHeart} onClick={() => handleUnlike(post._id)} className="text-danger mr-2" />
+                            <span className="mr-3">Unlike </span>
+                            </>
                           ) : (
                             // <button onClick={() => handleLike(post._id)}>Like</button>
+                            <>
                             <FontAwesomeIcon icon={faHeart} onClick={() => handleLike(post._id)} className="text-danger mr-2" />
+                            <span className="mr-3">Like </span>
+                            </>
                           )}
-                          <span className="mr-3">Like {post.likes ? post.likes.length : 0} </span>
-                          <div className="rounded-circle bg-secondary text-white px-2">{post.likes}</div>
+                          
+                          <div className="rounded-circle bg-secondary text-white px-2">{post.likes ? post.likes.length : 0}</div>
                         </div>
                         <a data-toggle="collapse" href="#commentCollapse" role="button" aria-expanded="false" aria-controls="commentCollapse">
                           <div className="d-flex align-items-center">
@@ -389,15 +396,7 @@ function Home() {
                     <p className="font-weight-bold">$50/hr</p>
                   </div>
                 </div>
-                <div className="d-flex justify-content-between mt-4">
-                  <div className="text-left">
-                    <h6 className="card-title">Senior UI/UX Designer</h6>
-                    <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  </div>
-                  <div className="text-right mb-3">
-                    <p className="font-weight-bold">$50/hr</p>
-                  </div>
-                </div>
+               
                 <div className="d-flex justify-content-between mt-4">
                   <div className="text-left">
                     <h6 className="card-title">Senior Programmer</h6>
@@ -407,17 +406,9 @@ function Home() {
                     <p className="font-weight-bold">$50/hr</p>
                   </div>
                 </div>
-                <div className="d-flex justify-content-between mt-4">
-                  <div className="text-left">
-                    <h6 className="card-title">Senior Front-End Developer</h6>
-                    <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  </div>
-                  <div className="text-right mb-3">
-                    <p className="font-weight-bold">$50/hr</p>
-                  </div>
-                </div>
               </div>
             </div>
+
             <div className="card mt-5">
               <div className="card-header d-flex justify-content-between align-items-center" style={{ backgroundColor: '#fff' }}>
                 <h5 className="mb-0">Most Viewed This Week</h5>
@@ -430,15 +421,6 @@ function Home() {
                     <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-weight-bold">$50/hr</p>
-                  </div>
-                </div>
-                <div className="d-flex justify-content-between mt-4">
-                  <div className="text-left">
-                    <h6 className="card-title">Senior UI/UX Designer</h6>
-                    <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  </div>
-                  <div className="text-right mb-3">
                     <p className="font-weight-bold">$50/hr</p>
                   </div>
                 </div>

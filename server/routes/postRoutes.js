@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
-const User = require('../models/User');
 const authenticateToken = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
@@ -52,7 +51,9 @@ router.post('/', authenticateToken, postUpload.fields([{ name: 'image', maxCount
     content: text,
     tags,
     imagePath: req.files.image ? `/uploads/post/${req.files.image[0].filename}` : null,
-    videoPath: req.files.video ? `/uploads/post/${req.files.video[0].filename}` : null
+    videoPath: req.files.video ? `/uploads/post/${req.files.video[0].filename}` : null,
+    likes: [],
+    comments: []
   });
   try {
     await newPost.save();
@@ -61,24 +62,29 @@ router.post('/', authenticateToken, postUpload.fields([{ name: 'image', maxCount
     res.status(500).json({ message: 'Failed to create post', error: err.message });
   }
 });
-  
 
-  // Like a post
+// Like a post
 router.post('/like/:postId', authenticateToken, async (req, res) => {
   const { postId } = req.params;
   const userId = req.user.id;
-console.log(userId);
+
   try {
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).send({ error: 'Post not found' });
     }
+
+    if (!post.likes) {
+      post.likes = [];
+    }
+
     if (!post.likes.includes(userId)) {
       post.likes.push(userId);
       await post.save();
     }
     res.json(post);
   } catch (error) {
+    console.error('Error liking the post:', error);
     res.status(500).json({ error: 'Something went wrong' });
   }
 });
@@ -93,14 +99,83 @@ router.post('/unlike/:postId', authenticateToken, async (req, res) => {
     if (!post) {
       return res.status(404).send({ error: 'Post not found' });
     }
+
+    if (!post.likes) {
+      post.likes = [];
+    }
+
     post.likes = post.likes.filter(id => id.toString() !== userId);
     await post.save();
     res.json(post);
+  } catch (error) {
+    console.error('Error unliking the post:', error);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+// Route to add a comment to a post
+router.post('/comment/:postId', authenticateToken, async (req, res) => {
+  const { postId } = req.params;
+  const { text } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const newComment = new Comment({ user: userId, post: postId, text });
+    await newComment.save();
+    await Post.findByIdAndUpdate(postId, { $push: { comments: newComment._id } });
+    res.status(201).json(newComment);
   } catch (error) {
     res.status(500).json({ error: 'Something went wrong' });
   }
 });
 
+// Route to add a reply to a comment
+router.post('/comment/:postId/:commentId', authenticateToken, async (req, res) => {
+  const { postId, commentId } = req.params;
+  const { text } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const newReply = new Comment({ user: userId, post: postId, text });
+    await newReply.save();
+    await Comment.findByIdAndUpdate(commentId, { $push: { replies: newReply._id } });
+    res.status(201).json(newReply);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+// Route to like a comment
+router.post('/comment/like/:commentId', authenticateToken, async (req, res) => {
+  const { commentId } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const comment = await Comment.findById(commentId);
+    if (!comment.likes.includes(userId)) {
+      comment.likes.push(userId);
+      await comment.save();
+    }
+    res.json(comment);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+// Route to unlike a comment
+router.post('/comment/unlike/:commentId', authenticateToken, async (req, res) => {
+  const { commentId } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const comment = await Comment.findById(commentId);
+    comment.likes = comment.likes.filter(id => id.toString() !== userId);
+    await comment.save();
+    res.json(comment);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
 
 
 module.exports = router;

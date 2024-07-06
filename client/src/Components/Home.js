@@ -8,6 +8,7 @@ import TopProfiles from './TopProfiles';
 import withAuth from '../withAuth';
 // import { likePost, unlikePost } from '../PostActions';
 import axios from 'axios';
+import Comment from './Comment';
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -25,6 +26,7 @@ function Home() {
   const [viewMore, setViewMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [postContent, setPostContent] = useState({ text: '', image: null, video: null });
+  const [showComments, setShowComments] = useState({});
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -105,6 +107,16 @@ function Home() {
       console.error('Error creating post:', error);
     }
   };
+
+  //comment
+  const toggleComments = (postId) => {
+    setShowComments((prevState) => ({
+      ...prevState,
+      [postId]: !prevState[postId],
+    }));
+  };
+
+  //like
 
   const handleLike = async (postId) => {
     try {
@@ -361,8 +373,10 @@ function Home() {
                         </div>
                         <a data-toggle="collapse" href="#commentCollapse" role="button" aria-expanded="false" aria-controls="commentCollapse">
                           <div className="d-flex align-items-center">
+                          <a onClick={() => toggleComments(post._id)} role="button">
                             <FontAwesomeIcon icon={faComment} className="text-primary mr-2" />
-                            <span className="mr-3">Comment</span>
+                            <span className="mr-3" >Comment</span>
+                            </a>
                             <div className="rounded-circle bg-secondary text-white px-2">{post.comments.length}</div>
                           </div>
                         </a>
@@ -379,6 +393,9 @@ function Home() {
               ))}
             </div>
           </div>
+
+
+
 
           <div className="col-md-3 side-section">
             <div className="card">

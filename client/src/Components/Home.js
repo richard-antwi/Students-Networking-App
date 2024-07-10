@@ -115,7 +115,6 @@ function Home() {
       [postId]: !prevState[postId],
     }));
   };
-
   //like
 
   const handleLike = async (postId) => {
@@ -386,6 +385,14 @@ function Home() {
                           <div className="rounded-circle bg-secondary text-white px-2">{post.views}</div>
                         </div>
                       </div>
+                       {/* Comment Section */}
+          {showComments[post._id] && (
+            <div className="mt-3">
+              {post.comments.map(comment => (
+                <Comment key={comment._id} comment={comment} postId={post._id} fetchPosts={fetchPosts} />
+              ))}
+            </div>
+          )}
                     </div>
                   </div>
                   {(index === 0 || (index + 1) % 3 === 0) && <TopProfiles avatar={avatar} />}

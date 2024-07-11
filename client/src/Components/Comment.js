@@ -47,6 +47,8 @@ const Comment = ({ comment, postId, fetchPosts }) => {
             <span className="text-muted">{new Date(comment.createdAt).toLocaleString()}</span>
           </div>
           <p>{comment.text}</p>
+
+          <p>hello this is working </p>
           <div className="d-flex align-items-center">
             <FontAwesomeIcon icon={faHeart} onClick={handleLikeComment} className="text-danger mr-2" />
             <span className="mr-3">{comment.likes.length}</span>

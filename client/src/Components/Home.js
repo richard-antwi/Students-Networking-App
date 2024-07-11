@@ -109,12 +109,22 @@ function Home() {
   };
 
   //comment
-  const toggleComments = (postId) => {
-    setShowComments((prevState) => ({
-      ...prevState,
-      [postId]: !prevState[postId],
-    }));
+  // const toggleComments = (postId) => {
+  //   setShowComments((prevState) => ({
+  //     ...prevState,
+  //     [postId]: !prevState[postId], // Toggle visibility based on the current state
+  //   }));
+  // };
+
+  const toggleComments = postId => {
+    setShowComments(prev => {
+      const newState = { ...prev, [postId]: !prev[postId] };
+      console.log("New showComments state:", JSON.stringify(newState, null, 2));
+      return newState;
+    });
   };
+  
+  
   //like
 
   const handleLike = async (postId) => {
@@ -372,10 +382,10 @@ function Home() {
                         </div>
                         <a data-toggle="collapse" href="#commentCollapse" role="button" aria-expanded="false" aria-controls="commentCollapse">
                           <div className="d-flex align-items-center">
-                          <a onClick={() => toggleComments(post._id)} role="button">
+                          <div onClick={() => toggleComments(post._id)} className="mr-3 cursor-pointer">
                             <FontAwesomeIcon icon={faComment} className="text-primary mr-2" />
                             <span className="mr-3" >Comment</span>
-                            </a>
+                            </div>
                             <div className="rounded-circle bg-secondary text-white px-2">{post.comments.length}</div>
                           </div>
                         </a>
@@ -385,14 +395,14 @@ function Home() {
                           <div className="rounded-circle bg-secondary text-white px-2">{post.views}</div>
                         </div>
                       </div>
-                       {/* Comment Section */}
-          {showComments[post._id] && (
-            <div className="mt-3">
-              {post.comments.map(comment => (
-                <Comment key={comment._id} comment={comment} postId={post._id} fetchPosts={fetchPosts} />
-              ))}
-            </div>
-          )}
+                                {/* Comment Section */}
+                    {showComments[post._id] && (
+                      <div className="mt-3">
+                        {showComments[post._id] && post.comments.map(comment => (
+                            <Comment key={comment._id} comment={comment} postId={post._id} fetchPosts={fetchPosts} />
+                         ))}
+                        </div>
+                              )}
                     </div>
                   </div>
                   {(index === 0 || (index + 1) % 3 === 0) && <TopProfiles avatar={avatar} />}

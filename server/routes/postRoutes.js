@@ -114,7 +114,7 @@ router.post('/unlike/:postId', authenticateToken, async (req, res) => {
 });
 
 // Route to add a comment to a post
-router.post('/comment/:postId', authenticateToken, async (req, res) => {
+router.post('/comments/:postId', authenticateToken, async (req, res) => {
   const { postId } = req.params;
   const { text } = req.body;
   const userId = req.user.id;
@@ -130,7 +130,7 @@ router.post('/comment/:postId', authenticateToken, async (req, res) => {
 });
 
 // Route to add a reply to a comment
-router.post('/comment/:postId/:commentId', authenticateToken, async (req, res) => {
+router.post('/comments/reply/:postId', authenticateToken, async (req, res) => {
   const { postId, commentId } = req.params;
   const { text } = req.body;
   const userId = req.user.id;
@@ -146,7 +146,7 @@ router.post('/comment/:postId/:commentId', authenticateToken, async (req, res) =
 });
 
 // Route to like a comment
-router.post('/comment/like/:commentId', authenticateToken, async (req, res) => {
+router.post('/comments/like/:commentId', authenticateToken, async (req, res) => {
   const { commentId } = req.params;
   const userId = req.user.id;
 

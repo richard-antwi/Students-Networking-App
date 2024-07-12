@@ -6,7 +6,7 @@ const authenticateToken = async (req, res, next) => {
   if (token == null) return res.sendStatus(401).json({ message: 'No token provided' });
   try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Decoded JWT:", decoded);
+      // console.log("Decoded JWT:", decoded);
       req.user = decoded;
       next(); 
   } catch (err) {

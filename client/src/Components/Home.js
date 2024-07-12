@@ -27,6 +27,7 @@ function Home() {
   const [showModal, setShowModal] = useState(false);
   const [postContent, setPostContent] = useState({ text: '', image: null, video: null });
   const [showComments, setShowComments] = useState({});
+  const [newComment, setNewComment] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -119,7 +120,7 @@ function Home() {
   const toggleComments = postId => {
     setShowComments(prev => {
       const newState = { ...prev, [postId]: !prev[postId] };
-      console.log("New showComments state:", JSON.stringify(newState, null, 2));
+      // console.log("New showComments state:", JSON.stringify(newState, null, 2));
       return newState;
     });
   };
@@ -150,6 +151,27 @@ function Home() {
       console.error('Error unliking the post:', error);
     }
   };
+
+  //submit comment
+  const handleCommentChange = (e) => {
+    setNewComment(e.target.value);
+  };
+  
+  const submitComment = async (postId) => {
+    if (!newComment.trim()) return;
+    try {
+      await axios.post(`http://localhost:3001/api/posts/comments/${postId}`, {
+        text: newComment,}, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      setNewComment(''); // Clear the input after submission
+      fetchPosts(); // Refresh the list of posts and comments
+    } catch (error) {
+      console.error('Error submitting the comment:', error);
+    }
+  };
+
+
   const handleImageChange = (e) => {
     setPostContent({ ...postContent, image: e.target.files[0] });
   };
@@ -397,12 +419,24 @@ function Home() {
                       </div>
                                 {/* Comment Section */}
                     {showComments[post._id] && (
-                      <div className="mt-3">
-                        {showComments[post._id] && post.comments.map(comment => (
-                            <Comment key={comment._id} comment={comment} postId={post._id} fetchPosts={fetchPosts} />
-                         ))}
-                        </div>
-                              )}
+      <div className="comment-section">
+        {post.comments && post.comments.length > 0 ? (
+          post.comments.map(comment => (
+            <Comment key={comment._id} comment={comment} postId={post._id} fetchPosts={fetchPosts} />
+          ))
+        ) : (
+          <p>No comments yet. Be the first to comment!</p>
+        )}
+        {/* Here you can add a form or input field to post new comments */}
+        <div className="add-comment">
+          <textarea placeholder="Write a comment..."   
+            value={newComment}
+            onChange={handleCommentChange}
+            className="form-control"></textarea>
+          <button className="btn btn-primary mt-2" onClick={() => submitComment(post._id)}>Post Comment</button>
+        </div>
+      </div>
+    )}
                     </div>
                   </div>
                   {(index === 0 || (index + 1) % 3 === 0) && <TopProfiles avatar={avatar} />}

@@ -13,7 +13,7 @@ const Comment = ({ comment, postId, fetchPosts }) => {
 
   const handleLikeComment = async () => {
     try {
-      await axios.post(`http://localhost:3001/api/comments/like/${comment._id}`, {}, {
+      await axios.post(`http://localhost:3001/api/posts/comments/like/${comment._id}`, {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       fetchPosts();
@@ -24,7 +24,7 @@ const Comment = ({ comment, postId, fetchPosts }) => {
 
   const handleReply = async () => {
     try {
-      await axios.post(`http://localhost:3001/api/comments/reply/${postId}`, {
+      await axios.post(`http://localhost:3001/api/posts/comments/reply/${postId}`, {
         text: replyContent,
         parentId: comment._id,
         attachment: attachment,

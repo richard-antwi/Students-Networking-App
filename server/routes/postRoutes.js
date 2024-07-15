@@ -38,7 +38,7 @@ router.get('/', async (req, res) => {
             select: 'firstName lastName profileImagePath'
           },
           {
-            path: 'replies', // Ensure your Comment schema has a 'replies' field which references Comment ids
+            path: 'replies', 
             model: 'Comment', // Only necessary if it's not automatically inferred
             populate: {
               path: 'user', 

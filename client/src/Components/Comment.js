@@ -80,9 +80,9 @@ const Comment = ({ comment, postId, fetchPosts }) => {
             <FontAwesomeIcon icon={faHeart} onClick={handleLikeComment} className="text-danger mr-2" />
             <span className="mr-3">{comment.likes.length}</span>
             <FontAwesomeIcon icon={faReply} onClick={() => setShowReply(!showReply)} className="text-primary mr-2" />
-            {comment.replies.length > 0 && (<>
             <span className="mr-3">Reply</span>
-              <FontAwesomeIcon icon={faCommentDots} onClick={() => setShowReplies(!showReplies)} className="text-secondary" /></>
+            {comment.replies.length > 0 && (
+              <FontAwesomeIcon icon={faCommentDots} onClick={() => setShowReplies(!showReplies)} className="text-secondary" />
             )}
           </div>
           {showReply && (

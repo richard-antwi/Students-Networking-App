@@ -200,9 +200,9 @@ function Home() {
           }
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch suggestions');
-        }
+        // if (!response.ok) {
+        //   throw new Error('Failed to fetch suggestions');
+        // }
 
         const data = await response.json();
         setSuggestions(data.suggestions || []);

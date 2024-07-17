@@ -28,6 +28,7 @@ function Home() {
   const [postContent, setPostContent] = useState({ text: '', image: null, video: null });
   const [showComments, setShowComments] = useState({});
   const [newComment, setNewComment] = useState('');
+  const [commentingOn, setCommentingOn] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -157,20 +158,25 @@ function Home() {
     setNewComment(e.target.value);
   };
   
-  const submitComment = async (postId) => {
+  const submitComment = async (postId , parentId = null) => {
     if (!newComment.trim()) return;
     try {
       await axios.post(`http://localhost:3001/api/posts/comments/${postId}`, {
-        text: newComment,}, {
+        text: newComment,
+        parentId: parentId || commentingOn,
+      }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setNewComment(''); // Clear the input after submission
+      setCommentingOn(null);
       fetchPosts(); // Refresh the list of posts and comments
     } catch (error) {
       console.error('Error submitting the comment:', error);
     }
   };
-
+  const initiateReply = (commentId) => {
+    setCommentingOn(commentId);
+  };
 
   const handleImageChange = (e) => {
     setPostContent({ ...postContent, image: e.target.files[0] });
@@ -422,7 +428,7 @@ function Home() {
       <div className="comment-section">
         {post.comments && post.comments.length > 0 ? (
           post.comments.map(comment => (
-            <Comment key={comment._id} comment={comment} postId={post._id} fetchPosts={fetchPosts} />
+            <Comment key={comment._id} comment={comment} postId={post._id} fetchPosts={fetchPosts} initiateReply={initiateReply} />
           ))
         ) : (
           <p>No comments yet. Be the first to comment!</p>
@@ -433,7 +439,7 @@ function Home() {
             value={newComment}
             onChange={handleCommentChange}
             className="form-control"></textarea>
-          <button className="btn btn-primary mt-2" onClick={() => submitComment(post._id)}>Post Comment</button>
+          <button className="btn btn-primary mt-2" onClick={() => submitComment(post._id, commentingOn)}>Post Comment</button>
         </div>
       </div>
     )}

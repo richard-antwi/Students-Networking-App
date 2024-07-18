@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock, faHeart, faComment, faEye } from '@fortawesome/free-solid-svg-icons';
+import {faCommentDots, faReply, faPlus, faBookmark, faEnvelope, faGraduationCap, faMapMarkerAlt, faClock, faHeart, faComment, faEye } from '@fortawesome/free-solid-svg-icons';
 import avatar from '../Images/avatar.webp';
 import { Modal, Button, Form } from 'react-bootstrap';
 import TopProfiles from './TopProfiles';
 import withAuth from '../withAuth';
 // import { likePost, unlikePost } from '../PostActions';
 import axios from 'axios';
-import Comment from './Comment';
+// import Comment from './Comment';
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -29,6 +29,14 @@ function Home() {
   const [showComments, setShowComments] = useState({});
   const [newComment, setNewComment] = useState('');
   const [commentingOn, setCommentingOn] = useState(null);
+  const [replyTexts, setReplyTexts] = useState({});
+  // const [attachments, setAttachments] = useState({});
+  const [showReplies, setShowReplies] = useState({});
+  // const [showReplyForm, setShowReplyForm] = useState({});
+  const [showReply, setShowReply] = useState({});
+  // const [likes, setLikes] = useState({});  // Assuming likes are managed by comment ID
+
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -110,21 +118,7 @@ function Home() {
     }
   };
 
-  //comment
-  // const toggleComments = (postId) => {
-  //   setShowComments((prevState) => ({
-  //     ...prevState,
-  //     [postId]: !prevState[postId], // Toggle visibility based on the current state
-  //   }));
-  // };
-
-  const toggleComments = postId => {
-    setShowComments(prev => {
-      const newState = { ...prev, [postId]: !prev[postId] };
-      // console.log("New showComments state:", JSON.stringify(newState, null, 2));
-      return newState;
-    });
-  };
+ 
   
   
   //like
@@ -153,31 +147,64 @@ function Home() {
     }
   };
 
+   //comment
+  // const toggleComments = (postId) => {
+  //   setShowComments((prevState) => ({
+  //     ...prevState,
+  //     [postId]: !prevState[postId], // Toggle visibility based on the current state
+  //   }));
+  // };
+
+  const toggleComments = postId => {
+    setShowComments(prev => {
+      const newState = { ...prev, [postId]: !prev[postId] };
+      // console.log("New showComments state:", JSON.stringify(newState, null, 2));
+      return newState;
+    });
+  };
+
   //submit comment
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
   
-  const submitComment = async (postId , parentId = null) => {
-    if (!newComment.trim()) return;
-    try {
-      await axios.post(`http://localhost:3001/api/posts/comments/${postId}`, {
-        text: newComment,
-        parentId: parentId || commentingOn,
-      }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setNewComment(''); // Clear the input after submission
-      setCommentingOn(null);
-      fetchPosts(); // Refresh the list of posts and comments
-    } catch (error) {
-      console.error('Error submitting the comment:', error);
-    }
-  };
-  const initiateReply = (commentId) => {
-    setCommentingOn(commentId);
+  const handleReplyChange = (e, commentId) => {
+    setReplyTexts(prev => ({ ...prev, [commentId]: e.target.value }));
   };
 
+
+const handleLikeComment = async (commentId) => {
+  try {
+    await axios.post(`http://localhost:3001/api/posts/comments/like/${commentId}`, {}, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+    fetchPosts();
+  } catch (error) {
+    console.error('Error liking the comment:', error);
+  }
+};
+
+const submitComment = async (postId, text, parentId = null) => {
+  const payload = { text, parentId };
+  if (!newComment.trim()) return; // This checks only newComment, not the 'text' parameter
+  try {
+      await axios.post(`http://localhost:3001/api/posts/comments/${postId}`, {
+          text: newComment, // This should probably be 'text' passed into the function
+          parentId: parentId || commentingOn,
+      }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      console.log(`Submitting comment for postId=${postId} with parentId=${parentId}`);
+      console.log(payload);
+      setNewComment(''); // Should also handle replyTexts reset if it's a reply
+      setCommentingOn(null);
+      fetchPosts(); // Refresh the list of posts and comments
+  } catch (error) {
+      console.error('Error submitting the comment:', error);
+  }
+};
+
+ 
   const handleImageChange = (e) => {
     setPostContent({ ...postContent, image: e.target.files[0] });
   };
@@ -206,9 +233,9 @@ function Home() {
           }
         });
 
-        // if (!response.ok) {
-        //   throw new Error('Failed to fetch suggestions');
-        // }
+        if (!response.ok) {
+          throw new Error('Failed to fetch suggestions');
+        }
 
         const data = await response.json();
         setSuggestions(data.suggestions || []);
@@ -408,7 +435,7 @@ function Home() {
                           
                           <div className="rounded-circle bg-secondary text-white px-2">{post.likes ? post.likes.length : 0}</div>
                         </div>
-                        <a data-toggle="collapse" href="#commentCollapse" role="button" aria-expanded="false" aria-controls="commentCollapse">
+                        {/* <a data-toggle="collapse" href="#commentCollapse" role="button" aria-expanded="false" aria-controls="commentCollapse"> */}
                           <div className="d-flex align-items-center">
                           <div onClick={() => toggleComments(post._id)} className="mr-3 cursor-pointer">
                             <FontAwesomeIcon icon={faComment} className="text-primary mr-2" />
@@ -416,7 +443,7 @@ function Home() {
                             </div>
                             <div className="rounded-circle bg-secondary text-white px-2">{post.comments.length}</div>
                           </div>
-                        </a>
+                        {/* </a> */}
                         <div className="d-flex align-items-center">
                           <FontAwesomeIcon icon={faEye} className="text-success mr-2" />
                           <span>View</span>
@@ -425,24 +452,78 @@ function Home() {
                       </div>
                                 {/* Comment Section */}
                     {showComments[post._id] && (
-      <div className="comment-section">
-        {post.comments && post.comments.length > 0 ? (
-          post.comments.map(comment => (
-            <Comment key={comment._id} comment={comment} postId={post._id} fetchPosts={fetchPosts} initiateReply={initiateReply} />
-          ))
-        ) : (
-          <p>No comments yet. Be the first to comment!</p>
-        )}
-        {/* Here you can add a form or input field to post new comments */}
-        <div className="add-comment">
-          <textarea placeholder="Write a comment..."   
-            value={newComment}
-            onChange={handleCommentChange}
-            className="form-control"></textarea>
-          <button className="btn btn-primary mt-2" onClick={() => submitComment(post._id, commentingOn)}>Post Comment</button>
+  <div className="comment-section">
+    {post.comments && post.comments.length > 0 ? (
+      post.comments.map(comment => (
+        <div key={comment._id} className="mb-3">
+          <div className="d-flex align-items-start">
+            <img src={comment.user.avatar} alt="User Avatar" className="img-fluid rounded-circle mr-3" style={{ width: '40px', height: '40px' }} />
+            <div>
+              <div className="d-flex justify-content-between">
+                <h6 className="mb-0">{comment.user.firstName} {comment.user.lastName}</h6>
+                <span className="text-muted">{new Date(comment.createdAt).toLocaleString()}</span>
+              </div>
+              <p>{comment.text}</p>
+
+              {/* Attachment handling */}
+              {comment.attachment && (
+                comment.attachmentType === 'image' ? (
+                  <img src={URL.createObjectURL(comment.attachment)} alt="Attachment" className="img-fluid mb-2" />
+                ) : (
+                  <video controls className="mb-2">
+                    <source src={URL.createObjectURL(comment.attachment)} type={`video/${comment.attachment.type.split('/')[1]}`} />
+                  </video>
+                )
+              )}
+
+              <div className="d-flex align-items-center">
+                <FontAwesomeIcon icon={faHeart} onClick={() => handleLikeComment(comment._id)} className="text-danger mr-2" />
+                <span className="mr-3">{comment.likes.length}</span>
+                <FontAwesomeIcon icon={faReply} onClick={() => setShowReply(comment._id, !showReply[comment._id])} className="text-primary mr-2" />
+                <span className="mr-3">Reply</span>
+                {comment.replies.length > 0 && (
+                  <FontAwesomeIcon icon={faCommentDots} onClick={() => setShowReplies(comment._id, !showReplies[comment._id])} className="text-secondary" />
+                )}
+              </div>
+
+              {/* Reply form */}
+              {showReply[comment._id] && (
+                <div className="mt-2">
+                  <textarea
+                    className="form-control mb-2"
+                    rows="2"
+                    value={replyTexts[comment._id] || ''}
+                    onChange={(e) => handleReplyChange(e, comment._id)}
+                    placeholder="Write a reply..."
+                  />
+                  <button className="btn btn-primary" onClick={() => submitComment(post._id, replyTexts[comment._id], comment._id)}>Reply</button>
+                </div>
+              )}
+
+              {/* Nested replies display */}
+              {showReplies[comment._id] && comment.replies.map(reply => (
+                <div key={reply._id} style={{ marginLeft: '20px' }}>
+                  <p>{reply.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      ))
+    ) : (
+      <p>No comments yet. Be the first to comment!</p>
     )}
+    <div className="add-comment">
+      <textarea
+        placeholder="Write a comment..."
+        value={newComment}
+        onChange={handleCommentChange}
+        className="form-control"></textarea>
+      <button className="btn btn-primary mt-2" onClick={() => submitComment(post._id, newComment)}>Post Comment</button>
+    </div>
+  </div>
+)}
+
                     </div>
                   </div>
                   {(index === 0 || (index + 1) % 3 === 0) && <TopProfiles avatar={avatar} />}

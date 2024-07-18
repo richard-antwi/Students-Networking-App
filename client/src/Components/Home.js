@@ -32,7 +32,6 @@ function Home() {
   const [replyTexts, setReplyTexts] = useState({});
   // const [attachments, setAttachments] = useState({});
   const [showReplies, setShowReplies] = useState({});
-  // const [showReplyForm, setShowReplyForm] = useState({});
   const [showReply, setShowReply] = useState({});
   // const [likes, setLikes] = useState({});  // Assuming likes are managed by comment ID
 

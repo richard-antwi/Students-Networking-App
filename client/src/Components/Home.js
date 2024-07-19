@@ -30,10 +30,9 @@ function Home() {
   const [newComment, setNewComment] = useState('');
   const [commentingOn, setCommentingOn] = useState(null);
   const [replyTexts, setReplyTexts] = useState({});
-  // const [attachments, setAttachments] = useState({});
   const [showReplies, setShowReplies] = useState({});
   const [showReply, setShowReply] = useState({});
-  // const [likes, setLikes] = useState({});  // Assuming likes are managed by comment ID
+ 
 
 
 

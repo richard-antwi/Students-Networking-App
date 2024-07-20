@@ -144,7 +144,7 @@ function Home() {
       console.error('Error unliking the post:', error);
     }
   };
-
+//comments for the post on home
    //comment
   // const toggleComments = (postId) => {
   //   setShowComments((prevState) => ({

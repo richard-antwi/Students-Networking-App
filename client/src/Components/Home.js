@@ -145,7 +145,7 @@ function Home() {
     }
   };
 //comments for the post on home
-   //comment
+   
   // const toggleComments = (postId) => {
   //   setShowComments((prevState) => ({
   //     ...prevState,

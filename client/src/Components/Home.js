@@ -146,12 +146,7 @@ function Home() {
   };
 //comments for the post on home
    
-  // const toggleComments = (postId) => {
-  //   setShowComments((prevState) => ({
-  //     ...prevState,
-  //     [postId]: !prevState[postId], // Toggle visibility based on the current state
-  //   }));
-  // };
+ 
 
   const toggleComments = postId => {
     setShowComments(prev => {

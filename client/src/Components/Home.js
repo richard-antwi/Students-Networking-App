@@ -151,7 +151,7 @@ function Home() {
   const toggleComments = postId => {
     setShowComments(prev => {
       const newState = { ...prev, [postId]: !prev[postId] };
-      // console.log("New showComments state:", JSON.stringify(newState, null, 2));
+      console.log("New showComments state:", JSON.stringify(newState, null, 2));
       return newState;
     });
   };

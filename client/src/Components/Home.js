@@ -183,7 +183,7 @@ const submitComment = async (postId, text, parentId = null) => {
   if (!newComment.trim()) return; // This checks only newComment, not the 'text' parameter
   try {
       await axios.post(`http://localhost:3001/api/posts/comments/${postId}`, {
-          text: newComment, // This should probably be 'text' passed into the function
+          text: newComment, 
           parentId: parentId || commentingOn,
       }, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }

@@ -190,7 +190,7 @@ const submitComment = async (postId, text, parentId = null) => {
       });
       console.log(`Submitting comment for postId=${postId} with parentId=${parentId}`);
       console.log(payload);
-      setNewComment(''); // Should also handle replyTexts reset if it's a reply
+
       setCommentingOn(null);
       fetchPosts(); // Refresh the list of posts and comments
   } catch (error) {

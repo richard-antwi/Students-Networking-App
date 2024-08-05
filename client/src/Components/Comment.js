@@ -1,9 +1,5 @@
 
 
-
-
-
-
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faReply, faCommentDots, faImage, faVideo } from '@fortawesome/free-solid-svg-icons';
